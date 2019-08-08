@@ -1,0 +1,39 @@
+debug: false
+spring:
+  application:
+    name: submitfile-api
+opentracing:
+  jaeger:
+    enabled: true
+    http-sender:
+      url: http://jaeger-collector.local/api/traces
+    enable-b3-propagation: true
+    tags:
+      api: submitfile
+  spring:
+    cloud:
+      async:
+        enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  metrics:
+    export:
+      prometheus:
+        pushgateway:
+          enabled: true
+          base-url: pushgateway.local
+          push-rate: 15s
+          grouping-key:
+            wf: demo
+cadence:
+  host: cadence
+  port: 7933
+  emit-metric: true
+  retention-periods: 10d
+logging:
+  level:
+    com.anz: debug
+    io.jaegertracing.internal.reporters.LoggingReporter: warn
