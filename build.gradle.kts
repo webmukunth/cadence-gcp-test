@@ -85,15 +85,15 @@ project(":commons-api") {
     }
 }
 
-project(":download-activity-service") {
+project(":workflow-service") {
     dependencies {
-        "implementation"(project(":download-activity-api"))
+        "implementation"(project(":workflow-api"))
     }
 }
 
-project(":submitfile-workflow-service") {
+project(":submitfile-service") {
     dependencies {
-        "implementation"(project(":download-activity-api"))
+        "implementation"(project(":workflow-api"))
         "implementation"("org.springframework.boot:spring-boot-starter-web:${springBootVersion}")
     }
 }

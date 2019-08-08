@@ -1,7 +1,7 @@
 debug: false
 spring:
   application:
-    name: processfile-wf
+    name: workflow-service
 
 opentracing:
   jaeger:
@@ -10,7 +10,7 @@ opentracing:
       url: http://jaeger-collector.local/api/traces
     enable-b3-propagation: true
     tags:
-      wf: processfile
+      custom-tag: val1
   spring:
     web:
       enabled: false
@@ -31,7 +31,7 @@ cadence:
   host: cadence
   port: 7933
   emit-metric: true
-  retention-period: 10d
+  retention-period: 1d
 logging:
   level:
     com.anz: debug

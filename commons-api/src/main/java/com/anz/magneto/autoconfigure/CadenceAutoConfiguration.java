@@ -20,7 +20,6 @@ import io.opentracing.contrib.spring.tracer.configuration.TracerAutoConfiguratio
 import io.opentracing.tag.Tags;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -62,17 +61,12 @@ public class CadenceAutoConfiguration {
   @Bean
   MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
     return registry -> {
-      try {
-        registry.config().commonTags(
-            Tags.COMPONENT.getKey(), "cadence",
-            "sbapp", applicationName,
-            "instance", InetAddress.getLocalHost().getHostAddress(),
-            "host", InetAddress.getLocalHost().getHostName(),
-            "domain", Constants.DOMAIN
-        );
-      } catch (UnknownHostException e) {
-        log.error("Error occurred", e);
-      }
+      registry.config().commonTags(
+          Tags.COMPONENT.getKey(), "cadence",
+          "clientApp", applicationName,
+          "clientDomain", Constants.DOMAIN,
+          "clientInstance", Constants.INSTANCE_NAME
+      );
     };
   }
 
@@ -80,8 +74,9 @@ public class CadenceAutoConfiguration {
   TracerBuilderCustomizer tracerBuilderCustomizer() {
     return builder -> builder.withTags(
         Map.of(
-            "sbapp", applicationName,
-            "domain", Constants.DOMAIN
+            "clientApp", applicationName,
+            "clientDomain", Constants.DOMAIN,
+            "clientInstance", Constants.INSTANCE_NAME
         )
     );
   }
@@ -101,7 +96,7 @@ public class CadenceAutoConfiguration {
   public WorkflowServiceTChannel workflowServiceTChannel(CadenceConfigurationProperties prop,
       Scope ms, Tracer tracer) {
 
-    log.debug("{} cadenceConfiguration: {}, tracer: {}", applicationName, prop, tracer);
+    log.info("{} cadenceConfiguration: {}, tracer: {}", applicationName, prop, tracer);
 
     final var host = prop.getHost();
     final var port = prop.getPort();

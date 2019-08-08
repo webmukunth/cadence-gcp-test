@@ -1,7 +1,7 @@
 debug: false
 spring:
   application:
-    name: submitfile-api
+    name: submitfile-service
 opentracing:
   jaeger:
     enabled: true
@@ -32,7 +32,7 @@ cadence:
   host: cadence
   port: 7933
   emit-metric: true
-  retention-periods: 10d
+  retention-period: 1d
 logging:
   level:
     com.anz: debug

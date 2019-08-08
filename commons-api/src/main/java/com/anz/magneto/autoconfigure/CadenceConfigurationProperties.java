@@ -8,10 +8,10 @@ import lombok.ToString;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.convert.DurationUnit;
 
-@ConfigurationProperties(prefix = "cadence")
 @ToString
 @Getter
 @Setter
+@ConfigurationProperties(prefix = "cadence")
 public class CadenceConfigurationProperties {
 
   private String host;

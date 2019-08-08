@@ -11,8 +11,6 @@ import com.uber.cadence.worker.Worker.FactoryOptions;
 import com.uber.cadence.worker.WorkerOptions;
 import com.uber.cadence.worker.WorkflowImplementationOptions;
 import com.uber.m3.tally.Scope;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -31,8 +29,7 @@ public class WorkerAutoConfiguration {
   @Bean
   @ConditionalOnMissingBean
   public Factory workerFactory(WorkflowServiceTChannel tc, Scope ms,
-      DownloadActivity downloadAct, ProcessFileActivity processFileAct)
-      throws UnknownHostException {
+      DownloadActivity downloadAct, ProcessFileActivity processFileAct) {
 
     log.debug("   downloadActivity: {}", downloadAct);
     log.debug("processFileActivity: {}", processFileAct);
@@ -64,7 +61,7 @@ public class WorkerAutoConfiguration {
                     .build())
             .setMaxConcurrentActivityExecutionSize(16)
             .setMaxConcurrentWorkflowExecutionSize(16)
-            .setIdentity(applicationName + "@" + InetAddress.getLocalHost().getHostName())
+            .setIdentity(applicationName + "@" + Constants.INSTANCE_NAME)
             .setMetricsScope(ms)
             .build()
     );
