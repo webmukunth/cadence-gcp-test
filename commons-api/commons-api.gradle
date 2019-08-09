@@ -1,0 +1,16 @@
+description = "Commons API"
+
+apply plugin: 'io.spring.dependency-management'
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    implementation "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
+    implementation "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:${javaSpringJaegerVersion}"
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}

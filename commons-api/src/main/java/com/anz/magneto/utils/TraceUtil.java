@@ -89,7 +89,8 @@ public class TraceUtil {
 
     final var span = sb.start();
 
-    try (Scope ignored = tracer.activateSpan(span)) {
+    try (Scope scope = tracer.activateSpan(span)) {
+      log.trace( "scope: {}", scope);
       return callable.call();
     } catch (Exception ex) {
       log.error("Exception occurred", ex);

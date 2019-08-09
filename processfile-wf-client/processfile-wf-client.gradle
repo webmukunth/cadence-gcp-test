@@ -1,0 +1,5 @@
+description = "Process file workflow implementation"
+
+dependencies {
+    implementation project(":processfile-api")
+}
