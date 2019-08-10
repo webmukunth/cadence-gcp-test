@@ -6,6 +6,7 @@ plugins {
     id 'net.ltgt.errorprone' version '0.8.1' apply false
     id 'org.springframework.boot' version '2.1.7.RELEASE' apply false
     id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
+    id "com.google.cloud.tools.jib" version "1.4.0" apply false
 }
 
 ext {
@@ -50,6 +51,10 @@ subprojects {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
         options.encoding = 'UTF-8'
+        options.errorprone {
+            enabled = true
+            disableWarningsInGeneratedCode = true
+        }
     }
 
     compileTestJava {
@@ -73,6 +78,7 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
 
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'com.google.cloud.tools.jib'
 
     dependencies {
         implementation project(":commons-api")
@@ -97,5 +103,15 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
 
     processResources {
         expand(['projectName': project.name, 'version': version])
+    }
+
+    jib {
+        from {
+            image = "gcr.io/distroless/java:11-debug"
+        }
+
+        to {
+            image = "magneto/${project.name}:${version}"
+        }
     }
 }
