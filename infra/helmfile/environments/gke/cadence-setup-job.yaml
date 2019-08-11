@@ -1,0 +1,35 @@
+resources:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      labels:
+        app: cassandra
+        chart: cassandra-0.13.1
+        heritage: Tiller
+        release: cadence
+        name: cadence-domain-create-job
+      name: cadence-domain-create-job
+    spec:
+      activeDeadlineSeconds: 120
+      backoffLimit: 6
+      completions: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - env:
+                - name: CADENCE_CLI_ADDRESS
+                  value: cadence-frontend:7933
+                - name: CADENCE_CLI_DOMAIN
+                  value: megneto
+              image: docker.io/ubercadence/cli:0.7.3
+              name: cadence-domain-create-job
+              command:
+                - sh
+                - '-c'
+                - |
+                  #!/bin/bash -ex
+                  ./cadence --domain=magneto domain register --global_domain false
+                  ./cadence --help
+          terminationGracePeriodSeconds: 30
+          restartPolicy: OnFailure

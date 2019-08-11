@@ -5,27 +5,51 @@ helmDefaults:
   force: true
 
 releases:
-  - name: cadence
-    chart: ../charts/cadence
+  - name: cadence-cassandra-schema-setup
+    chart: incubator/raw
     wait: true
     installed: true
     namespace: default
     labels:
       component: workflow
       package-manager: helmfile
+      chart: cadence-cassandra-schema-setup
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+  - name: cadence
+    chart: ../charts/cadence
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: workflow
       chart: cadence
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
-  - name: cadence-svc
+  - name: cadence-setup-job
     chart: incubator/raw
     wait: true
     installed: true
     namespace: default
     labels:
-      component: monitoring
       package-manager: helmfile
-      chart: cadence-svc
+      component: workflow
+      chart: cadence-setup-job
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+  - name: cadence-ingress
+    chart: incubator/raw
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: workflow
+      chart: cadence-ingress
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 

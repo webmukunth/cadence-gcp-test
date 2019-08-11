@@ -10,7 +10,7 @@ all: diff
 repos:
 	helmfile repos
 
-lint: repos
+lint: 
 	helmfile --environment ${HELMFILE_ENV} lint --skip-deps
 
 diff: lint

@@ -1,0 +1,21 @@
+resources:
+  - apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      annotations:
+        kubernetes.io/ingress.class: traefik
+      labels:
+        app.kubernetes.io/instance: cadence
+        app.kubernetes.io/managed-by: Tiller
+        app.kubernetes.io/name: cadence-web
+        helm.sh/chart: cadence-0.2.0
+      name: cadence-web
+    spec:
+      rules:
+        - host: traefik.gke
+          http:
+            paths:
+              - path: /cadence
+                backend:
+                  serviceName: cadence-web
+                  servicePort: 80

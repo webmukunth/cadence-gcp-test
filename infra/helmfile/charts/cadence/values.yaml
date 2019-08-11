@@ -18,8 +18,6 @@ server:
 
   bindOnLocalHost: false
 
-  cassandraVisibilityKeyspace: cadence
-
   frontend:
     enabled: true
     bindOnIP: "0.0.0.0"
@@ -152,24 +150,10 @@ web:
   affinity: {}
 
 
-cassandraVisibilityKeyspace: cadence_visibility
 cassandra:
-  image:
-    repo: cassandra
-    tag: 3.11.3
-    pullPolicy: IfNotPresent
-  enabled: true
-  seeds: cassandra
+  seeds: cassandra.default.svc.cluster.local
   consistency: One
   keyspace: cadence
-  config:
-    cluster_size: 1
-  resources: {}
-    # requests:
-    #   memory: 4Gi
-    #   cpu: 1
-    # limits:
-    #   cpu: 2
-  # podDisruptionBudget:
-  #   maxUnavailable: 1
-    # minAvailable: 1
+  visibilityKeyspace: cadence_visibility
+  user: cassandra
+  password: cassandra

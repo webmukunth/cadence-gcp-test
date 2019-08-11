@@ -1,0 +1,62 @@
+resources:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      labels:
+        app: cassandra
+        chart: cassandra-0.13.1
+        heritage: Tiller
+        release: cadence
+        name: cadence-cassandra-schema-setup
+      name: cadence-cassandra-schema-setup
+    spec:
+      activeDeadlineSeconds: 600
+      backoffLimit: 6
+      completions: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - name: cadence-cassandra-schema-setup
+              image: docker.io/ubercadence/server:0.7.3-auto-setup
+              env:
+                - name: CASSANDRA_SEEDS
+                  value: cassandra-db
+                - name: CASSANDRA_USER
+                  value: cassandra
+                - name: CASSANDRA_PASSWORD
+                  value: cassandra
+              command:
+                - bash
+                - '-c'
+                - |
+                  set -x
+                  echo "Started Running at $(date)"
+                  env | sort
+                  RF=2
+                  # cassandra env
+                  export KEYSPACE="${KEYSPACE:-cadence}"
+                  export VISIBILITY_KEYSPACE="${VISIBILITY_KEYSPACE:-cadence_visibility}"
+                  export CASSANDRA_PORT=9042
+                  export CASSANDRA_USER=cassandra
+                  export CASSANDRA_PASSWORD=cassandra
+
+                  server=`echo $CASSANDRA_SEEDS | awk -F ',' '{print $1}'`
+                  until cqlsh -u $CASSANDRA_USER -p $CASSANDRA_PASSWORD --cqlversion=3.4.4 $server < /dev/null; do
+                      echo 'waiting for cassandra to start up'
+                      sleep 1
+                  done
+                  echo 'cassandra started'
+
+                  SCHEMA_DIR=$CADENCE_HOME/schema/cassandra/cadence/versioned
+                  /usr/local/bin/cadence-cassandra-tool --ep $CASSANDRA_SEEDS create -k $KEYSPACE --rf $RF
+                  /usr/local/bin/cadence-cassandra-tool --ep $CASSANDRA_SEEDS -k $KEYSPACE setup-schema -v 0.0
+                  /usr/local/bin/cadence-cassandra-tool --ep $CASSANDRA_SEEDS -k $KEYSPACE update-schema -d $SCHEMA_DIR
+                  VISIBILITY_SCHEMA_DIR=$CADENCE_HOME/schema/cassandra/visibility/versioned
+                  /usr/local/bin/cadence-cassandra-tool --ep $CASSANDRA_SEEDS create -k $VISIBILITY_KEYSPACE --rf $RF
+                  /usr/local/bin/cadence-cassandra-tool --ep $CASSANDRA_SEEDS -k $VISIBILITY_KEYSPACE setup-schema -v 0.0
+                  /usr/local/bin/cadence-cassandra-tool --ep $CASSANDRA_SEEDS -k $VISIBILITY_KEYSPACE update-schema -d $VISIBILITY_SCHEMA_DIR
+                  echo 'cassandra schema for cadence ready'
+                  sleep 600
+          terminationGracePeriodSeconds: 30
+          restartPolicy: OnFailure
