@@ -7,10 +7,10 @@ resources:
         chart: cassandra-0.13.1
         heritage: Tiller
         release: cadence
-        name: cadence-domain-create-job
-      name: cadence-domain-create-job
+        name: cadence-setup-job
+      name: cadence-setup-job
     spec:
-      activeDeadlineSeconds: 120
+      activeDeadlineSeconds: 300
       backoffLimit: 6
       completions: 1
       parallelism: 1
@@ -22,14 +22,13 @@ resources:
                   value: cadence-frontend:7933
                 - name: CADENCE_CLI_DOMAIN
                   value: megneto
-              image: docker.io/ubercadence/cli:0.7.3
-              name: cadence-domain-create-job
+              image: docker.io/ubercadence/cli:0.7.0
+              name: cadence-setup-job
               command:
                 - sh
                 - '-c'
                 - |
                   #!/bin/bash -ex
-                  ./cadence --domain=magneto domain register --global_domain false
-                  ./cadence --help
+                  cadence --domain=magneto domain register --global_domain false
           terminationGracePeriodSeconds: 30
           restartPolicy: OnFailure

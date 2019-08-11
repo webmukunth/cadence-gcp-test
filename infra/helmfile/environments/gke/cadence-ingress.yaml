@@ -12,10 +12,10 @@ resources:
       name: cadence-web
     spec:
       rules:
-        - host: traefik.gke
+        - host: cadence.gke
           http:
             paths:
-              - path: /cadence
+              - path: /
                 backend:
                   serviceName: cadence-web
                   servicePort: 80
