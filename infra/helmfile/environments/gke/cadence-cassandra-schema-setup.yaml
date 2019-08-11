@@ -57,6 +57,5 @@ resources:
                   /usr/local/bin/cadence-cassandra-tool --ep $CASSANDRA_SEEDS -k $VISIBILITY_KEYSPACE setup-schema -v 0.0
                   /usr/local/bin/cadence-cassandra-tool --ep $CASSANDRA_SEEDS -k $VISIBILITY_KEYSPACE update-schema -d $VISIBILITY_SCHEMA_DIR
                   echo 'cassandra schema for cadence ready'
-                  sleep 600
           terminationGracePeriodSeconds: 30
           restartPolicy: OnFailure
