@@ -1,0 +1,34 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 300
+  force: true
+
+releases:
+  - name: cadence
+    chart: ../charts/cadence
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      component: workflow
+      package-manager: helmfile
+      chart: cadence
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+  - name: cadence-svc
+    chart: incubator/raw
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      component: monitoring
+      package-manager: helmfile
+      chart: cadence-svc
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+environments:
+  default: {}
+  gke: {}

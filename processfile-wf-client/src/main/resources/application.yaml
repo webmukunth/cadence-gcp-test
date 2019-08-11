@@ -12,11 +12,9 @@ opentracing:
     tags:
       custom-tag: val1
   spring:
-    web:
-      enabled: false
     cloud:
       async:
-        enabled: false
+        enabled: true
 management:
   metrics:
     export:

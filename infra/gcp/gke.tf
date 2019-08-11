@@ -121,16 +121,19 @@ resource "google_container_node_pool" "gke-np" {
 
   autoscaling {
     min_node_count = "1"
-    max_node_count = "3"
+    max_node_count = "5"
   }
 
   node_config {
     preemptible  = true
     machine_type = "n1-standard-2"
+    disk_size_gb = 100
+    #disk_type    = "pd-ssd"
 
     metadata = {
       disable-legacy-endpoints = "true"
     }
+
     oauth_scopes = [
       "logging-write",
       "monitoring",
@@ -142,5 +145,30 @@ resource "google_container_node_pool" "gke-np" {
     create = "15m"
     update = "15m"
     delete = "15m"
+  }
+}
+
+data "google_client_config" "current" {}
+
+provider "kubernetes" {
+  load_config_file       = false
+  host                   = "https://${google_container_cluster.gke.endpoint}"
+  cluster_ca_certificate = "${base64decode(google_container_cluster.gke.master_auth[0].cluster_ca_certificate)}"
+  token                  = "${data.google_client_config.current.access_token}"
+}
+
+resource "kubernetes_cluster_role_binding" "make-me-admin" {
+  metadata {
+    name = "owner-gke-admin"
+  }
+  role_ref {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "ClusterRole"
+    name      = "cluster-admin"
+  }
+  subject {
+    api_group = "rbac.authorization.k8s.io"
+    kind      = "User"
+    name      = "nataram767579@gmail.com"
   }
 }

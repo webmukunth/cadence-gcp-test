@@ -1,0 +1,22 @@
+helmDefaults:
+  tillerNamespace: kube-system
+  tillerless: true
+  timeout: 300
+  force: true
+
+releases:
+  - name: traefik
+    chart: stable/traefik
+    wait: true
+    installed: {{ eq .Environment.Name "gke" }}
+    namespace: kube-system
+    labels:
+      package-manager: helmfile
+      component: infra
+      app: traefik
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+environments:
+  default: {}
+  gke: {}

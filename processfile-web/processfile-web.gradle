@@ -2,5 +2,4 @@ description = "Process file workflow web endpoint"
 
 dependencies {
     implementation project(":processfile-api")
-    implementation 'org.springframework.boot:spring-boot-starter-web'
 }

@@ -1,0 +1,83 @@
+resources:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: cadence
+        release: prometheus-operator
+      name: cadence-metric
+    spec:
+      type: ClusterIP
+      clusterIP: None
+      ports:
+        - name: frontend-metrics
+          port: 8000
+          protocol: TCP
+          targetPort: 8000
+        - name: matching-metrics
+          port: 8001
+          protocol: TCP
+          targetPort: 8001
+        - name: history-metrics
+          port: 8002
+          protocol: TCP
+          targetPort: 8002
+        - name: worker-metrics
+          port: 8003
+          protocol: TCP
+          targetPort: 8003
+      selector:
+        app.kubernetes.io/instance: cadence
+        app.kubernetes.io/name: cadence
+
+  - apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      labels:
+        app: cadence
+        release: prometheus-operator
+      name: cadence
+    spec:
+      endpoints:
+        - port: frontend-metrics
+          scheme: http
+          path: /metrics
+        - port: matching-metrics
+          scheme: http
+          path: /metrics
+        - port: history-metrics
+          scheme: http
+          path: /metrics
+        - port: worker-metrics
+          scheme: http
+          path: /metrics
+      jobLabel: cadence
+      namespaceSelector:
+        matchNames:
+          - default
+      selector:
+        matchLabels:
+          release: prometheus-operator
+          app: cadence
+
+  - apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      labels:
+        app: cassandra
+        release: prometheus-operator
+      name: cassandra
+    spec:
+      endpoints:
+        - port: metrics
+          scheme: http
+          path: /metrics
+      jobLabel: cassandra
+      namespaceSelector:
+        matchNames:
+          - default
+      selector:
+        matchLabels:
+          release: cadence
+          app: cassandra
+          name: cadence-cassandra-svc

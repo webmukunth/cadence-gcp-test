@@ -1,0 +1,22 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 300
+  force: true
+
+releases:
+  - name: prometheus-service-monitor
+    chart: incubator/raw
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      component: monitoring
+      package-manager: helmfile
+      chart: prometheus-service-monitor
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+environments:
+  default: {}
+  gke: {}

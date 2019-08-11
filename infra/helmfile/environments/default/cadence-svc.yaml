@@ -1,0 +1,135 @@
+resources:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      labels:
+        app: cassandra
+        chart: cassandra-0.13.1
+        heritage: Tiller
+        release: cadence
+        name: cadence-domain-create-job
+      name: cadence-domain-create-job
+    spec:
+      activeDeadlineSeconds: 120
+      backoffLimit: 6
+      completions: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - env:
+                - name: CADENCE_CLI_ADDRESS
+                  value: cadence-frontend:7933
+                - name: CADENCE_CLI_DOMAIN
+                  value: megneto
+              image: docker.io/ubercadence/cli:0.6.4
+              name: cadence-domain-create-job
+              command:
+                - sh
+                - '-c'
+                - |
+                  #!/bin/bash -ex
+                  ./cadence --domain=magneto domain register --global_domain false
+                  ./cadence --help
+          terminationGracePeriodSeconds: 30
+          restartPolicy: OnFailure
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: cassandra
+        chart: cassandra-0.13.1
+        heritage: Tiller
+        release: cadence
+        name: cadence-cassandra-exp
+      name: cadence-cassandra-exp
+    spec:
+      ports:
+        - name: intra
+          port: 7000
+          protocol: TCP
+          targetPort: 7000
+        - name: tls
+          port: 7001
+          protocol: TCP
+          targetPort: 7001
+        - name: jmx
+          port: 7199
+          protocol: TCP
+          targetPort: 7199
+        - name: cql
+          port: 9042
+          protocol: TCP
+          targetPort: 9042
+        - name: thrift
+          port: 9160
+          protocol: TCP
+          targetPort: 9160
+      selector:
+        app: cassandra
+        release: cadence
+      sessionAffinity: None
+      type: LoadBalancer
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      labels:
+        app: cassandra
+        chart: cassandra-0.13.1
+        heritage: Tiller
+        release: cadence
+        name: cadence-cassandra-svc
+      name: cadence-cassandra-svc
+    spec:
+      ports:
+        - name: intra
+          port: 7000
+          protocol: TCP
+          targetPort: 7000
+        - name: tls
+          port: 7001
+          protocol: TCP
+          targetPort: 7001
+        - name: jmx
+          port: 7199
+          protocol: TCP
+          targetPort: 7199
+        - name: cql
+          port: 9042
+          protocol: TCP
+          targetPort: 9042
+        - name: thrift
+          port: 9160
+          protocol: TCP
+          targetPort: 9160
+        - name: metrics
+          port: 5556
+          protocol: TCP
+          targetPort: 5556
+      selector:
+        app: cassandra
+        release: cadence
+      sessionAffinity: None
+      type: ClusterIP
+
+  - apiVersion: extensions/v1beta1
+    kind: Ingress
+    metadata:
+      annotations:
+        kubernetes.io/ingress.class: traefik
+      labels:
+        app.kubernetes.io/instance: cadence
+        app.kubernetes.io/managed-by: Tiller
+        app.kubernetes.io/name: cadence-web
+        helm.sh/chart: cadence-0.2.0
+      name: cadence-web
+    spec:
+      rules:
+        - host: cadence.k3s.local
+          http:
+            paths:
+              - backend:
+                  serviceName: cadence-web
+                  servicePort: 80
+                path: /

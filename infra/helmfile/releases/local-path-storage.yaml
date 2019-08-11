@@ -1,0 +1,23 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 300
+  force: true
+  recreatePods: true
+
+releases:
+  - name: local-path-storage
+    chart: incubator/raw
+    installed: {{ eq .Environment.Name "default" }}
+    namespace: default
+    wait: true
+    labels:
+      component: monitoring
+      package-manager: helmfile
+      chart: local-path-storage
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.gotmpl
+
+environments:
+  default: {}
+  gke: {}
