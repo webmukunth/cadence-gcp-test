@@ -6,7 +6,7 @@ SHELL:=bash
 all: plan
 
 init:
-	terraform init -input=false -reconfigure -no-color -upgrade=true
+	terraform init -input=false -reconfigure -no-color 
 
 get: init
 	terraform get -update -no-color
@@ -27,3 +27,7 @@ destroy: init
 
 show: init
 	terraform show
+
+upgrade:
+	terraform init -input=false -reconfigure -no-color -upgrade=true
+

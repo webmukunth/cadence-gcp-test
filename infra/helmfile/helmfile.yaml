@@ -1,5 +1,5 @@
 helmDefaults:
-  timeout: 1200
+  timeout: 1800
   wait: true
 
 repositories:
@@ -9,10 +9,13 @@ repositories:
     url: https://kubernetes-charts-incubator.storage.googleapis.com
   - name: banzaicloud-stable
     url: https://kubernetes-charts.banzaicloud.com
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
 
 helmfiles:
   - releases/local-path-storage.yaml
   - releases/traefik.yaml
+  - releases/cassandra.yaml
 #  - releases/cadence.yaml
 #  - releases/jaeger.yaml
 #  - releases/prometheus-operator.yaml

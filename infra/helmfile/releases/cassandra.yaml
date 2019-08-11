@@ -1,0 +1,22 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 900
+  force: true
+
+releases:
+  - name: cassandra
+    chart: bitnami/cassandra
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: database
+      app: cassandra
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+environments:
+  default: {}
+  gke: {}
