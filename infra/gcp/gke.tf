@@ -42,7 +42,7 @@ resource "google_container_cluster" "gke" {
 
   network_policy {
     # Enable network policy.  A default deny all policy is then configured as a local exec below
-    enabled = true
+    enabled = false
   }
 
   addons_config {
