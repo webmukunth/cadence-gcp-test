@@ -4,6 +4,7 @@ kind: Service
 metadata:
   name: {{ include "cadence.fullname" . }}-frontend
   labels:
+    cadence-service: frontend
     app.kubernetes.io/name: {{ include "cadence.name" . }}
     helm.sh/chart: {{ include "cadence.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -15,6 +16,10 @@ spec:
       targetPort: {{ .Values.server.frontend.service.port }}
       protocol: TCP
       name: frontend
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: frontend-metrics
   selector:
     app.kubernetes.io/name: {{ include "cadence.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -28,6 +33,7 @@ kind: Service
 metadata:
   name: {{ include "cadence.fullname" . }}-matching
   labels:
+    cadence-service: matching
     app.kubernetes.io/name: {{ include "cadence.name" . }}
     helm.sh/chart: {{ include "cadence.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -39,6 +45,10 @@ spec:
       targetPort: {{ .Values.server.matching.service.port }}
       protocol: TCP
       name: matching
+    - port: 8001
+      targetPort: 8001
+      protocol: TCP
+      name: matching-metrics
   selector:
     app.kubernetes.io/name: {{ include "cadence.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -52,6 +62,7 @@ kind: Service
 metadata:
   name: {{ include "cadence.fullname" . }}-history
   labels:
+    cadence-service: history
     app.kubernetes.io/name: {{ include "cadence.name" . }}
     helm.sh/chart: {{ include "cadence.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -63,6 +74,10 @@ spec:
       targetPort: {{ .Values.server.history.service.port }}
       protocol: TCP
       name: history
+    - port: 8002
+      targetPort: 8002
+      protocol: TCP
+      name: history-metrics
   selector:
     app.kubernetes.io/name: {{ include "cadence.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -76,6 +91,7 @@ kind: Service
 metadata:
   name: {{ include "cadence.fullname" . }}-worker
   labels:
+    cadence-service: worker
     app.kubernetes.io/name: {{ include "cadence.name" . }}
     helm.sh/chart: {{ include "cadence.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
@@ -87,6 +103,10 @@ spec:
       targetPort: {{ .Values.server.worker.service.port }}
       protocol: TCP
       name: worker
+    - port: 8003
+      targetPort: 8003
+      protocol: TCP
+      name: worker-metrics
   selector:
     app.kubernetes.io/name: {{ include "cadence.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}

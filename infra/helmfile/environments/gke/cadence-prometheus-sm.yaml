@@ -1,0 +1,76 @@
+resources:
+  - apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      labels:
+        service: cadence-frontend
+      name: cadence-frontend
+    spec:
+      endpoints:
+        - port: frontend-metrics
+          scheme: http
+          path: /metrics
+      jobLabel: cadence
+      namespaceSelector:
+        matchNames:
+          - default
+      selector:
+        matchLabels:
+          cadence-service: frontend
+
+  - apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      labels:
+        service: cadence-matching
+      name: cadence-matching
+    spec:
+      endpoints:
+        - port: matching-metrics
+          scheme: http
+          path: /metrics
+      jobLabel: cadence
+      namespaceSelector:
+        matchNames:
+          - default
+      selector:
+        matchLabels:
+          cadence-service: matching
+
+  - apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      labels:
+        service: cadence-history
+      name: cadence-history
+    spec:
+      endpoints:
+        - port: history-metrics
+          scheme: http
+          path: /metrics
+      jobLabel: cadence
+      namespaceSelector:
+        matchNames:
+          - default
+      selector:
+        matchLabels:
+          cadence-service: history
+          
+  - apiVersion: monitoring.coreos.com/v1
+    kind: ServiceMonitor
+    metadata:
+      labels:
+        service: cadence-worker
+      name: cadence-worker
+    spec:
+      endpoints:
+        - port: worker-metrics
+          scheme: http
+          path: /metrics
+      jobLabel: cadence
+      namespaceSelector:
+        matchNames:
+          - default
+      selector:
+        matchLabels:
+          cadence-service: worker
