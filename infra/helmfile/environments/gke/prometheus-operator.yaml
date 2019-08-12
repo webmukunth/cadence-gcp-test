@@ -1,4 +1,3 @@
-nameOverride: "prom"
 fullnameOverride: "prom"
 ## Create default rules for monitoring the cluster
 ##
@@ -24,6 +23,7 @@ defaultRules:
 alertmanager:
   enabled: false
 grafana:
+  fullnameOverride: "grafana"
   enabled: true
   adminPassword: admin
   ingress:
