@@ -29,7 +29,7 @@ grafana:
   ingress:
     enabled: true
     hosts:
-    - grafana.local
+    - grafana.gke
     annotations:
       kubernetes.io/ingress.class: traefik
     path: /
@@ -91,16 +91,22 @@ prometheusOperator:
     enabled: false
   serviceMonitor:
     interval: 15s
+
 prometheus:
   enabled: true
   ingress:
     enabled: true
     hosts:
-      - prometheus.local
+      - prometheus.gke
     annotations:
       kubernetes.io/ingress.class: traefik
     path: /
   prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    serviceMonitorSelector: {}
+    serviceMonitorNamespaceSelector:
+      matchNames:
+        - default
     scrapeInterval: 15s
     image:
       repository: quay.io/prometheus/prometheus
@@ -111,4 +117,4 @@ prometheus:
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
-              storage: 1Gi
+              storage: 16Gi

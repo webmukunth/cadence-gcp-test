@@ -7,9 +7,9 @@ provider "google-beta" {
 }
 
 locals {
-  project  = "cyanotype-508f8d"
+  project  = "phonomania-fd0bb0"
   gke-name = "magneto-gke"
-  location = "us-central1-c"
+  location = "us-west2-b"
 }
 
 data "google_container_engine_versions" "gke-version" {
@@ -117,7 +117,7 @@ resource "google_container_node_pool" "gke-np" {
     auto_upgrade = "true"
   }
 
-  initial_node_count = "1"
+  initial_node_count = "3"
 
   autoscaling {
     min_node_count = "1"
@@ -126,9 +126,9 @@ resource "google_container_node_pool" "gke-np" {
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-2"
+    machine_type = "n1-standard-4"
     disk_size_gb = 100
-    #disk_type    = "pd-ssd"
+    disk_type    = "pd-ssd"
 
     metadata = {
       disable-legacy-endpoints = "true"

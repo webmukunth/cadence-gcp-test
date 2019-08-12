@@ -99,7 +99,7 @@ persistence:
     - ReadWriteOnce
   ## Persistent Volume size
   ##
-  size: 8Gi
+  size: 16Gi
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -202,7 +202,24 @@ securityContext:
 ## Affinity for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
-affinity: {}
+affinity:
+  podAntiAffinity:
+    # Use pod anti-affinity to force the scheduler to not deploy two
+    # Cassandra pod on the same node.
+    #
+    # This is using pod anti-affinity to ensure that the scheduler tries
+    # it best to spread pods
+    # see https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#inter-pod-affinity-and-anti-affinity-beta-feature)
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - cassandra
+          topologyKey: kubernetes.io/hostname
 
 ## Tolerations for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/

@@ -20,7 +20,7 @@ plan: validate
 
 apply: 
 	terraform apply -no-color -lock=true -lock-timeout=5s terraform.plan
-	gcloud container clusters get-credentials magneto-gke --zone us-central1-c
+	gcloud container clusters get-credentials magneto-gke --zone us-west2-b
 
 destroy: init
 	terraform destroy -no-color -lock=true -lock-timeout=5s -auto-approve

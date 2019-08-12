@@ -15,7 +15,7 @@ set -x
 gcloud projects create ${PROJECT_ID} --name $PROJECT_NAME
 
 PREV_PROJECT_NAME=$(gcloud config get-value project  2>/dev/null)
-gcloud config set project $PROJECT_NAME
+gcloud config set project $PROJECT_ID
 
 # Billing
 gcloud beta billing projects link $PROJECT_ID \
