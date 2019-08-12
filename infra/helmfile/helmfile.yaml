@@ -17,8 +17,8 @@ helmfiles:
   - releases/traefik.yaml
   - releases/cassandra-db.yaml
   - releases/cadence.yaml
+  - releases/jaeger.yaml
   - releases/prometheus-operator.yaml
-#  - releases/jaeger.yaml
 #  - releases/prometheus-service-monitor.yaml
 #  - releases/prometheus-pushgateway.yaml
 

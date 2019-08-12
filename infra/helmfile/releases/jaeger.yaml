@@ -7,32 +7,14 @@ helmDefaults:
 
 releases:
   - name: jaeger
-    chart: incubator/raw
+    chart: incubator/jaeger
     wait: true
     installed: true
     namespace: default
     labels:
-      component: monitoring
       package-manager: helmfile
+      component: monitoring
       chart: jaeger
-    hooks:
-      - events: ["presync", "prepare"]
-        command: "/bin/bash"
-        args:
-          - -c
-          - |
-            set -exuo pipefail
-            for File in crds/jaegertracing_v1_jaeger_crd.yaml \
-                        service_account.yaml \
-                        role.yaml \
-                        role_binding.yaml \
-                        role_binding.yaml \
-                        operator.yaml; do
-              echo "Installing $File to {{ .Environment.Values.helmfile_namespace  }}"
-              curl -ksSL https://raw.githubusercontent.com/jaegertracing/jaeger-operator/master/deploy/$File \
-                | sed "s/namespace: observability/namespace: default/" \
-                | kubectl apply -f -
-            done
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
