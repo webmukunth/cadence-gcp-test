@@ -130,7 +130,7 @@ cluster:
   datacenter: dc1
   rack: rack1
   enableRPC: true
-  endpointSnitch: SimpleSnitch
+  endpointSnitch: GossipingPropertyFileSnitch
   minimumAvailable: 2
   ## Encryption values. NOTE: They require tlsEncryptionSecretName
   internodeEncryption: none
