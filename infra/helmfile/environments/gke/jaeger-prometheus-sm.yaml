@@ -25,13 +25,13 @@ resources:
     kind: ServiceMonitor
     metadata:
       labels:
-        app: jaeger-agent-metrics
-      name: jaeger-agent-metrics
+        app: jaeger-agent
+      name: jaeger-agent
     spec:
       endpoints:
         - port: metrics
           scheme: http
-          path: /
+          path: /metrics
       jobLabel: jaeger-agent
       namespaceSelector:
         matchNames:
@@ -66,13 +66,13 @@ resources:
     kind: ServiceMonitor
     metadata:
       labels:
-        app: jaeger-collector-metrics
-      name: jaeger-collector-metrics
+        app: jaeger-collector
+      name: jaeger-collector
     spec:
       endpoints:
         - port: metrics
           scheme: http
-          path: /
+          path: /metrics
       jobLabel: jaeger-collector
       namespaceSelector:
         matchNames:
@@ -95,9 +95,9 @@ resources:
     spec:
       ports:
         - name: metrics
-          port: 14269
+          port: 16687
           protocol: TCP
-          targetPort: 14269
+          targetPort: 16687
       selector:
         app.kubernetes.io/component: query
         app.kubernetes.io/instance: jaeger
@@ -107,13 +107,13 @@ resources:
     kind: ServiceMonitor
     metadata:
       labels:
-        app: jaeger-query-metrics
-      name: jaeger-query-metrics
+        app: jaeger-query
+      name: jaeger-query
     spec:
       endpoints:
         - port: metrics
           scheme: http
-          path: /
+          path: /metrics
       jobLabel: jaeger-query
       namespaceSelector:
         matchNames:
