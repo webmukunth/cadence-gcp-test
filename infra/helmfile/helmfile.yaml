@@ -19,8 +19,6 @@ helmfiles:
   - releases/jaeger.yaml
   - releases/cassandra-db.yaml
   - releases/cadence.yaml
-#  - releases/prometheus-service-monitor.yaml
-#  - releases/prometheus-pushgateway.yaml
 
 environments:
   defaults: {}
