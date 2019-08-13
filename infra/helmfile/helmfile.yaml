@@ -19,6 +19,7 @@ helmfiles:
   - releases/prometheus-operator.yaml
   - releases/jaeger.yaml
   - releases/cadence.yaml
+  - releases/magneto.yaml
 
 environments:
   defaults: {}

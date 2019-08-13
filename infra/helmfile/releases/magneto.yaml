@@ -1,0 +1,35 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 300
+  force: true
+  recreatePods: true
+
+releases:
+  - name: processfile-wf-client
+    chart: ../charts/magneto-sb-app
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: processfile-wf-client
+      chart: magneto-sb-app
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+  - name: processfile-web
+    chart: ../charts/magneto-sb-app
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: processfile-wf-client
+      chart: magneto-sb-app
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+environments:
+  default: {}
+  gke: {}

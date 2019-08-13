@@ -1,4 +1,3 @@
-import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'base'
     id 'idea'
@@ -14,11 +13,13 @@ ext {
     springCloudVersion = 'Greenwich.SR2'
     javaSpringJaegerVersion = '2.0.0'
     micrometerPrometheusVersion = '1.2.0'
-    prometheusPushGatewayVersion = '0.6.0'
     uberCadenceClientVersion = '2.5.2'
     lombokVersion = '1.18.8'
     errorProneVersion = 'latest.release'
+    imageRepo = "gcr.io/phonomania-fd0bb0"
 }
+
+imageRepo += imageRepo != "" ? "/" : ""
 
 /* Common configuration for all sub projects */
 subprojects {
@@ -93,7 +94,6 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
         /* Observability stack */
         implementation "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:${javaSpringJaegerVersion}"
         implementation "io.micrometer:micrometer-registry-prometheus:${micrometerPrometheusVersion}"
-        implementation "io.prometheus:simpleclient_pushgateway:${prometheusPushGatewayVersion}"
     }
 
     dependencyManagement {
@@ -108,11 +108,11 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
 
     jib {
         from {
-            image = "gcr.io/distroless/java:11-debug"
+            image = "gcr.io/distroless/java:11"
         }
-
         to {
-            image = "magneto/${project.name}:${version}"
+            image = "${imageRepo}magneto/${project.name}:${version}"
+            credHelper = 'gcr'
         }
     }
 }

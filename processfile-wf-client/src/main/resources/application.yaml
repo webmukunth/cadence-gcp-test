@@ -16,15 +16,17 @@ opentracing:
       async:
         enabled: true
 management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    prometheus:
+      enabled: true
   metrics:
     export:
       prometheus:
-        pushgateway:
-          enabled: true
-          base-url: pushgateway.local
-          push-rate: 15s
-          grouping-key:
-            wf: demo
+        enabled: true
 cadence:
   host: cadence
   port: 7933
