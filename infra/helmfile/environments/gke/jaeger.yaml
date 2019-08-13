@@ -75,7 +75,7 @@ elasticsearch:
       enabled: false
 
 agent:
-  enabled: true
+  enabled: false
   annotations: {}
   image: jaegertracing/jaeger-agent
   pullPolicy: IfNotPresent
@@ -158,7 +158,7 @@ collector:
 query:
   enabled: true
   agentSidecar:
-    enabled: true
+    enabled: false
   annotations: {}
   image: jaegertracing/jaeger-query
   pullPolicy: IfNotPresent

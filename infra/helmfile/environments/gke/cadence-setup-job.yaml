@@ -2,12 +2,6 @@ resources:
   - apiVersion: batch/v1
     kind: Job
     metadata:
-      labels:
-        app: cassandra
-        chart: cassandra-0.13.1
-        heritage: Tiller
-        release: cadence
-        name: cadence-setup-job
       name: cadence-setup-job
     spec:
       activeDeadlineSeconds: 300

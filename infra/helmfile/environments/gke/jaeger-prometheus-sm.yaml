@@ -3,53 +3,7 @@ resources:
     kind: Service
     metadata:
       labels:
-        app: jaeger-agent-metrics
-        app.kubernetes.io/component: agent
-        app.kubernetes.io/instance: jaeger
-        app.kubernetes.io/managed-by: Tiller
-        app.kubernetes.io/name: jaeger
-        helm.sh/chart: jaeger-0.13.0
-      name: jaeger-agent-metrics
-    spec:
-      ports:
-        - name: metrics
-          port: 14271
-          protocol: TCP
-          targetPort: 14271
-      selector:
-        app.kubernetes.io/component: agent
-        app.kubernetes.io/instance: jaeger
-        app.kubernetes.io/name: jaeger
-
-  - apiVersion: monitoring.coreos.com/v1
-    kind: ServiceMonitor
-    metadata:
-      labels:
-        app: jaeger-agent
-      name: jaeger-agent
-    spec:
-      endpoints:
-        - port: metrics
-          scheme: http
-          path: /metrics
-      jobLabel: jaeger-agent
-      namespaceSelector:
-        matchNames:
-          - default
-      selector:
-        matchLabels:
-          app: jaeger-agent-metrics
-
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      labels:
-        app: jaeger-collector-metrics
-        app.kubernetes.io/component: collector
-        app.kubernetes.io/instance: jaeger
-        app.kubernetes.io/managed-by: Tiller
-        app.kubernetes.io/name: jaeger
-        helm.sh/chart: jaeger-0.13.0
+        metrics-service: jaeger-collector
       name: jaeger-collector-metrics
     spec:
       ports:
@@ -65,8 +19,6 @@ resources:
   - apiVersion: monitoring.coreos.com/v1
     kind: ServiceMonitor
     metadata:
-      labels:
-        app: jaeger-collector
       name: jaeger-collector
     spec:
       endpoints:
@@ -79,18 +31,13 @@ resources:
           - default
       selector:
         matchLabels:
-          app: jaeger-collector-metrics
+          metrics-service: jaeger-collector
 
   - apiVersion: v1
     kind: Service
     metadata:
       labels:
-        app: jaeger-query-metrics
-        app.kubernetes.io/component: query
-        app.kubernetes.io/instance: jaeger
-        app.kubernetes.io/managed-by: Tiller
-        app.kubernetes.io/name: jaeger
-        helm.sh/chart: jaeger-0.13.0
+        metrics-service: jaeger-query
       name: jaeger-query-metrics
     spec:
       ports:
@@ -106,8 +53,6 @@ resources:
   - apiVersion: monitoring.coreos.com/v1
     kind: ServiceMonitor
     metadata:
-      labels:
-        app: jaeger-query
       name: jaeger-query
     spec:
       endpoints:
@@ -120,4 +65,4 @@ resources:
           - default
       selector:
         matchLabels:
-          app: jaeger-query-metrics
+          metrics-service: jaeger-query

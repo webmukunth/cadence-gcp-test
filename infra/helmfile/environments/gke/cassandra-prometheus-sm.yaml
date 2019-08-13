@@ -3,10 +3,7 @@ resources:
     kind: Service
     metadata:
       labels:
-        app: cassandra-metrics
-        chart: cassandra-3.1.1
-        heritage: Tiller
-        release: cassandra-db
+        metrics-service: cassandra
       name: cassandra-metrics
     spec:
       ports:
@@ -37,5 +34,5 @@ resources:
           - default
       selector:
         matchLabels:
-          app: cassandra-metrics
+          metrics-service: cassandra
 
