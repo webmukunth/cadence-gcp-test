@@ -10,7 +10,8 @@ opentracing:
       url: http://jaeger-collector.local/api/traces
     enable-b3-propagation: true
     tags:
-      api: submitfile
+      component: ${projectName}
+    service-name: magneto
   spring:
     cloud:
       async:

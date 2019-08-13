@@ -45,15 +45,31 @@ grafana:
   additionalDataSources: []
   serviceMonitor:
     selfMonitor: true
+  dashboardProviders:
+    dashboardproviders.yaml:
+      apiVersion: 1
+      providers:
+      - name: 'default'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/default
+      - name: 'local'
+        orgId: 1
+        folder: ''
+        type: file
+        disableDeletion: false
+        editable: true
+        options:
+          path: /var/lib/grafana/dashboards/local
   dashboards:
     default:
        cassandra:
          gnetId: 6258
          revision: 3
-         datasource: Prometheus
-       cadence:
-         gnetId: 10373
-         revision: 1
          datasource: Prometheus
        jvm-micrometer:
          gnetId: 4701
