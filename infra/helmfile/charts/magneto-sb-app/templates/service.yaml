@@ -4,6 +4,10 @@ metadata:
   name: {{ include "magneto-sb-app.fullname" . }}
   labels:
 {{ include "magneto-sb-app.labels" . | indent 4 }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: {{ .Values.service.port | quote }}
+    prometheus.io/path: "/actuator/prometheus"
 spec:
   type: {{ .Values.service.type }}
   ports:

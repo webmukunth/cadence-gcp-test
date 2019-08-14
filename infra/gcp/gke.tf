@@ -9,7 +9,7 @@ provider "google-beta" {
 locals {
   project  = "phonomania-fd0bb0"
   gke-name = "magneto-gke"
-  location = "us-west2-b"
+  location = "us-west2-c"
 }
 
 data "google_container_engine_versions" "gke-version" {

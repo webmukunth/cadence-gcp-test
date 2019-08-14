@@ -9,6 +9,10 @@ metadata:
     helm.sh/chart: {{ include "cadence.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
 spec:
   type: {{ .Values.server.frontend.service.type }}
   ports:
@@ -38,6 +42,10 @@ metadata:
     helm.sh/chart: {{ include "cadence.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8001"
+    prometheus.io/path: "/metrics"
 spec:
   type: {{ .Values.server.matching.service.type }}
   ports:
@@ -67,6 +75,10 @@ metadata:
     helm.sh/chart: {{ include "cadence.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8002"
+    prometheus.io/path: "/metrics"
 spec:
   type: {{ .Values.server.history.service.type }}
   ports:
@@ -96,6 +108,10 @@ metadata:
     helm.sh/chart: {{ include "cadence.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8003"
+    prometheus.io/path: "/metrics"
 spec:
   type: {{ .Values.server.worker.service.type }}
   ports:

@@ -17,18 +17,6 @@ releases:
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
-  - name: cassandra-prometheus-sm
-    chart: incubator/raw
-    wait: true
-    installed: true
-    namespace: default
-    labels:
-      package-manager: helmfile
-      component: workflow
-      chart: cassandra-prometheus-sm
-    values:
-      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
-
 environments:
   default: {}
   gke: {}

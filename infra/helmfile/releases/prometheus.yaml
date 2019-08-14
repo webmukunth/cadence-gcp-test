@@ -1,0 +1,38 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 300
+  force: true
+  recreatePods: true
+
+releases:
+  - name: prometheus
+    chart: stable/prometheus
+    installed: true
+    namespace: default
+    wait: true
+    labels:
+      component: monitoring
+      package-manager: helmfile
+      chart: prometheus
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+  - name: grafana
+    chart: stable/grafana
+    installed: true
+    namespace: default
+    wait: true
+    labels:
+      component: monitoring
+      package-manager: helmfile
+      chart: grafana
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+    set:
+      - name: dashboards.default.cadence.json
+        file: ../dashboards/cadence.json
+
+environments:
+  default: {}
+  gke: {}

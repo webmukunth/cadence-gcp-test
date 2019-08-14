@@ -122,7 +122,10 @@ collector:
   cmdlineParams: {}
   replicaCount: 1
   service:
-    annotations: {}
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "14269"
+      prometheus.io/path: "/metrics"
     # List of IP ranges that are allowed to access the load balancer (if supported)
     loadBalancerSourceRanges: []
     type: ClusterIP
@@ -166,7 +169,10 @@ query:
   cmdlineParams: {}
   replicaCount: 1
   service:
-    annotations: {}
+    annotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "16687"
+      prometheus.io/path: "/metrics"
     type: ClusterIP
     # List of IP ranges that are allowed to access the load balancer (if supported)
     loadBalancerSourceRanges: []
