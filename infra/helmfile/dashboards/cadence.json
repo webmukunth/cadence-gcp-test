@@ -16,8 +16,7 @@
   "editable": true,
   "gnetId": 10373,
   "graphTooltip": 0,
-  "id": 12,
-  "iteration": 1565702189172,
+  "iteration": 1565761627688,
   "links": [],
   "panels": [
     {
@@ -26,6 +25,7 @@
       "dashLength": 10,
       "dashes": false,
       "fill": 1,
+      "fillGradient": 0,
       "gridPos": {
         "h": 8,
         "w": 24,
@@ -48,7 +48,9 @@
       "linewidth": 1,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 2,
       "points": false,
@@ -68,15 +70,15 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "rate(cadence_workflow_endtoend_latency_seconds_sum[3m])",
+          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_sum[3m]))",
           "format": "time_series",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "E2E Latency",
+          "legendFormat": "E2E Sum",
           "refId": "A"
         },
         {
-          "expr": "rate(cadence_workflow_endtoend_latency_seconds_max[3m])",
+          "expr": "max(rate(cadence_workflow_endtoend_latency_seconds_max[3m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -84,7 +86,7 @@
           "refId": "B"
         },
         {
-          "expr": "rate(cadence_workflow_completed_total[3m])",
+          "expr": "sum(rate(cadence_workflow_completed_total[3m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Completed Count",
@@ -148,6 +150,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -169,7 +172,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -245,6 +250,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -267,7 +273,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -348,6 +356,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -369,7 +378,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -519,6 +530,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -540,7 +552,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -1247,8 +1261,8 @@
       }
     }
   ],
-  "refresh": false,
-  "schemaVersion": 18,
+  "refresh": "5s",
+  "schemaVersion": 19,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -1290,7 +1304,7 @@
     ]
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -1322,5 +1336,5 @@
   "timezone": "browser",
   "title": "Cadence frontend",
   "uid": "000058219",
-  "version": 2
+  "version": 1
 }

@@ -45,7 +45,10 @@ public class CadenceAutoConfiguration {
   @Bean
   @ConditionalOnMissingBean
   public TraceUtil traceUtil(Tracer tracer, MeterRegistry registry) {
-    return new TraceUtil(tracer, registry);
+    var ret = new TraceUtil(tracer, registry);
+    TraceUtil.setGlobalTraceUtil(ret);
+    log.info("Initialized traceUtil: {}", ret);
+    return ret;
   }
 
   @Bean

@@ -4,30 +4,40 @@ import com.uber.cadence.WorkflowExecution;
 import com.uber.cadence.activity.Activity;
 import com.uber.cadence.activity.ActivityTask;
 import com.uber.cadence.internal.logging.LoggerTag;
+import com.uber.cadence.workflow.Workflow;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.MDC;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 @Slf4j
 public class TraceUtil {
 
+
+  // used by java objects managed by cadence workflow
+  private static TraceUtil globalTraceUtil = new TraceUtil();
+
   private final Tracer tracer;
   private final MeterRegistry registry;
+
+  private TraceUtil() {
+    tracer = null;
+    registry = null;
+  }
 
   public TraceUtil(Tracer tracer, MeterRegistry registry) {
     this.tracer = tracer;
     this.registry = registry;
   }
+
 
   private static void onError(Throwable throwable, Span span) {
     Tags.ERROR.set(span, Boolean.TRUE);
@@ -49,6 +59,14 @@ public class TraceUtil {
 
   public static String standardMetricName(String s) {
     return s.replaceAll("\\p{Punct}++", "_");
+  }
+
+  public static TraceUtil getGlobalTraceUtil() {
+    return globalTraceUtil;
+  }
+
+  public static void setGlobalTraceUtil(TraceUtil tracerUtil) {
+    globalTraceUtil = tracerUtil;
   }
 
   private Span getActiveSpan() {
@@ -90,7 +108,7 @@ public class TraceUtil {
     final var span = sb.start();
 
     try (Scope scope = tracer.activateSpan(span)) {
-      log.trace( "scope: {}", scope);
+      log.trace("scope: {}", scope);
       return callable.call();
     } catch (Exception ex) {
       log.error("Exception occurred", ex);
@@ -99,6 +117,11 @@ public class TraceUtil {
       throw Activity.wrap(ex);
     } finally {
       sample.stop(Timer.builder(standardMetricName(act))
+          .publishPercentiles(0.5, 0.8, 0.95, 0.99)
+          .publishPercentileHistogram()
+          .sla(Duration.ofMillis(100))
+          .minimumExpectedValue(Duration.ofMillis(1))
+          .maximumExpectedValue(Duration.ofSeconds(10))
           .tags("taskList", act.getTaskList())
           .tags("domain", act.getWorkflowDomain())
           .tags("exception", exceptionClass)
@@ -106,4 +129,56 @@ public class TraceUtil {
       span.finish();
     }
   }
+
+  public <T> T traceAndMeasureWorkflow(Callable<T> callable) {
+
+    if (tracer == null || registry == null) {
+      try {
+        return callable.call();
+      } catch (Exception e) {
+        throw new RuntimeException(e);
+      }
+    }
+
+    /* start timer */
+    final var sample = Timer.start(registry);
+    var exceptionClass = "none";
+
+    var workFlowType = MDC.get(LoggerTag.WORKFLOW_TYPE);
+
+    if (workFlowType == null) {
+      workFlowType = "Unknown";
+    }
+
+    /* start tracing */
+    final var sb = tracer.buildSpan(workFlowType)
+        .withTag(Tags.COMPONENT, "workflow")
+        .withTag(Tags.SPAN_KIND, Tags.SPAN_KIND_CLIENT);
+
+    /* Copy the MDC header key,value to span */
+    MDC.getCopyOfContextMap().forEach(sb::withTag);
+
+    final var span = sb.start();
+
+    try (Scope scope = tracer.activateSpan(span)) {
+      log.trace("scope: {}", scope);
+      return callable.call();
+    } catch (Exception ex) {
+      log.error("Exception occurred", ex);
+      exceptionClass = ex.getClass().getSimpleName();
+      onError(ex, span);
+      throw Workflow.wrap(ex);
+    } finally {
+      sample.stop(Timer.builder(standardMetricName(workFlowType))
+          .publishPercentiles(0.5, 0.8, 0.95, 0.99)
+          .publishPercentileHistogram()
+          .sla(Duration.ofMillis(100))
+          .minimumExpectedValue(Duration.ofMillis(1))
+          .maximumExpectedValue(Duration.ofSeconds(10))
+          .tags("exception", exceptionClass)
+          .register(registry));
+      span.finish();
+    }
+  }
+
 }
