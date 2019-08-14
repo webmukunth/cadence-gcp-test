@@ -63,7 +63,7 @@ public class CadenceAutoConfiguration {
     return registry -> {
       registry.config().commonTags(
           Tags.COMPONENT.getKey(), "cadence",
-          "clientApp", applicationName,
+          "application", applicationName,
           "clientDomain", Constants.DOMAIN,
           "clientInstance", Constants.INSTANCE_NAME
       );
@@ -74,7 +74,7 @@ public class CadenceAutoConfiguration {
   TracerBuilderCustomizer tracerBuilderCustomizer() {
     return builder -> builder.withTags(
         Map.of(
-            "clientApp", applicationName,
+            "application", applicationName,
             "clientDomain", Constants.DOMAIN,
             "clientInstance", Constants.INSTANCE_NAME
         )
