@@ -1,4 +1,3 @@
-
 package com.anz.magneto.model.payment;
 
 import java.math.BigDecimal;
@@ -6,13 +5,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Data;
 
 
 /**
  * <p>Java class for com.anz.From_Type complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="com.anz.From_Type">
  *   &lt;complexContent>
@@ -39,8 +39,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "com.anz.From_Type", propOrder = {
@@ -54,241 +52,34 @@ import javax.xml.bind.annotation.XmlType;
     "narrative",
     "pmtAuthMethod"
 })
+@Data
 public class ComAnzFromType {
 
-    @XmlElement(name = "AcctId")
-    protected String acctId;
-    @XmlElement(name = "AcctSys")
-    protected String acctSys;
-    @XmlElement(name = "AcctGrp")
-    protected String acctGrp;
-    @XmlElement(name = "Branch")
-    protected String branch;
-    @XmlElement(name = "CostCentre")
-    protected String costCentre;
-    @XmlElement(name = "Ccy")
-    protected String ccy;
-    @XmlElement(name = "Amt")
-    protected BigDecimal amt;
-    @XmlElement(name = "Narrative")
-    protected String narrative;
-    @XmlElement(name = "PmtAuthMethod")
-    protected String pmtAuthMethod;
+  @XmlElement(name = "AcctId")
+  protected String acctId;
 
-    /**
-     * Gets the value of the acctId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAcctId() {
-        return acctId;
-    }
+  @XmlElement(name = "AcctSys")
+  protected String acctSys;
 
-    /**
-     * Sets the value of the acctId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAcctId(String value) {
-        this.acctId = value;
-    }
+  @XmlElement(name = "AcctGrp")
+  protected String acctGrp;
 
-    /**
-     * Gets the value of the acctSys property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAcctSys() {
-        return acctSys;
-    }
+  @XmlElement(name = "Branch")
+  protected String branch;
 
-    /**
-     * Sets the value of the acctSys property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAcctSys(String value) {
-        this.acctSys = value;
-    }
+  @XmlElement(name = "CostCentre")
+  protected String costCentre;
 
-    /**
-     * Gets the value of the acctGrp property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAcctGrp() {
-        return acctGrp;
-    }
+  @XmlElement(name = "Ccy")
+  protected String ccy;
 
-    /**
-     * Sets the value of the acctGrp property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAcctGrp(String value) {
-        this.acctGrp = value;
-    }
+  @XmlElement(name = "Amt")
+  protected BigDecimal amt;
 
-    /**
-     * Gets the value of the branch property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getBranch() {
-        return branch;
-    }
+  @XmlElement(name = "Narrative")
+  protected String narrative;
 
-    /**
-     * Sets the value of the branch property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setBranch(String value) {
-        this.branch = value;
-    }
-
-    /**
-     * Gets the value of the costCentre property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCostCentre() {
-        return costCentre;
-    }
-
-    /**
-     * Sets the value of the costCentre property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCostCentre(String value) {
-        this.costCentre = value;
-    }
-
-    /**
-     * Gets the value of the ccy property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCcy() {
-        return ccy;
-    }
-
-    /**
-     * Sets the value of the ccy property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCcy(String value) {
-        this.ccy = value;
-    }
-
-    /**
-     * Gets the value of the amt property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public BigDecimal getAmt() {
-        return amt;
-    }
-
-    /**
-     * Sets the value of the amt property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public void setAmt(BigDecimal value) {
-        this.amt = value;
-    }
-
-    /**
-     * Gets the value of the narrative property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getNarrative() {
-        return narrative;
-    }
-
-    /**
-     * Sets the value of the narrative property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setNarrative(String value) {
-        this.narrative = value;
-    }
-
-    /**
-     * Gets the value of the pmtAuthMethod property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPmtAuthMethod() {
-        return pmtAuthMethod;
-    }
-
-    /**
-     * Sets the value of the pmtAuthMethod property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPmtAuthMethod(String value) {
-        this.pmtAuthMethod = value;
-    }
+  @XmlElement(name = "PmtAuthMethod")
+  protected String pmtAuthMethod;
 
 }

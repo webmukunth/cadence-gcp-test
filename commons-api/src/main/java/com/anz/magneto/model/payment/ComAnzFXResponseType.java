@@ -1,4 +1,3 @@
-
 package com.anz.magneto.model.payment;
 
 import java.math.BigDecimal;
@@ -6,13 +5,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Data;
 
 
 /**
  * <p>Java class for com.anz.FX_Response_Type complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="com.anz.FX_Response_Type">
  *   &lt;complexContent>
@@ -32,8 +32,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "com.anz.FX_Response_Type", propOrder = {
@@ -47,241 +45,34 @@ import javax.xml.bind.annotation.XmlType;
     "toAmount",
     "toCurCode"
 })
+@Data
 public class ComAnzFXResponseType {
 
-    @XmlElement(name = "ItemNo")
-    protected String itemNo;
-    @XmlElement(name = "ItemId")
-    protected String itemId;
-    @XmlElement(name = "DealId")
-    protected String dealId;
-    @XmlElement(name = "ExchRate")
-    protected BigDecimal exchRate;
-    @XmlElement(name = "Rate")
-    protected BigDecimal rate;
-    @XmlElement(name = "FromAmount")
-    protected BigDecimal fromAmount;
-    @XmlElement(name = "FromCurCode")
-    protected String fromCurCode;
-    @XmlElement(name = "ToAmount")
-    protected BigDecimal toAmount;
-    @XmlElement(name = "ToCurCode")
-    protected String toCurCode;
+  @XmlElement(name = "ItemNo")
+  protected String itemNo;
 
-    /**
-     * Gets the value of the itemNo property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getItemNo() {
-        return itemNo;
-    }
+  @XmlElement(name = "ItemId")
+  protected String itemId;
 
-    /**
-     * Sets the value of the itemNo property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setItemNo(String value) {
-        this.itemNo = value;
-    }
+  @XmlElement(name = "DealId")
+  protected String dealId;
 
-    /**
-     * Gets the value of the itemId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getItemId() {
-        return itemId;
-    }
+  @XmlElement(name = "ExchRate")
+  protected BigDecimal exchRate;
 
-    /**
-     * Sets the value of the itemId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setItemId(String value) {
-        this.itemId = value;
-    }
+  @XmlElement(name = "Rate")
+  protected BigDecimal rate;
 
-    /**
-     * Gets the value of the dealId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDealId() {
-        return dealId;
-    }
+  @XmlElement(name = "FromAmount")
+  protected BigDecimal fromAmount;
 
-    /**
-     * Sets the value of the dealId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDealId(String value) {
-        this.dealId = value;
-    }
+  @XmlElement(name = "FromCurCode")
+  protected String fromCurCode;
 
-    /**
-     * Gets the value of the exchRate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public BigDecimal getExchRate() {
-        return exchRate;
-    }
+  @XmlElement(name = "ToAmount")
+  protected BigDecimal toAmount;
 
-    /**
-     * Sets the value of the exchRate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public void setExchRate(BigDecimal value) {
-        this.exchRate = value;
-    }
-
-    /**
-     * Gets the value of the rate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public BigDecimal getRate() {
-        return rate;
-    }
-
-    /**
-     * Sets the value of the rate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public void setRate(BigDecimal value) {
-        this.rate = value;
-    }
-
-    /**
-     * Gets the value of the fromAmount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public BigDecimal getFromAmount() {
-        return fromAmount;
-    }
-
-    /**
-     * Sets the value of the fromAmount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public void setFromAmount(BigDecimal value) {
-        this.fromAmount = value;
-    }
-
-    /**
-     * Gets the value of the fromCurCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getFromCurCode() {
-        return fromCurCode;
-    }
-
-    /**
-     * Sets the value of the fromCurCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setFromCurCode(String value) {
-        this.fromCurCode = value;
-    }
-
-    /**
-     * Gets the value of the toAmount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public BigDecimal getToAmount() {
-        return toAmount;
-    }
-
-    /**
-     * Sets the value of the toAmount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public void setToAmount(BigDecimal value) {
-        this.toAmount = value;
-    }
-
-    /**
-     * Gets the value of the toCurCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getToCurCode() {
-        return toCurCode;
-    }
-
-    /**
-     * Sets the value of the toCurCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setToCurCode(String value) {
-        this.toCurCode = value;
-    }
+  @XmlElement(name = "ToCurCode")
+  protected String toCurCode;
 
 }

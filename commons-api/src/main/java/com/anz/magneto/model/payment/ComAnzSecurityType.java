@@ -1,17 +1,17 @@
-
 package com.anz.magneto.model.payment;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Data;
 
 
 /**
  * <p>Java class for com.anz.Security_Type complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="com.anz.Security_Type">
  *   &lt;complexContent>
@@ -39,8 +39,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "com.anz.Security_Type", propOrder = {
@@ -62,449 +60,57 @@ import javax.xml.bind.annotation.XmlType;
     "tgotmhIndicators",
     "modeofStepUpAuth"
 })
+@Data
 public class ComAnzSecurityType {
 
-    @XmlElement(name = "TerminalId")
-    protected String terminalId;
-    @XmlElement(name = "DeviceId")
-    protected String deviceId;
-    @XmlElement(name = "Authentication")
-    protected String authentication;
-    @XmlElement(name = "RiskAssessmentOutcome")
-    protected String riskAssessmentOutcome;
-    @XmlElement(name = "CustRespToRiskAssessment")
-    protected String custRespToRiskAssessment;
-    @XmlElement(name = "AuthorisersCnt")
-    protected Integer authorisersCnt;
-    @XmlElement(name = "SessionId")
-    protected String sessionId;
-    @XmlElement(name = "AuthenticationMethd")
-    protected String authenticationMethd;
-    @XmlElement(name = "ServiceRepresentativeId")
-    protected String serviceRepresentativeId;
-    @XmlElement(name = "MalwareRiskScore")
-    protected Integer malwareRiskScore;
-    @XmlElement(name = "MalwareID")
-    protected String malwareID;
-    @XmlElement(name = "CustomerThreatIndicator")
-    protected String customerThreatIndicator;
-    @XmlElement(name = "ClientName")
-    protected String clientName;
-    @XmlElement(name = "ShieldStatus")
-    protected String shieldStatus;
-    @XmlElement(name = "SMSStatus")
-    protected String smsStatus;
-    @XmlElement(name = "TGO-TMH-Indicators")
-    protected String tgotmhIndicators;
-    @XmlElement(name = "ModeofStepUpAuth")
-    protected String modeofStepUpAuth;
+  @XmlElement(name = "TerminalId")
+  protected String terminalId;
 
-    /**
-     * Gets the value of the terminalId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTerminalId() {
-        return terminalId;
-    }
+  @XmlElement(name = "DeviceId")
+  protected String deviceId;
 
-    /**
-     * Sets the value of the terminalId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTerminalId(String value) {
-        this.terminalId = value;
-    }
+  @XmlElement(name = "Authentication")
+  protected String authentication;
 
-    /**
-     * Gets the value of the deviceId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getDeviceId() {
-        return deviceId;
-    }
+  @XmlElement(name = "RiskAssessmentOutcome")
+  protected String riskAssessmentOutcome;
 
-    /**
-     * Sets the value of the deviceId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setDeviceId(String value) {
-        this.deviceId = value;
-    }
+  @XmlElement(name = "CustRespToRiskAssessment")
+  protected String custRespToRiskAssessment;
 
-    /**
-     * Gets the value of the authentication property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAuthentication() {
-        return authentication;
-    }
+  @XmlElement(name = "AuthorisersCnt")
+  protected Integer authorisersCnt;
 
-    /**
-     * Sets the value of the authentication property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAuthentication(String value) {
-        this.authentication = value;
-    }
+  @XmlElement(name = "SessionId")
+  protected String sessionId;
 
-    /**
-     * Gets the value of the riskAssessmentOutcome property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getRiskAssessmentOutcome() {
-        return riskAssessmentOutcome;
-    }
+  @XmlElement(name = "AuthenticationMethd")
+  protected String authenticationMethd;
 
-    /**
-     * Sets the value of the riskAssessmentOutcome property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setRiskAssessmentOutcome(String value) {
-        this.riskAssessmentOutcome = value;
-    }
+  @XmlElement(name = "ServiceRepresentativeId")
+  protected String serviceRepresentativeId;
 
-    /**
-     * Gets the value of the custRespToRiskAssessment property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCustRespToRiskAssessment() {
-        return custRespToRiskAssessment;
-    }
+  @XmlElement(name = "MalwareRiskScore")
+  protected Integer malwareRiskScore;
 
-    /**
-     * Sets the value of the custRespToRiskAssessment property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCustRespToRiskAssessment(String value) {
-        this.custRespToRiskAssessment = value;
-    }
+  @XmlElement(name = "MalwareID")
+  protected String malwareID;
 
-    /**
-     * Gets the value of the authorisersCnt property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
-     */
-    public Integer getAuthorisersCnt() {
-        return authorisersCnt;
-    }
+  @XmlElement(name = "CustomerThreatIndicator")
+  protected String customerThreatIndicator;
 
-    /**
-     * Sets the value of the authorisersCnt property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
-     */
-    public void setAuthorisersCnt(Integer value) {
-        this.authorisersCnt = value;
-    }
+  @XmlElement(name = "ClientName")
+  protected String clientName;
 
-    /**
-     * Gets the value of the sessionId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getSessionId() {
-        return sessionId;
-    }
+  @XmlElement(name = "ShieldStatus")
+  protected String shieldStatus;
 
-    /**
-     * Sets the value of the sessionId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setSessionId(String value) {
-        this.sessionId = value;
-    }
+  @XmlElement(name = "SMSStatus")
+  protected String smsStatus;
 
-    /**
-     * Gets the value of the authenticationMethd property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAuthenticationMethd() {
-        return authenticationMethd;
-    }
+  @XmlElement(name = "TGO-TMH-Indicators")
+  protected String tgotmhIndicators;
 
-    /**
-     * Sets the value of the authenticationMethd property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAuthenticationMethd(String value) {
-        this.authenticationMethd = value;
-    }
-
-    /**
-     * Gets the value of the serviceRepresentativeId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getServiceRepresentativeId() {
-        return serviceRepresentativeId;
-    }
-
-    /**
-     * Sets the value of the serviceRepresentativeId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setServiceRepresentativeId(String value) {
-        this.serviceRepresentativeId = value;
-    }
-
-    /**
-     * Gets the value of the malwareRiskScore property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
-     */
-    public Integer getMalwareRiskScore() {
-        return malwareRiskScore;
-    }
-
-    /**
-     * Sets the value of the malwareRiskScore property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
-     */
-    public void setMalwareRiskScore(Integer value) {
-        this.malwareRiskScore = value;
-    }
-
-    /**
-     * Gets the value of the malwareID property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getMalwareID() {
-        return malwareID;
-    }
-
-    /**
-     * Sets the value of the malwareID property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setMalwareID(String value) {
-        this.malwareID = value;
-    }
-
-    /**
-     * Gets the value of the customerThreatIndicator property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCustomerThreatIndicator() {
-        return customerThreatIndicator;
-    }
-
-    /**
-     * Sets the value of the customerThreatIndicator property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCustomerThreatIndicator(String value) {
-        this.customerThreatIndicator = value;
-    }
-
-    /**
-     * Gets the value of the clientName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getClientName() {
-        return clientName;
-    }
-
-    /**
-     * Sets the value of the clientName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setClientName(String value) {
-        this.clientName = value;
-    }
-
-    /**
-     * Gets the value of the shieldStatus property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getShieldStatus() {
-        return shieldStatus;
-    }
-
-    /**
-     * Sets the value of the shieldStatus property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setShieldStatus(String value) {
-        this.shieldStatus = value;
-    }
-
-    /**
-     * Gets the value of the smsStatus property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getSMSStatus() {
-        return smsStatus;
-    }
-
-    /**
-     * Sets the value of the smsStatus property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setSMSStatus(String value) {
-        this.smsStatus = value;
-    }
-
-    /**
-     * Gets the value of the tgotmhIndicators property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getTGOTMHIndicators() {
-        return tgotmhIndicators;
-    }
-
-    /**
-     * Sets the value of the tgotmhIndicators property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setTGOTMHIndicators(String value) {
-        this.tgotmhIndicators = value;
-    }
-
-    /**
-     * Gets the value of the modeofStepUpAuth property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getModeofStepUpAuth() {
-        return modeofStepUpAuth;
-    }
-
-    /**
-     * Sets the value of the modeofStepUpAuth property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setModeofStepUpAuth(String value) {
-        this.modeofStepUpAuth = value;
-    }
-
+  @XmlElement(name = "ModeofStepUpAuth")
+  protected String modeofStepUpAuth;
 }

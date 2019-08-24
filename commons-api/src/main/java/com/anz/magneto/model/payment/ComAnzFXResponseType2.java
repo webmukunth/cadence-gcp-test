@@ -1,17 +1,17 @@
-
 package com.anz.magneto.model.payment;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Data;
 
 
 /**
  * <p>Java class for com.anz.FX_Response_Type2 complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="com.anz.FX_Response_Type2">
  *   &lt;complexContent>
@@ -25,8 +25,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "com.anz.FX_Response_Type2", propOrder = {
@@ -34,85 +32,16 @@ import javax.xml.bind.annotation.XmlType;
     "statusCode",
     "statusDesc"
 })
+@Data
 public class ComAnzFXResponseType2 {
 
-    @XmlElement(name = "ItemNo")
-    protected String itemNo;
-    @XmlElement(name = "StatusCode")
-    protected String statusCode;
-    @XmlElement(name = "StatusDesc")
-    protected String statusDesc;
+  @XmlElement(name = "ItemNo")
+  protected String itemNo;
 
-    /**
-     * Gets the value of the itemNo property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getItemNo() {
-        return itemNo;
-    }
+  @XmlElement(name = "StatusCode")
+  protected String statusCode;
 
-    /**
-     * Sets the value of the itemNo property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setItemNo(String value) {
-        this.itemNo = value;
-    }
-
-    /**
-     * Gets the value of the statusCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getStatusCode() {
-        return statusCode;
-    }
-
-    /**
-     * Sets the value of the statusCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setStatusCode(String value) {
-        this.statusCode = value;
-    }
-
-    /**
-     * Gets the value of the statusDesc property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getStatusDesc() {
-        return statusDesc;
-    }
-
-    /**
-     * Sets the value of the statusDesc property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setStatusDesc(String value) {
-        this.statusDesc = value;
-    }
+  @XmlElement(name = "StatusDesc")
+  protected String statusDesc;
 
 }

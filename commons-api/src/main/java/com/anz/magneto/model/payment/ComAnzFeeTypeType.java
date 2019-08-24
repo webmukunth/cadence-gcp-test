@@ -1,4 +1,3 @@
-
 package com.anz.magneto.model.payment;
 
 import java.math.BigDecimal;
@@ -6,13 +5,14 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.Data;
 
 
 /**
  * <p>Java class for com.anz.FeeType_Type complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="com.anz.FeeType_Type">
  *   &lt;complexContent>
@@ -28,8 +28,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "com.anz.FeeType_Type", propOrder = {
@@ -39,137 +37,22 @@ import javax.xml.bind.annotation.XmlType;
     "curCode",
     "narrative"
 })
+@Data
 public class ComAnzFeeTypeType {
 
-    @XmlElement(name = "ItemId")
-    protected String itemId;
-    @XmlElement(name = "Code", required = true)
-    protected String code;
-    @XmlElement(name = "Amount", required = true)
-    protected BigDecimal amount;
-    @XmlElement(name = "CurCode", required = true)
-    protected String curCode;
-    @XmlElement(name = "Narrative")
-    protected String narrative;
+  @XmlElement(name = "ItemId")
+  protected String itemId;
 
-    /**
-     * Gets the value of the itemId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getItemId() {
-        return itemId;
-    }
+  @XmlElement(name = "Code", required = true)
+  protected String code;
 
-    /**
-     * Sets the value of the itemId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setItemId(String value) {
-        this.itemId = value;
-    }
+  @XmlElement(name = "Amount", required = true)
+  protected BigDecimal amount;
 
-    /**
-     * Gets the value of the code property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCode() {
-        return code;
-    }
+  @XmlElement(name = "CurCode", required = true)
+  protected String curCode;
 
-    /**
-     * Sets the value of the code property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCode(String value) {
-        this.code = value;
-    }
-
-    /**
-     * Gets the value of the amount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    /**
-     * Sets the value of the amount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public void setAmount(BigDecimal value) {
-        this.amount = value;
-    }
-
-    /**
-     * Gets the value of the curCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCurCode() {
-        return curCode;
-    }
-
-    /**
-     * Sets the value of the curCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCurCode(String value) {
-        this.curCode = value;
-    }
-
-    /**
-     * Gets the value of the narrative property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getNarrative() {
-        return narrative;
-    }
-
-    /**
-     * Sets the value of the narrative property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setNarrative(String value) {
-        this.narrative = value;
-    }
+  @XmlElement(name = "Narrative")
+  protected String narrative;
 
 }

@@ -1,8 +1,5 @@
-
 package com.anz.magneto.model.payment;
 
-import com.anz.psp.commons.model.format.DateFormat;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,13 +7,14 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+import lombok.Data;
 
 
 /**
  * <p>Java class for com.anz.ToAcct_Type complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="com.anz.ToAcct_Type">
  *   &lt;complexContent>
@@ -60,8 +58,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "com.anz.ToAcct_Type", propOrder = {
@@ -87,557 +83,72 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "pmtAuthMethod",
     "autoException"
 })
+@Data
 public class ComAnzToAcctType {
 
-    @XmlElement(name = "AcctId")
-    protected String acctId;
-    @XmlElement(name = "AcctSys")
-    protected String acctSys;
-    @XmlElement(name = "AcctGrp")
-    protected String acctGrp;
-    @XmlElement(name = "Branch")
-    protected String branch;
-    @XmlElement(name = "CostCentre")
-    protected String costCentre;
-    @XmlElement(name = "Location")
-    protected String location;
-    @XmlElement(name = "Name")
-    protected String name;
-    @XmlElement(name = "CurCode", required = true)
-    protected String curCode;
-    @XmlElement(name = "Alias")
-    protected String alias;
-    @XmlElement(name = "AliasType")
-    protected String aliasType;
-    @XmlElement(name = "AliasName")
-    protected String aliasName;
-    @XmlElement(name = "AliasLegalName")
-    protected String aliasLegalName;
-    @XmlElement(name = "AliasCreationDate")
-    @XmlSchemaType(name = "date")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern= DateFormat.DATE_FORMAT)
-    protected XMLGregorianCalendar aliasCreationDate;
-    @XmlElement(name = "AliasMaintDate")
-    @XmlSchemaType(name = "date")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern= DateFormat.DATE_FORMAT)
-    protected XMLGregorianCalendar aliasMaintDate;
-    @XmlElement(name = "Amount", required = true)
-    protected BigDecimal amount;
-    @XmlElement(name = "Narrative")
-    protected String narrative;
-    @XmlElement(name = "OwnAccount")
-    protected String ownAccount;
-    @XmlElement(name = "AcctUse")
-    protected String acctUse;
-    @XmlElement(name = "RestrictMeth")
-    protected String restrictMeth;
-    @XmlElement(name = "PmtAuthMethod")
-    protected String pmtAuthMethod;
-    @XmlElement(name = "AutoException")
-    protected String autoException;
+  @XmlElement(name = "AcctId")
+  protected String acctId;
 
-    /**
-     * Gets the value of the acctId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAcctId() {
-        return acctId;
-    }
+  @XmlElement(name = "AcctSys")
+  protected String acctSys;
 
-    /**
-     * Sets the value of the acctId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAcctId(String value) {
-        this.acctId = value;
-    }
+  @XmlElement(name = "AcctGrp")
+  protected String acctGrp;
 
-    /**
-     * Gets the value of the acctSys property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAcctSys() {
-        return acctSys;
-    }
+  @XmlElement(name = "Branch")
+  protected String branch;
 
-    /**
-     * Sets the value of the acctSys property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAcctSys(String value) {
-        this.acctSys = value;
-    }
+  @XmlElement(name = "CostCentre")
+  protected String costCentre;
 
-    /**
-     * Gets the value of the acctGrp property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAcctGrp() {
-        return acctGrp;
-    }
+  @XmlElement(name = "Location")
+  protected String location;
 
-    /**
-     * Sets the value of the acctGrp property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAcctGrp(String value) {
-        this.acctGrp = value;
-    }
+  @XmlElement(name = "Name")
+  protected String name;
 
-    /**
-     * Gets the value of the branch property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getBranch() {
-        return branch;
-    }
+  @XmlElement(name = "CurCode", required = true)
+  protected String curCode;
 
-    /**
-     * Sets the value of the branch property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setBranch(String value) {
-        this.branch = value;
-    }
+  @XmlElement(name = "Alias")
+  protected String alias;
 
-    /**
-     * Gets the value of the costCentre property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCostCentre() {
-        return costCentre;
-    }
+  @XmlElement(name = "AliasType")
+  protected String aliasType;
 
-    /**
-     * Sets the value of the costCentre property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCostCentre(String value) {
-        this.costCentre = value;
-    }
+  @XmlElement(name = "AliasName")
+  protected String aliasName;
 
-    /**
-     * Gets the value of the location property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getLocation() {
-        return location;
-    }
+  @XmlElement(name = "AliasLegalName")
+  protected String aliasLegalName;
 
-    /**
-     * Sets the value of the location property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setLocation(String value) {
-        this.location = value;
-    }
+  @XmlElement(name = "AliasCreationDate")
+  @XmlSchemaType(name = "date")
+  protected XMLGregorianCalendar aliasCreationDate;
 
-    /**
-     * Gets the value of the name property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getName() {
-        return name;
-    }
+  @XmlElement(name = "AliasMaintDate")
+  @XmlSchemaType(name = "date")
+  protected XMLGregorianCalendar aliasMaintDate;
 
-    /**
-     * Sets the value of the name property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setName(String value) {
-        this.name = value;
-    }
+  @XmlElement(name = "Amount", required = true)
+  protected BigDecimal amount;
 
-    /**
-     * Gets the value of the curCode property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getCurCode() {
-        return curCode;
-    }
+  @XmlElement(name = "Narrative")
+  protected String narrative;
 
-    /**
-     * Sets the value of the curCode property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setCurCode(String value) {
-        this.curCode = value;
-    }
+  @XmlElement(name = "OwnAccount")
+  protected String ownAccount;
 
-    /**
-     * Gets the value of the alias property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAlias() {
-        return alias;
-    }
+  @XmlElement(name = "AcctUse")
+  protected String acctUse;
 
-    /**
-     * Sets the value of the alias property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAlias(String value) {
-        this.alias = value;
-    }
+  @XmlElement(name = "RestrictMeth")
+  protected String restrictMeth;
 
-    /**
-     * Gets the value of the aliasType property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAliasType() {
-        return aliasType;
-    }
+  @XmlElement(name = "PmtAuthMethod")
+  protected String pmtAuthMethod;
 
-    /**
-     * Sets the value of the aliasType property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAliasType(String value) {
-        this.aliasType = value;
-    }
-
-    /**
-     * Gets the value of the aliasName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAliasName() {
-        return aliasName;
-    }
-
-    /**
-     * Sets the value of the aliasName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAliasName(String value) {
-        this.aliasName = value;
-    }
-
-    /**
-     * Gets the value of the aliasLegalName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAliasLegalName() {
-        return aliasLegalName;
-    }
-
-    /**
-     * Sets the value of the aliasLegalName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAliasLegalName(String value) {
-        this.aliasLegalName = value;
-    }
-
-    /**
-     * Gets the value of the aliasCreationDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public XMLGregorianCalendar getAliasCreationDate() {
-        return aliasCreationDate;
-    }
-
-    /**
-     * Sets the value of the aliasCreationDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setAliasCreationDate(XMLGregorianCalendar value) {
-        this.aliasCreationDate = value;
-    }
-
-    /**
-     * Gets the value of the aliasMaintDate property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public XMLGregorianCalendar getAliasMaintDate() {
-        return aliasMaintDate;
-    }
-
-    /**
-     * Sets the value of the aliasMaintDate property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setAliasMaintDate(XMLGregorianCalendar value) {
-        this.aliasMaintDate = value;
-    }
-
-    /**
-     * Gets the value of the amount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    /**
-     * Sets the value of the amount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link BigDecimal }
-     *     
-     */
-    public void setAmount(BigDecimal value) {
-        this.amount = value;
-    }
-
-    /**
-     * Gets the value of the narrative property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getNarrative() {
-        return narrative;
-    }
-
-    /**
-     * Sets the value of the narrative property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setNarrative(String value) {
-        this.narrative = value;
-    }
-
-    /**
-     * Gets the value of the ownAccount property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getOwnAccount() {
-        return ownAccount;
-    }
-
-    /**
-     * Sets the value of the ownAccount property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setOwnAccount(String value) {
-        this.ownAccount = value;
-    }
-
-    /**
-     * Gets the value of the acctUse property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAcctUse() {
-        return acctUse;
-    }
-
-    /**
-     * Sets the value of the acctUse property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAcctUse(String value) {
-        this.acctUse = value;
-    }
-
-    /**
-     * Gets the value of the restrictMeth property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getRestrictMeth() {
-        return restrictMeth;
-    }
-
-    /**
-     * Sets the value of the restrictMeth property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setRestrictMeth(String value) {
-        this.restrictMeth = value;
-    }
-
-    /**
-     * Gets the value of the pmtAuthMethod property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPmtAuthMethod() {
-        return pmtAuthMethod;
-    }
-
-    /**
-     * Sets the value of the pmtAuthMethod property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPmtAuthMethod(String value) {
-        this.pmtAuthMethod = value;
-    }
-
-    /**
-     * Gets the value of the autoException property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getAutoException() {
-        return autoException;
-    }
-
-    /**
-     * Sets the value of the autoException property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setAutoException(String value) {
-        this.autoException = value;
-    }
+  @XmlElement(name = "AutoException")
+  protected String autoException;
 
 }

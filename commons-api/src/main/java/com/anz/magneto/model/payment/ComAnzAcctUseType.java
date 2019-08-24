@@ -1,13 +1,13 @@
-
 package com.anz.magneto.model.payment;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
+import lombok.ToString;
 
 
 /**
  * <p>Java class for com.anz.AcctUse_Type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
  * <pre>
@@ -19,22 +19,22 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "com.anz.AcctUse_Type")
 @XmlEnum
+@ToString
 public enum ComAnzAcctUseType {
 
-    BUSINESS,
-    SUSPENSE,
-    PERSONAL;
+  BUSINESS,
+  SUSPENSE,
+  PERSONAL;
 
-    public String value() {
-        return name();
-    }
+  public String value() {
+    return name();
+  }
 
-    public static ComAnzAcctUseType fromValue(String v) {
-        return valueOf(v);
-    }
+  public static ComAnzAcctUseType fromValue(String v) {
+    return valueOf(v);
+  }
 
 }

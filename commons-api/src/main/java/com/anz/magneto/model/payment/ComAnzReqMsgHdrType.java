@@ -1,21 +1,19 @@
-
 package com.anz.magneto.model.payment;
 
-import com.anz.psp.commons.model.format.DateFormat;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+import lombok.Data;
 
 
 /**
  * <p>Java class for com.anz.Req_MsgHdr_Type complex type.
- * 
+ *
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ *
  * <pre>
  * &lt;complexType name="com.anz.Req_MsgHdr_Type">
  *   &lt;complexContent>
@@ -40,8 +38,6 @@ import javax.xml.datatype.XMLGregorianCalendar;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "com.anz.Req_MsgHdr_Type", propOrder = {
@@ -53,191 +49,29 @@ import javax.xml.datatype.XMLGregorianCalendar;
     "outcomeQueue",
     "validationToken"
 })
+@Data
 public class ComAnzReqMsgHdrType {
 
-    @XmlElement(name = "ClientDt", required = true)
-    @XmlSchemaType(name = "dateTime")
-    @JsonFormat(shape= JsonFormat.Shape.STRING, pattern= DateFormat.DATE_TIME_FORMAT)
-    protected XMLGregorianCalendar clientDt;
-    @XmlElement(name = "ClientName", required = true)
-    protected String clientName;
-    @XmlElement(name = "PartyId", required = true)
-    protected String partyId;
-    @XmlElement(name = "Version", required = true)
-    protected String version;
-    @XmlElement(name = "OrigMethod")
-    protected String origMethod;
-    @XmlElement(name = "OutcomeQueue")
-    protected String outcomeQueue;
-    @XmlElement(name = "ValidationToken")
-    protected String validationToken;
+  @XmlElement(name = "ClientDt", required = true)
+  @XmlSchemaType(name = "dateTime")
+  protected XMLGregorianCalendar clientDt;
 
-    /**
-     * Gets the value of the clientDt property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public XMLGregorianCalendar getClientDt() {
-        return clientDt;
-    }
+  @XmlElement(name = "ClientName", required = true)
+  protected String clientName;
 
-    /**
-     * Sets the value of the clientDt property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link XMLGregorianCalendar }
-     *     
-     */
-    public void setClientDt(XMLGregorianCalendar value) {
-        this.clientDt = value;
-    }
+  @XmlElement(name = "PartyId", required = true)
+  protected String partyId;
 
-    /**
-     * Gets the value of the clientName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getClientName() {
-        return clientName;
-    }
+  @XmlElement(name = "Version", required = true)
+  protected String version;
 
-    /**
-     * Sets the value of the clientName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setClientName(String value) {
-        this.clientName = value;
-    }
+  @XmlElement(name = "OrigMethod")
+  protected String origMethod;
 
-    /**
-     * Gets the value of the partyId property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getPartyId() {
-        return partyId;
-    }
+  @XmlElement(name = "OutcomeQueue")
+  protected String outcomeQueue;
 
-    /**
-     * Sets the value of the partyId property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setPartyId(String value) {
-        this.partyId = value;
-    }
-
-    /**
-     * Gets the value of the version property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getVersion() {
-        return version;
-    }
-
-    /**
-     * Sets the value of the version property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setVersion(String value) {
-        this.version = value;
-    }
-
-    /**
-     * Gets the value of the origMethod property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getOrigMethod() {
-        return origMethod;
-    }
-
-    /**
-     * Sets the value of the origMethod property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setOrigMethod(String value) {
-        this.origMethod = value;
-    }
-
-    /**
-     * Gets the value of the outcomeQueue property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getOutcomeQueue() {
-        return outcomeQueue;
-    }
-
-    /**
-     * Sets the value of the outcomeQueue property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setOutcomeQueue(String value) {
-        this.outcomeQueue = value;
-    }
-
-    /**
-     * Gets the value of the validationToken property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getValidationToken() {
-        return validationToken;
-    }
-
-    /**
-     * Sets the value of the validationToken property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setValidationToken(String value) {
-        this.validationToken = value;
-    }
+  @XmlElement(name = "ValidationToken")
+  protected String validationToken;
 
 }
