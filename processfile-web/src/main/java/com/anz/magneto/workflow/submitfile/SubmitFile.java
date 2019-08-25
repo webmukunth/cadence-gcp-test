@@ -72,7 +72,7 @@ public class SubmitFile {
   @PostMapping(
       path = "/transform",
       consumes = {"application/vnd.gpa.v2+xml", "application/vnd.gpa.v2+json"},
-      produces = "application/vnd.gpa.v1+json"
+      produces = "application/vnd.gpa.v2+json"
   )
   @Timed(description = "Transform request V2")
   ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request) {
