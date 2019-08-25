@@ -36,12 +36,12 @@ import lombok.Data;
 public class ComAnzFXResponseType2 {
 
   @XmlElement(name = "ItemNo")
-  protected String itemNo;
+  String itemNo;
 
   @XmlElement(name = "StatusCode")
-  protected String statusCode;
+  String statusCode;
 
   @XmlElement(name = "StatusDesc")
-  protected String statusDesc;
+  String statusDesc;
 
 }

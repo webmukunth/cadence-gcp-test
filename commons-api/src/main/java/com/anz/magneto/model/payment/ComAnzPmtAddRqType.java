@@ -63,49 +63,49 @@ import lombok.Data;
 public class ComAnzPmtAddRqType {
 
   @XmlElement(name = "RqUID", required = true)
-  protected String rqUID;
+  String rqUID;
 
   @XmlElement(name = "ClientInfo")
-  protected String clientInfo;
+  String clientInfo;
 
   @XmlElement(name = "MsgHdr", required = true)
-  protected ComAnzReqMsgHdrType msgHdr;
+  ComAnzReqMsgHdrType msgHdr;
 
   @XmlElement(name = "Security")
-  protected ComAnzSecurityType security;
+  ComAnzSecurityType security;
 
   @XmlElement(name = "PayHdr", required = true)
-  protected ComAnzPayHdrType payHdr;
+  ComAnzPayHdrType payHdr;
 
   @XmlElement(name = "FromFIData", required = true)
-  protected ComAnzFromFIDataType fromFIData;
+  ComAnzFromFIDataType fromFIData;
 
   @XmlElement(name = "FromCust")
-  protected ComAnzFromCustType fromCust;
+  ComAnzFromCustType fromCust;
 
   @XmlElement(name = "FromAcct", required = true)
-  protected ComAnzFromAcctType fromAcct;
+  ComAnzFromAcctType fromAcct;
 
   @XmlElement(name = "Lien")
-  protected ComAnzLienType lien;
+  ComAnzLienType lien;
 
   @XmlElement(name = "ToFIData", required = true)
-  protected ComAnzToFIDataType toFIData;
+  ComAnzToFIDataType toFIData;
 
   @XmlElement(name = "Clearing")
-  protected ComAnzClearingType clearing;
+  ComAnzClearingType clearing;
 
   @XmlElement(name = "ToBene")
-  protected ComAnzToBeneType toBene;
+  ComAnzToBeneType toBene;
 
   @XmlElement(name = "ToAcct", required = true)
-  protected ComAnzToAcctType toAcct;
+  ComAnzToAcctType toAcct;
 
   @XmlElement(name = "FX")
-  protected List<ComAnzFXType> fx;
+  List<ComAnzFXType> fx;
 
   @XmlElement(name = "Fees")
-  protected List<ComAnzFeesType> fees;
+  List<ComAnzFeesType> fees;
   @XmlAttribute(name = "id")
-  protected String id;
+  String id;
 }

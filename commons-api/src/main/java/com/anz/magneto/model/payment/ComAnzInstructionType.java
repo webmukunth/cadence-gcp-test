@@ -34,9 +34,9 @@ import lombok.Data;
 public class ComAnzInstructionType {
 
   @XmlElement(name = "Code")
-  protected String code;
+  String code;
 
   @XmlElement(name = "Text")
-  protected String text;
+  String text;
 
 }

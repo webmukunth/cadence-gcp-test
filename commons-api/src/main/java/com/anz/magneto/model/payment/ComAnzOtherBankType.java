@@ -34,9 +34,9 @@ import lombok.Data;
 public class ComAnzOtherBankType {
 
   @XmlElement(name = "Type")
-  protected String type;
+  String type;
 
   @XmlElement(name = "Code")
-  protected String code;
+  String code;
 
 }

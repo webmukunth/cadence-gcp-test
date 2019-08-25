@@ -55,37 +55,37 @@ import lombok.Data;
 public class ComAnzPmtAddRsType {
 
   @XmlElement(name = "RqUID", required = true)
-  protected String rqUID;
+  String rqUID;
 
   @XmlElement(name = "ClientInfo")
-  protected String clientInfo;
+  String clientInfo;
 
   @XmlElement(name = "DestinationName")
-  protected String destinationName;
+  String destinationName;
 
   @XmlElement(name = "ClientName")
-  protected String clientName;
+  String clientName;
 
   @XmlElement(name = "MsgHdr")
-  protected ComAnzReqMsgHdrPacType msgHdr;
+  ComAnzReqMsgHdrPacType msgHdr;
 
   @XmlElement(name = "OutcomeQueue")
-  protected String outcomeQueue;
+  String outcomeQueue;
 
   @XmlElement(name = "PayHdr", required = true)
-  protected ComAnzResPayHdrType payHdr;
+  ComAnzResPayHdrType payHdr;
 
   @XmlElement(name = "Status", required = true)
-  protected ComAnzStatusType status;
+  ComAnzStatusType status;
 
   @XmlElement(name = "FX")
-  protected List<ComAnzFXResponseType2> fx;
+  List<ComAnzFXResponseType2> fx;
 
   @XmlElement(name = "Message")
-  protected List<ComAnzMessageType2> message;
+  List<ComAnzMessageType2> message;
 
   @XmlElement(name = "Returned")
-  protected ComAnzReturnedType returned;
+  ComAnzReturnedType returned;
   @XmlAttribute(name = "id")
-  protected String id;
+  String id;
 }

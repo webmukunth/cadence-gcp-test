@@ -36,12 +36,12 @@ import lombok.Data;
 public class ComAnzMessageType2 {
 
   @XmlElement(name = "ItemId")
-  protected String itemId;
+  String itemId;
 
   @XmlElement(name = "StatusCode")
-  protected String statusCode;
+  String statusCode;
 
   @XmlElement(name = "StatusDesc")
-  protected String statusDesc;
+  String statusDesc;
 
 }

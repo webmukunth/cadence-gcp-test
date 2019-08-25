@@ -41,18 +41,18 @@ import lombok.Data;
 public class ComAnzFeeTypeType {
 
   @XmlElement(name = "ItemId")
-  protected String itemId;
+  String itemId;
 
   @XmlElement(name = "Code", required = true)
-  protected String code;
+  String code;
 
   @XmlElement(name = "Amount", required = true)
-  protected BigDecimal amount;
+  BigDecimal amount;
 
   @XmlElement(name = "CurCode", required = true)
-  protected String curCode;
+  String curCode;
 
   @XmlElement(name = "Narrative")
-  protected String narrative;
+  String narrative;
 
 }

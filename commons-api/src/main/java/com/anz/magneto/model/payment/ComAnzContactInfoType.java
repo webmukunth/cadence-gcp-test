@@ -36,12 +36,12 @@ import lombok.Data;
 public class ComAnzContactInfoType {
 
   @XmlElement(name = "ContactType")
-  protected String contactType;
+  String contactType;
 
   @XmlElement(name = "ContactName")
-  protected String contactName;
+  String contactName;
 
   @XmlElement(name = "ContactAddr")
-  protected String contactAddr;
+  String contactAddr;
 
 }

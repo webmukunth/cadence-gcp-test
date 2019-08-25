@@ -42,21 +42,21 @@ import lombok.Data;
 public class ComAnzMsgType {
 
   @XmlElement(name = "Status")
-  protected String status;
+  String status;
 
   @XmlElement(name = "Detail")
-  protected String detail;
+  String detail;
 
   @XmlElement(name = "ItemId")
-  protected String itemId;
+  String itemId;
 
   @XmlElement(name = "Id")
-  protected String id;
+  String id;
 
   @XmlElement(name = "Type")
-  protected String type;
+  String type;
 
   @XmlElement(name = "Text")
-  protected String text;
+  String text;
 
 }

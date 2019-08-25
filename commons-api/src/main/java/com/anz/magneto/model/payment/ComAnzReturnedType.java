@@ -56,38 +56,38 @@ import lombok.Data;
 public class ComAnzReturnedType {
 
   @XmlElement(name = "DRBalance")
-  protected BigDecimal drBalance;
+  BigDecimal drBalance;
 
   @XmlElement(name = "CRBalance")
-  protected BigDecimal crBalance;
+  BigDecimal crBalance;
 
   @XmlElement(name = "DRLedgerBalance")
-  protected BigDecimal drLedgerBalance;
+  BigDecimal drLedgerBalance;
 
   @XmlElement(name = "CRLedgerBalance")
-  protected BigDecimal crLedgerBalance;
+  BigDecimal crLedgerBalance;
 
   @XmlElement(name = "PaymentReference")
-  protected String paymentReference;
+  String paymentReference;
 
   @XmlElement(name = "PODSId")
-  protected String podsId;
+  String podsId;
 
   @XmlElement(name = "ClearMethod")
-  protected String clearMethod;
+  String clearMethod;
 
   @XmlElement(name = "ClearSubMethod")
-  protected String clearSubMethod;
+  String clearSubMethod;
 
   @XmlElement(name = "Message")
-  protected List<ComAnzMsgType> message;
+  List<ComAnzMsgType> message;
 
   @XmlElement(name = "LienId")
-  protected String lienId;
+  String lienId;
 
   @XmlElement(name = "Timestamps")
-  protected List<ComAnzTimestampsType> timestamps;
+  List<ComAnzTimestampsType> timestamps;
 
   @XmlElement(name = "FX")
-  protected List<ComAnzFXResponseType> fx;
+  List<ComAnzFXResponseType> fx;
 }

@@ -42,20 +42,20 @@ import lombok.Data;
 public class ComAnzResPayHdrType {
 
   @XmlElement(name = "PaymentID", required = true)
-  protected String paymentID;
+  String paymentID;
 
   @XmlElement(name = "PaymentBatchID")
-  protected String paymentBatchID;
+  String paymentBatchID;
 
   @XmlElement(name = "ItemId")
-  protected String itemId;
+  String itemId;
 
   @XmlElement(name = "ClearPref")
-  protected String clearPref;
+  String clearPref;
 
   @XmlElement(name = "ClearSubPref")
-  protected String clearSubPref;
+  String clearSubPref;
 
   @XmlElement(name = "MOP")
-  protected String mop;
+  String mop;
 }

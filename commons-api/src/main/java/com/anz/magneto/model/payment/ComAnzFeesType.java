@@ -73,53 +73,53 @@ import lombok.Data;
 public class ComAnzFeesType {
 
   @XmlElement(name = "ItemId")
-  protected String itemId;
+  String itemId;
 
   @XmlElement(name = "Consolidate")
-  protected String consolidate;
+  String consolidate;
 
   @XmlElement(name = "From")
-  protected ComAnzFromType from;
+  ComAnzFromType from;
 
   @XmlElement(name = "To")
-  protected ComAnzToType to;
+  ComAnzToType to;
 
   @XmlElement(name = "FX")
-  protected ComAnzFXType fx;
+  ComAnzFXType fx;
 
   @XmlElement(name = "AcctId")
-  protected String acctId;
+  String acctId;
 
   @XmlElement(name = "AcctSys")
-  protected String acctSys;
+  String acctSys;
 
   @XmlElement(name = "AcctGrp")
-  protected String acctGrp;
+  String acctGrp;
 
   @XmlElement(name = "Branch")
-  protected String branch;
+  String branch;
 
   @XmlElement(name = "CostCentre")
-  protected String costCentre;
+  String costCentre;
 
   @XmlElement(name = "Ccy")
-  protected String ccy;
+  String ccy;
 
   @XmlElement(name = "Amt")
-  protected String amt;
+  String amt;
 
   @XmlElement(name = "Narrative")
-  protected String narrative;
+  String narrative;
 
   @XmlElement(name = "Commission")
-  protected ComAnzCommissionType commission;
+  ComAnzCommissionType commission;
 
   @XmlElement(name = "ChargeBearer")
-  protected String chargeBearer;
+  String chargeBearer;
 
   @XmlElement(name = "CurCode")
-  protected String curCode;
+  String curCode;
 
   @XmlElement(name = "FeeType")
-  protected List<ComAnzFeeTypeType> feeType;
+  List<ComAnzFeeTypeType> feeType;
 }

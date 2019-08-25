@@ -43,20 +43,20 @@ import lombok.Data;
 public class ComAnzToDetailsType {
 
   @XmlElement(name = "PaymentTRN")
-  protected String paymentTRN;
+  String paymentTRN;
 
   @XmlElement(name = "Status", required = true)
-  protected ComAnzStatusType status;
+  ComAnzStatusType status;
 
   @XmlElement(name = "ToBene")
-  protected ComAnzToBeneType toBene;
+  ComAnzToBeneType toBene;
 
   @XmlElement(name = "ToAcct", required = true)
-  protected ComAnzToAcctType toAcct;
+  ComAnzToAcctType toAcct;
 
   @XmlElement(name = "FX")
-  protected ComAnzFXType fx;
+  ComAnzFXType fx;
 
   @XmlElement(name = "Fees")
-  protected List<ComAnzFeesType> fees;
+  List<ComAnzFeesType> fees;
 }

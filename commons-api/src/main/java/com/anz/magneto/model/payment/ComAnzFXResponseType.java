@@ -49,30 +49,30 @@ import lombok.Data;
 public class ComAnzFXResponseType {
 
   @XmlElement(name = "ItemNo")
-  protected String itemNo;
+  String itemNo;
 
   @XmlElement(name = "ItemId")
-  protected String itemId;
+  String itemId;
 
   @XmlElement(name = "DealId")
-  protected String dealId;
+  String dealId;
 
   @XmlElement(name = "ExchRate")
-  protected BigDecimal exchRate;
+  BigDecimal exchRate;
 
   @XmlElement(name = "Rate")
-  protected BigDecimal rate;
+  BigDecimal rate;
 
   @XmlElement(name = "FromAmount")
-  protected BigDecimal fromAmount;
+  BigDecimal fromAmount;
 
   @XmlElement(name = "FromCurCode")
-  protected String fromCurCode;
+  String fromCurCode;
 
   @XmlElement(name = "ToAmount")
-  protected BigDecimal toAmount;
+  BigDecimal toAmount;
 
   @XmlElement(name = "ToCurCode")
-  protected String toCurCode;
+  String toCurCode;
 
 }

@@ -46,25 +46,25 @@ import lombok.Data;
 public class ComAnzPmtEnqRqType {
 
   @XmlElement(name = "RqUID", required = true)
-  protected String rqUID;
+  String rqUID;
 
   @XmlElement(name = "ClientInfo")
-  protected String clientInfo;
+  String clientInfo;
 
   @XmlElement(name = "ClientDt")
   @XmlSchemaType(name = "dateTime")
-  protected XMLGregorianCalendar clientDt;
+  XMLGregorianCalendar clientDt;
 
   @XmlElement(name = "ClientName")
-  protected String clientName;
+  String clientName;
 
   @XmlElement(name = "Version")
-  protected String version;
+  String version;
 
   @XmlElement(name = "OutcomeQueue")
-  protected String outcomeQueue;
+  String outcomeQueue;
 
   @XmlElement(name = "MsgHdr", required = true)
-  protected ComAnzReqMsgHdrType msgHdr;
+  ComAnzReqMsgHdrType msgHdr;
 
 }

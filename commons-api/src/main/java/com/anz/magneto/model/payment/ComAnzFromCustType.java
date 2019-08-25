@@ -70,64 +70,64 @@ import lombok.Data;
 public class ComAnzFromCustType {
 
   @XmlElement(name = "Name", required = true)
-  protected String name;
+  String name;
 
   @XmlElement(name = "ResidentStatus")
-  protected String residentStatus;
+  String residentStatus;
 
   @XmlElement(name = "Addr1")
-  protected String addr1;
+  String addr1;
 
   @XmlElement(name = "Addr2")
-  protected String addr2;
+  String addr2;
 
   @XmlElement(name = "Addr3")
-  protected String addr3;
+  String addr3;
 
   @XmlElement(name = "CustClass")
-  protected String custClass;
+  String custClass;
 
   @XmlElement(name = "BRNorCRN")
-  protected String brNorCRN;
+  String brNorCRN;
 
   @XmlElement(name = "CRN")
-  protected String crn;
+  String crn;
 
   @XmlElement(name = "LastAuthoriser")
-  protected String lastAuthoriser;
+  String lastAuthoriser;
 
   @XmlElement(name = "ARN")
-  protected String arn;
+  String arn;
 
   @XmlElement(name = "CRNCustClass")
-  protected String crnCustClass;
+  String crnCustClass;
 
   @XmlElement(name = "ClearingId")
-  protected String clearingId;
+  String clearingId;
 
   @XmlElement(name = "Reference")
-  protected String reference;
+  String reference;
 
   @XmlElement(name = "ContactType")
-  protected String contactType;
+  String contactType;
 
   @XmlElement(name = "ContactName")
-  protected String contactName;
+  String contactName;
 
   @XmlElement(name = "ContactAddr")
-  protected String contactAddr;
+  String contactAddr;
 
   @XmlElement(name = "InstructingParty")
-  protected String instructingParty;
+  String instructingParty;
 
   @XmlElement(name = "Id")
-  protected String id;
+  String id;
 
   @XmlElement(name = "LimitId")
-  protected String limitId;
+  String limitId;
 
   @XmlElement(name = "ControlCentre")
-  protected String controlCentre;
+  String controlCentre;
 
   /**
    * Gets the value of the brNorCRN property.

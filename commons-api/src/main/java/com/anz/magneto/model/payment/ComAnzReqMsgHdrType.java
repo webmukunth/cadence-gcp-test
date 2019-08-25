@@ -54,24 +54,24 @@ public class ComAnzReqMsgHdrType {
 
   @XmlElement(name = "ClientDt", required = true)
   @XmlSchemaType(name = "dateTime")
-  protected XMLGregorianCalendar clientDt;
+  XMLGregorianCalendar clientDt;
 
   @XmlElement(name = "ClientName", required = true)
-  protected String clientName;
+  String clientName;
 
   @XmlElement(name = "PartyId", required = true)
-  protected String partyId;
+  String partyId;
 
   @XmlElement(name = "Version", required = true)
-  protected String version;
+  String version;
 
   @XmlElement(name = "OrigMethod")
-  protected String origMethod;
+  String origMethod;
 
   @XmlElement(name = "OutcomeQueue")
-  protected String outcomeQueue;
+  String outcomeQueue;
 
   @XmlElement(name = "ValidationToken")
-  protected String validationToken;
+  String validationToken;
 
 }

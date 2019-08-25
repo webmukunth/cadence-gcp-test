@@ -60,42 +60,42 @@ import lombok.Data;
 public class ComAnzPayHdrType {
 
   @XmlElement(name = "PODsID")
-  protected String poDsID;
+  String poDsID;
 
   @XmlElement(name = "PaymentID", required = true)
-  protected String paymentID;
+  String paymentID;
 
   @XmlElement(name = "ThirdPartyPayID")
-  protected String thirdPartyPayID;
+  String thirdPartyPayID;
 
   @XmlElement(name = "PaymentBatchID")
-  protected String paymentBatchID;
+  String paymentBatchID;
 
   @XmlElement(name = "ItemId")
-  protected String itemId;
+  String itemId;
 
   @XmlElement(name = "NbrofItems")
-  protected BigInteger nbrofItems;
+  BigInteger nbrofItems;
 
   @XmlElement(name = "ValueofItems")
-  protected BigDecimal valueofItems;
+  BigDecimal valueofItems;
 
   @XmlElement(name = "PaymentTRN")
-  protected String paymentTRN;
+  String paymentTRN;
 
   @XmlElement(name = "PaymentRelRef")
-  protected String paymentRelRef;
+  String paymentRelRef;
 
   @XmlElement(name = "ProcDate", required = true)
   @XmlSchemaType(name = "date")
-  protected XMLGregorianCalendar procDate;
+  XMLGregorianCalendar procDate;
 
   @XmlElement(name = "AcctTranType")
-  protected String acctTranType;
+  String acctTranType;
 
   @XmlElement(name = "BankOriginated")
-  protected String bankOriginated;
+  String bankOriginated;
 
   @XmlElement(name = "CustomerContact")
-  protected String customerContact;
+  String customerContact;
 }

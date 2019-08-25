@@ -47,27 +47,27 @@ import lombok.Data;
 public class ComAnzToType {
 
   @XmlElement(name = "AcctId")
-  protected String acctId;
+  String acctId;
 
   @XmlElement(name = "AcctSys")
-  protected String acctSys;
+  String acctSys;
 
   @XmlElement(name = "AcctGrp")
-  protected String acctGrp;
+  String acctGrp;
 
   @XmlElement(name = "Branch")
-  protected String branch;
+  String branch;
 
   @XmlElement(name = "CostCentre")
-  protected String costCentre;
+  String costCentre;
 
   @XmlElement(name = "Ccy")
-  protected String ccy;
+  String ccy;
 
   @XmlElement(name = "Amt")
-  protected BigDecimal amt;
+  BigDecimal amt;
 
   @XmlElement(name = "Narrative")
-  protected String narrative;
+  String narrative;
 
 }

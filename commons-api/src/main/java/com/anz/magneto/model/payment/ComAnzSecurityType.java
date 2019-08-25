@@ -64,53 +64,53 @@ import lombok.Data;
 public class ComAnzSecurityType {
 
   @XmlElement(name = "TerminalId")
-  protected String terminalId;
+  String terminalId;
 
   @XmlElement(name = "DeviceId")
-  protected String deviceId;
+  String deviceId;
 
   @XmlElement(name = "Authentication")
-  protected String authentication;
+  String authentication;
 
   @XmlElement(name = "RiskAssessmentOutcome")
-  protected String riskAssessmentOutcome;
+  String riskAssessmentOutcome;
 
   @XmlElement(name = "CustRespToRiskAssessment")
-  protected String custRespToRiskAssessment;
+  String custRespToRiskAssessment;
 
   @XmlElement(name = "AuthorisersCnt")
-  protected Integer authorisersCnt;
+  Integer authorisersCnt;
 
   @XmlElement(name = "SessionId")
-  protected String sessionId;
+  String sessionId;
 
   @XmlElement(name = "AuthenticationMethd")
-  protected String authenticationMethd;
+  String authenticationMethd;
 
   @XmlElement(name = "ServiceRepresentativeId")
-  protected String serviceRepresentativeId;
+  String serviceRepresentativeId;
 
   @XmlElement(name = "MalwareRiskScore")
-  protected Integer malwareRiskScore;
+  Integer malwareRiskScore;
 
   @XmlElement(name = "MalwareID")
-  protected String malwareID;
+  String malwareID;
 
   @XmlElement(name = "CustomerThreatIndicator")
-  protected String customerThreatIndicator;
+  String customerThreatIndicator;
 
   @XmlElement(name = "ClientName")
-  protected String clientName;
+  String clientName;
 
   @XmlElement(name = "ShieldStatus")
-  protected String shieldStatus;
+  String shieldStatus;
 
   @XmlElement(name = "SMSStatus")
-  protected String smsStatus;
+  String smsStatus;
 
   @XmlElement(name = "TGO-TMH-Indicators")
-  protected String tgotmhIndicators;
+  String tgotmhIndicators;
 
   @XmlElement(name = "ModeofStepUpAuth")
-  protected String modeofStepUpAuth;
+  String modeofStepUpAuth;
 }

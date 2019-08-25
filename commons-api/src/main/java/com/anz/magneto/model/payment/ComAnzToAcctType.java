@@ -87,68 +87,68 @@ import lombok.Data;
 public class ComAnzToAcctType {
 
   @XmlElement(name = "AcctId")
-  protected String acctId;
+  String acctId;
 
   @XmlElement(name = "AcctSys")
-  protected String acctSys;
+  String acctSys;
 
   @XmlElement(name = "AcctGrp")
-  protected String acctGrp;
+  String acctGrp;
 
   @XmlElement(name = "Branch")
-  protected String branch;
+  String branch;
 
   @XmlElement(name = "CostCentre")
-  protected String costCentre;
+  String costCentre;
 
   @XmlElement(name = "Location")
-  protected String location;
+  String location;
 
   @XmlElement(name = "Name")
-  protected String name;
+  String name;
 
   @XmlElement(name = "CurCode", required = true)
-  protected String curCode;
+  String curCode;
 
   @XmlElement(name = "Alias")
-  protected String alias;
+  String alias;
 
   @XmlElement(name = "AliasType")
-  protected String aliasType;
+  String aliasType;
 
   @XmlElement(name = "AliasName")
-  protected String aliasName;
+  String aliasName;
 
   @XmlElement(name = "AliasLegalName")
-  protected String aliasLegalName;
+  String aliasLegalName;
 
   @XmlElement(name = "AliasCreationDate")
   @XmlSchemaType(name = "date")
-  protected XMLGregorianCalendar aliasCreationDate;
+  XMLGregorianCalendar aliasCreationDate;
 
   @XmlElement(name = "AliasMaintDate")
   @XmlSchemaType(name = "date")
-  protected XMLGregorianCalendar aliasMaintDate;
+  XMLGregorianCalendar aliasMaintDate;
 
   @XmlElement(name = "Amount", required = true)
-  protected BigDecimal amount;
+  BigDecimal amount;
 
   @XmlElement(name = "Narrative")
-  protected String narrative;
+  String narrative;
 
   @XmlElement(name = "OwnAccount")
-  protected String ownAccount;
+  String ownAccount;
 
   @XmlElement(name = "AcctUse")
-  protected String acctUse;
+  String acctUse;
 
   @XmlElement(name = "RestrictMeth")
-  protected String restrictMeth;
+  String restrictMeth;
 
   @XmlElement(name = "PmtAuthMethod")
-  protected String pmtAuthMethod;
+  String pmtAuthMethod;
 
   @XmlElement(name = "AutoException")
-  protected String autoException;
+  String autoException;
 
 }

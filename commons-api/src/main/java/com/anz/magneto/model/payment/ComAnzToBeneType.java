@@ -52,36 +52,36 @@ import lombok.Data;
 public class ComAnzToBeneType {
 
   @XmlElement(name = "Id")
-  protected String id;
+  String id;
 
   @XmlElement(name = "Name")
-  protected String name;
+  String name;
 
   @XmlElement(name = "ResidentStatus")
-  protected String residentStatus;
+  String residentStatus;
 
   @XmlElement(name = "Addr1")
-  protected String addr1;
+  String addr1;
 
   @XmlElement(name = "Addr2")
-  protected String addr2;
+  String addr2;
 
   @XmlElement(name = "Addr3")
-  protected String addr3;
+  String addr3;
 
   @XmlElement(name = "Country")
-  protected String country;
+  String country;
 
   @XmlElement(name = "Message")
-  protected String message;
+  String message;
 
   @XmlElement(name = "ContactType")
-  protected String contactType;
+  String contactType;
 
   @XmlElement(name = "ContactName")
-  protected String contactName;
+  String contactName;
 
   @XmlElement(name = "ContactAddr")
-  protected String contactAddr;
+  String contactAddr;
 
 }

@@ -34,9 +34,9 @@ import lombok.Data;
 public class ComAnzAdditionalStatusType {
 
   @XmlElement(name = "StatusCode", required = true)
-  protected String statusCode;
+  String statusCode;
 
   @XmlElement(name = "StatusDesc")
-  protected String statusDesc;
+  String statusDesc;
 
 }

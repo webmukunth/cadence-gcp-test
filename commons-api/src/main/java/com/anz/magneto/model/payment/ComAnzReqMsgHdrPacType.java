@@ -34,9 +34,9 @@ import lombok.Data;
 public class ComAnzReqMsgHdrPacType {
 
   @XmlElement(name = "ClientName")
-  protected String clientName;
+  String clientName;
 
   @XmlElement(name = "Country", required = true)
-  protected String country;
+  String country;
 
 }

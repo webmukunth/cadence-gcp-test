@@ -50,33 +50,33 @@ import lombok.Data;
 public class ComAnzPmtRsAckType {
 
   @XmlElement(name = "RqUID", required = true)
-  protected String rqUID;
+  String rqUID;
 
   @XmlElement(name = "StatusCode", required = true)
-  protected String statusCode;
+  String statusCode;
 
   @XmlElement(name = "StatusDesc")
-  protected String statusDesc;
+  String statusDesc;
 
   @XmlElement(name = "ClientInfo")
-  protected String clientInfo;
+  String clientInfo;
 
   @XmlElement(name = "DestinationName")
-  protected String destinationName;
+  String destinationName;
 
   @XmlElement(name = "ClientName")
-  protected String clientName;
+  String clientName;
 
   @XmlElement(name = "OutcomeQueue")
-  protected String outcomeQueue;
+  String outcomeQueue;
 
   @XmlElement(name = "MsgHdr")
-  protected ComAnzReqMsgHdrPacType msgHdr;
+  ComAnzReqMsgHdrPacType msgHdr;
 
   @XmlElement(name = "PayHdr")
-  protected ComAnzResPayHdrType payHdr;
+  ComAnzResPayHdrType payHdr;
 
   @XmlElement(name = "Status")
-  protected ComAnzStatusType status;
+  ComAnzStatusType status;
 
 }

@@ -38,14 +38,14 @@ import lombok.Data;
 public class ComAnzFromFIDataType {
 
   @XmlElement(name = "Country", required = true)
-  protected String country;
+  String country;
 
   @XmlElement(name = "BIC")
-  protected String bic;
+  String bic;
 
   @XmlElement(name = "Name")
-  protected String name;
+  String name;
 
   @XmlElement(name = "Branch")
-  protected String branch;
+  String branch;
 }

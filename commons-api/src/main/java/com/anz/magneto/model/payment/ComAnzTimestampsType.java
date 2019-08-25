@@ -36,10 +36,10 @@ import lombok.Data;
 public class ComAnzTimestampsType {
 
   @XmlElement(name = "Type")
-  protected String type;
+  String type;
 
   @XmlElement(name = "Timestamp")
   @XmlSchemaType(name = "dateTime")
-  protected XMLGregorianCalendar timestamp;
+  XMLGregorianCalendar timestamp;
 
 }

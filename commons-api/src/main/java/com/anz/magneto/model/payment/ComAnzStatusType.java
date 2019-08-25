@@ -43,21 +43,21 @@ import lombok.Data;
 public class ComAnzStatusType {
 
   @XmlElement(name = "StatusCode", required = true)
-  protected String statusCode;
+  String statusCode;
 
   @XmlElement(name = "StatusDesc")
-  protected String statusDesc;
+  String statusDesc;
 
   @XmlElement(name = "Duplicate")
-  protected String duplicate;
+  String duplicate;
 
   @XmlElement(name = "AddStatusCode")
-  protected String addStatusCode;
+  String addStatusCode;
 
   @XmlElement(name = "AddStatusDesc")
-  protected String addStatusDesc;
+  String addStatusDesc;
 
   @XmlElement(name = "AdditionalStatus")
-  protected List<ComAnzAdditionalStatusType> additionalStatus;
+  List<ComAnzAdditionalStatusType> additionalStatus;
 
 }

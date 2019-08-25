@@ -47,16 +47,16 @@ import lombok.Data;
 public class ComAnzLienType {
 
   @XmlElement(name = "Action", required = true)
-  protected String action;
+  String action;
 
   @XmlElement(name = "LienId")
-  protected String lienId;
+  String lienId;
 
   @XmlElement(name = "ExpiryDate")
   @XmlSchemaType(name = "date")
-  protected XMLGregorianCalendar expiryDate;
+  XMLGregorianCalendar expiryDate;
 
   @XmlElement(name = "ReasonCode")
-  protected String reasonCode;
+  String reasonCode;
 
 }

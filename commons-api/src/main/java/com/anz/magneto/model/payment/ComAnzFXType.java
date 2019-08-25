@@ -67,54 +67,54 @@ import lombok.Data;
 public class ComAnzFXType {
 
   @XmlElement(name = "ItemNo")
-  protected String itemNo;
+  String itemNo;
 
   @XmlElement(name = "FXType", required = true)
-  protected String fxType;
+  String fxType;
 
   @XmlElement(name = "FXOwner")
-  protected String fxOwner;
+  String fxOwner;
 
   @XmlElement(name = "DealSys")
-  protected String dealSys;
+  String dealSys;
 
   @XmlElement(name = "DealGrp")
-  protected String dealGrp;
+  String dealGrp;
 
   @XmlElement(name = "FXAcctId")
-  protected String fxAcctId;
+  String fxAcctId;
 
   @XmlElement(name = "QuoteId")
-  protected String quoteId;
+  String quoteId;
 
   @XmlElement(name = "DealId")
-  protected String dealId;
+  String dealId;
 
   @XmlElement(name = "ExchRate")
-  protected BigDecimal exchRate;
+  BigDecimal exchRate;
 
   @XmlElement(name = "TranDate")
   @XmlSchemaType(name = "dateTime")
-  protected XMLGregorianCalendar tranDate;
+  XMLGregorianCalendar tranDate;
 
   @XmlElement(name = "FromCurCode")
-  protected String fromCurCode;
+  String fromCurCode;
 
   @XmlElement(name = "ToCurCode")
-  protected String toCurCode;
+  String toCurCode;
 
   @XmlElement(name = "FromAmount")
-  protected BigDecimal fromAmount;
+  BigDecimal fromAmount;
 
   @XmlElement(name = "ToAmount")
-  protected BigDecimal toAmount;
+  BigDecimal toAmount;
 
   @XmlElement(name = "BaseAmount")
-  protected BigDecimal baseAmount;
+  BigDecimal baseAmount;
 
   @XmlElement(name = "BaseCurCode")
-  protected String baseCurCode;
+  String baseCurCode;
 
   @XmlElement(name = "Type")
-  protected String type;
+  String type;
 }

@@ -81,63 +81,63 @@ import lombok.Data;
 public class ComAnzFromAcctType {
 
   @XmlElement(name = "AcctId", required = true)
-  protected String acctId;
+  String acctId;
 
   @XmlElement(name = "AcctSys")
-  protected String acctSys;
+  String acctSys;
 
   @XmlElement(name = "AcctGrp")
-  protected String acctGrp;
+  String acctGrp;
 
   @XmlElement(name = "Branch")
-  protected String branch;
+  String branch;
 
   @XmlElement(name = "CostCentre")
-  protected String costCentre;
+  String costCentre;
 
   @XmlElement(name = "Location")
-  protected String location;
+  String location;
 
   @XmlElement(name = "Name")
-  protected String name;
+  String name;
 
   @XmlElement(name = "Linkage")
-  protected String linkage;
+  String linkage;
 
   @XmlElement(name = "PmtAuthMethod")
-  protected String pmtAuthMethod;
+  String pmtAuthMethod;
 
   @XmlElement(name = "AutoException")
-  protected String autoException;
+  String autoException;
 
   @XmlElement(name = "Narrative")
-  protected String narrative;
+  String narrative;
 
   @XmlElement(name = "CurCode", required = true)
-  protected String curCode;
+  String curCode;
 
   @XmlElement(name = "Amount")
-  protected BigDecimal amount;
+  BigDecimal amount;
 
   @XmlElement(name = "AcctUse")
-  protected String acctUse;
+  String acctUse;
 
   @XmlElement(name = "RestrictMeth")
-  protected String restrictMeth;
+  String restrictMeth;
 
   @XmlElement(name = "Reference")
-  protected String reference;
+  String reference;
 
   @XmlElement(name = "OrigAcctId")
-  protected String origAcctId;
+  String origAcctId;
 
   @XmlElement(name = "OrigAcctSys")
-  protected String origAcctSys;
+  String origAcctSys;
 
   @XmlElement(name = "OrigAcctGrp")
-  protected String origAcctGrp;
+  String origAcctGrp;
 
   @XmlElement(name = "OrigAcctCurCode")
-  protected String origAcctCurCode;
+  String origAcctCurCode;
 
 }

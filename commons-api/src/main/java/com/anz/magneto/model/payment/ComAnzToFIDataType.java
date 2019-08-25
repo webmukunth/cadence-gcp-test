@@ -56,43 +56,43 @@ import lombok.Data;
 public class ComAnzToFIDataType {
 
   @XmlElement(name = "Country", required = true)
-  protected String country;
+  String country;
 
   @XmlElement(name = "BIC")
-  protected String bic;
+  String bic;
 
   @XmlElement(name = "Branch")
-  protected String branch;
+  String branch;
 
   @XmlElement(name = "Name")
-  protected String name;
+  String name;
 
   @XmlElement(name = "Addr1")
-  protected String addr1;
+  String addr1;
 
   @XmlElement(name = "Addr2")
-  protected String addr2;
+  String addr2;
 
   @XmlElement(name = "Addr3")
-  protected String addr3;
+  String addr3;
 
   @XmlElement(name = "SenderRec1")
-  protected String senderRec1;
+  String senderRec1;
 
   @XmlElement(name = "SenderRec2")
-  protected String senderRec2;
+  String senderRec2;
 
   @XmlElement(name = "SenderRec3")
-  protected String senderRec3;
+  String senderRec3;
 
   @XmlElement(name = "SenderRec4")
-  protected String senderRec4;
+  String senderRec4;
 
   @XmlElement(name = "SenderRec5")
-  protected String senderRec5;
+  String senderRec5;
 
   @XmlElement(name = "SenderRec6")
-  protected String senderRec6;
+  String senderRec6;
 
   /**
    * Gets the value of the bic property.

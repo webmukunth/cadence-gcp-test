@@ -108,112 +108,112 @@ import lombok.Getter;
 public class ComAnzClearingType {
 
   @XmlElement(name = "ClearPref")
-  protected String clearPref;
+  String clearPref;
 
   @XmlElement(name = "ClearSubPref")
-  protected String clearSubPref;
+  String clearSubPref;
 
   @XmlElement(name = "ClearVersion")
-  protected String clearVersion;
+  String clearVersion;
 
   @XmlElement(name = "Date")
   @XmlSchemaType(name = "date")
-  protected XMLGregorianCalendar date;
+  XMLGregorianCalendar date;
 
   @XmlElement(name = "PurposeCode")
-  protected String purposeCode;
+  String purposeCode;
 
   @XmlElement(name = "PurposeText")
-  protected String purposeText;
+  String purposeText;
 
   @XmlElement(name = "InstructionCode")
-  protected String instructionCode;
+  String instructionCode;
 
   @XmlElement(name = "Instruction")
-  protected List<ComAnzInstructionType> instruction;
+  List<ComAnzInstructionType> instruction;
 
   @XmlElement(name = "ReturnsAcctId")
-  protected String returnsAcctId;
+  String returnsAcctId;
 
   @XmlElement(name = "ReturnsBranch")
-  protected String returnsBranch;
+  String returnsBranch;
 
   @XmlElement(name = "ReturnsAcctSys")
-  protected String returnsAcctSys;
+  String returnsAcctSys;
 
   @XmlElement(name = "ReturnsAcctGrp")
-  protected String returnsAcctGrp;
+  String returnsAcctGrp;
 
   @XmlElement(name = "ReturnsCostCentre")
-  protected String returnsCostCentre;
+  String returnsCostCentre;
 
   @XmlElement(name = "Reference")
-  protected String reference;
+  String reference;
 
   @XmlElement(name = "Name")
-  protected String name;
+  String name;
 
   @XmlElement(name = "ClearingId")
-  protected String clearingId;
+  String clearingId;
 
   @XmlElement(name = "ClearingName")
-  protected String clearingName;
+  String clearingName;
 
   @XmlElement(name = "TaxType")
-  protected String taxType;
+  String taxType;
 
   @XmlElement(name = "TaxAmount")
-  protected BigDecimal taxAmount;
+  BigDecimal taxAmount;
 
   @XmlElement(name = "ChqDeliveryMeth")
-  protected String chqDeliveryMeth;
+  String chqDeliveryMeth;
 
   @XmlElement(name = "ChqPayLocation")
-  protected String chqPayLocation;
+  String chqPayLocation;
 
   @XmlElement(name = "ChqPrintLocation")
-  protected String chqPrintLocation;
+  String chqPrintLocation;
 
   @XmlElement(name = "ChargeBearer")
-  protected String chargeBearer;
+  String chargeBearer;
 
   @XmlElement(name = "BENFee")
-  protected BigDecimal benFee;
+  BigDecimal benFee;
 
   @XmlElement(name = "BENAcctId")
-  protected String benAcctId;
+  String benAcctId;
 
   @XmlElement(name = "BENAcctSys")
-  protected String benAcctSys;
+  String benAcctSys;
 
   @XmlElement(name = "BENAcctGrp")
-  protected String benAcctGrp;
+  String benAcctGrp;
 
   @XmlElement(name = "BENBranch")
-  protected String benBranch;
+  String benBranch;
 
   @XmlElement(name = "BENCostCentre")
-  protected String benCostCentre;
+  String benCostCentre;
 
   @XmlElement(name = "BENNarrative")
-  protected String benNarrative;
+  String benNarrative;
 
   @XmlElement(name = "OtherBank")
-  protected List<ComAnzOtherBankType> otherBank;
+  List<ComAnzOtherBankType> otherBank;
 
   @XmlElement(name = "Message")
   @Getter(AccessLevel.NONE)
-  protected List<ComAnzMsgType> message;
+  List<ComAnzMsgType> message;
 
   @XmlElement(name = "RegReporting")
-  protected String regReporting;
+  String regReporting;
 
   @XmlElement(name = "RegReporting-1")
-  protected String regReporting1;
+  String regReporting1;
 
   @XmlElement(name = "RegReporting-2")
-  protected String regReporting2;
+  String regReporting2;
 
   @XmlElement(name = "RegReporting-3")
-  protected String regReporting3;
+  String regReporting3;
 }

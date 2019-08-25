@@ -42,21 +42,21 @@ import lombok.Data;
 public class ComAnzCommissionType {
 
   @XmlElement(name = "AcctId")
-  protected String acctId;
+  String acctId;
 
   @XmlElement(name = "AcctSys")
-  protected String acctSys;
+  String acctSys;
 
   @XmlElement(name = "AcctGrp")
-  protected String acctGrp;
+  String acctGrp;
 
   @XmlElement(name = "Branch")
-  protected String branch;
+  String branch;
 
   @XmlElement(name = "CostCentre")
-  protected String costCentre;
+  String costCentre;
 
   @XmlElement(name = "AcctCcy")
-  protected String acctCcy;
+  String acctCcy;
 
 }
