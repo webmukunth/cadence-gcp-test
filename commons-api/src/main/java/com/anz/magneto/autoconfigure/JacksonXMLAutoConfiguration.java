@@ -36,7 +36,7 @@ public class JacksonXMLAutoConfiguration {
     XmlFactory xmlFactory = new XmlFactory(inputFactory, outputFactory);
     XmlMapper xmlMapper = new XmlMapper(xmlFactory);
     xmlMapper.registerModule(new JaxbAnnotationModule());
-    log.info("new instance of XmlMapper version {} created", xmlMapper.version());
+    log.info("new instance of XmlMapper version {} created: {}", xmlMapper.version(), xmlMapper);
     return xmlMapper;
   }
 
@@ -46,7 +46,7 @@ public class JacksonXMLAutoConfiguration {
   public MappingJackson2XmlHttpMessageConverter xmlHttpMessageConverter(
       XmlMapper xmlMapper) {
     final var ret = new MappingJackson2XmlHttpMessageConverter(xmlMapper);
-    log.info("new instance of jackson2xml http Converter created: {}", ret);
+    log.info("new instance of jackson2xml http Converter created: {} {}", xmlMapper, ret);
     return ret;
   }
 }

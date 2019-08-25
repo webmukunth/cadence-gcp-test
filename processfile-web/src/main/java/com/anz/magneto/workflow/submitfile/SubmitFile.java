@@ -4,8 +4,6 @@ import com.anz.magneto.api.download.FileProcessingWorkflow;
 import com.anz.magneto.commons.Constants;
 import com.anz.magneto.model.payment.ComAnzPmtAddRqType;
 import com.anz.magneto.utils.TraceUtil;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowOptions;
@@ -63,9 +61,8 @@ public class SubmitFile {
       consumes = "application/vnd.gpa.v1+xml",
       produces = "application/vnd.gpa.v1+json"
   )
-  @Timed(description = "Transform request")
-  @JsonInclude(Include.NON_NULL)
-  ComAnzPmtAddRqType transform(InputStream inputStream) throws IOException {
+  @Timed(description = "Transform request V1")
+  ComAnzPmtAddRqType transformV1(InputStream inputStream) throws IOException {
     log.info("Got a request to transform");
     final var ret = xmlMapper.readValue(inputStream, ComAnzPmtAddRqType.class);
     log.info("Response: {}", ret);
@@ -73,15 +70,13 @@ public class SubmitFile {
   }
 
   @PostMapping(
-      path = "/transform2",
-      consumes = {"application/vnd.gpa.v1+xml", "application/vnd.gpa.v1+json"},
+      path = "/transform",
+      consumes = {"application/vnd.gpa.v2+xml", "application/vnd.gpa.v2+json"},
       produces = "application/vnd.gpa.v1+json"
   )
-  @Timed(description = "Transform request")
-  @JsonInclude(Include.NON_NULL)
-  ComAnzPmtAddRqType transform2(@RequestBody ComAnzPmtAddRqType request) throws IOException {
+  @Timed(description = "Transform request V2")
+  ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request) {
     log.info("Request: {}", request);
     return request;
   }
-
 }
