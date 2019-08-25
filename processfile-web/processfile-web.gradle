@@ -1,5 +1,14 @@
 description = "Process file workflow web endpoint"
 
 dependencies {
-    implementation project(":processfile-api")
+    api project(":processfile-api")
+
+    /* cadence workflow */
+    implementation "com.uber.cadence:cadence-client:${uberCadenceClientVersion}"
+
+    /* jackson xml */
+    implementation "javax.xml.bind:jaxb-api:${jaxbAPIVersion}"
+    implementation "com.fasterxml.woodstox:woodstox-core:${woodstoxVersion}"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}"
+    implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:${jacksonVersion}"
 }

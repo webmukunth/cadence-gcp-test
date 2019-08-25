@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSpy v2011 rel. 3 sp1 (http://www.altova.com) by ANZ Operations & Technology Pvt Ltd (ANZ Operations & Technology Pvt Ltd) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schema.cmo.anz/PmtAdd"
+  targetNamespace="http://schema.cmo.anz/PmtAdd" elementFormDefault="unqualified"
+  attributeFormDefault="unqualified">
+  <xs:complexType name="com.anz.PmtAddRq_Type">
+    <xs:sequence>
+      <xs:element name="RqUID" type="string36" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ClientInfo" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MsgHdr" type="com.anz.Req_MsgHdr_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Security" type="com.anz.Security_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PayHdr" type="com.anz.PayHdr_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="FromFIData" type="com.anz.FromFIData_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="FromCust" type="com.anz.FromCust_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FromAcct" type="com.anz.FromAcct_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Lien" type="com.anz.Lien_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ToFIData" type="com.anz.ToFIData_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Clearing" type="com.anz.Clearing_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ToBene" type="com.anz.ToBene_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ToAcct" type="com.anz.ToAcct_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="FX" type="com.anz.FX_Type" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Fees" type="com.anz.Fees_Type" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+    <!-- Optional id field used for XML Signature -->
+  </xs:complexType>
+  <xs:complexType name="com.anz.PmtEnqRq_Type">
+    <xs:sequence>
+      <xs:element name="RqUID" type="string36" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ClientInfo" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClientDt" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClientName" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Version" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OutcomeQueue" type="string80" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MsgHdr" type="com.anz.Req_MsgHdr_Type" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.ToDetails_Type">
+    <xs:sequence>
+      <xs:element name="PaymentTRN" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Status" type="com.anz.Status_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ToBene" type="com.anz.ToBene_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ToAcct" type="com.anz.ToAcct_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="FX" type="com.anz.FX_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Fees" type="com.anz.Fees_Type" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Req_MsgHdr_Type">
+    <xs:sequence>
+      <xs:element name="ClientDt" type="xs:dateTime" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ClientName" type="string10" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PartyId" type="string20" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Version" type="string10" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="OrigMethod" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="string20">
+            <xs:enumeration value="Attended"/>
+            <xs:enumeration value="Unattended"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="OutcomeQueue" type="string80" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ValidationToken" type="string36" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Req_MsgHdr_Pac_Type">
+    <xs:sequence>
+      <xs:element name="ClientName" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Country" type="string2" minOccurs="1" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Security_Type">
+    <xs:sequence>
+      <xs:element name="TerminalId" type="string36" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DeviceId" type="string40" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Authentication" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RiskAssessmentOutcome" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CustRespToRiskAssessment" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AuthorisersCnt" type="xs:int" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SessionId" type="string40" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AuthenticationMethd" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ServiceRepresentativeId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MalwareRiskScore" type="string4" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MalwareID" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CustomerThreatIndicator" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClientName" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ShieldStatus" type="string2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SMSStatus" type="string2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="TGO-TMH-Indicators" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ModeofStepUpAuth" type="string2" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.PayHdr_Type">
+    <xs:sequence>
+      <xs:element name="PODsID" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PaymentID" type="string35" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ThirdPartyPayID" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PaymentBatchID" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ItemId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="NbrofItems" type="xs:integer" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ValueofItems" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PaymentTRN" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PaymentRelRef" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ProcDate" type="xs:date" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AcctTranType" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BankOriginated" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CustomerContact" type="string1" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.FromFIData_Type">
+    <xs:sequence>
+      <xs:element name="Country" type="string2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="BIC" type="string11" minOccurs="0" maxOccurs="1"/>
+      <!-- Name, Branch will be removed. Retained for backward compatibility-->
+      <xs:element name="Name" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Branch" type="string16" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.FromCust_Type">
+    <xs:sequence>
+      <xs:element name="Name" type="string140" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="ResidentStatus" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr1" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr2" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr3" type="string35" minOccurs="0" maxOccurs="1"/>
+      <!-- CustClass will be removed. Retained for backward compatibility-->
+      <xs:element name="CustClass" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BRNorCRN" type="string25" minOccurs="0" maxOccurs="1"/>
+      <!-- CRN will be removed. Retained for backward compatibility-->
+      <xs:element name="CRN" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="LastAuthoriser" type="string60" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ARN" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CRNCustClass" type="string10" minOccurs="0" maxOccurs="1"/>
+      <!-- Retained for backward compatibility -->
+      <xs:element name="ClearingId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Reference" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ContactType" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ContactName" type="string140" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ContactAddr" type="string128" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="InstructingParty" type="string140" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Id" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="LimitId" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ControlCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.ContactInfo_Type">
+    <xs:sequence>
+      <xs:element name="ContactType" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ContactName" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ContactAddr" type="string128" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.FromAcct_Type">
+    <xs:sequence>
+      <xs:element name="AcctId" type="string34" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="AcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Branch" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CostCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Location" type="string40" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Name" type="string140" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Linkage" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PmtAuthMethod" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="string20">
+            <xs:enumeration value="AFPONLY"/>
+            <xs:enumeration value="FORCEDEBIT"/>
+            <xs:enumeration value="LIMITONLY"/>
+            <xs:enumeration value="AFPTHENLIMIT"/>
+            <xs:enumeration value="FORCEDEBITLIMIT"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="AutoException" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Narrative" type="string255" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CurCode" type="string3" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Amount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctUse" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RestrictMeth" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Reference" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OrigAcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OrigAcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OrigAcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OrigAcctCurCode" type="string3" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Lien_Type">
+    <xs:sequence>
+      <xs:element name="Action" minOccurs="1" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="string20">
+            <xs:enumeration value="ADD"/>
+            <xs:enumeration value="RELEASE"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="LienId" type="string36" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ExpiryDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ReasonCode" type="string35" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.ToFIData_Type">
+    <xs:sequence>
+      <xs:element name="Country" type="string2" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="BIC" type="string11" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Branch" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Name" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr1" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr2" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr3" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SenderRec1" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SenderRec2" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SenderRec3" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SenderRec4" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SenderRec5" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="SenderRec6" type="string35" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Clearing_Type">
+    <xs:sequence>
+      <xs:element name="ClearPref" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClearSubPref" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClearVersion" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Date" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PurposeCode" type="string30" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PurposeText" type="string350" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="InstructionCode" type="string30" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Instruction" type="com.anz.Instruction_Type" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xs:element name="ReturnsAcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ReturnsBranch" type="string30" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ReturnsAcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ReturnsAcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ReturnsCostCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Reference" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Name" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClearingId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClearingName" type="string40" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="TaxType" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="TaxAmount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ChqDeliveryMeth" type="string2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ChqPayLocation" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ChqPrintLocation" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ChargeBearer" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BENFee" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BENAcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BENAcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BENAcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BENBranch" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BENCostCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BENNarrative" type="string200" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OtherBank" type="com.anz.OtherBank_Type" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xs:element name="Message" type="com.anz.Msg_Type" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="RegReporting" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RegReporting-1" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RegReporting-2" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RegReporting-3" type="string35" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Instruction_Type">
+    <xs:sequence>
+      <xs:element name="Code" type="string4" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Text" type="string30" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.OtherBank_Type">
+    <xs:sequence>
+      <xs:element name="Type" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Code" type="string20" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Msg_Type">
+    <xs:sequence>
+      <xs:element name="Status" type="string40" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Detail" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ItemId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Id" type="string40" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Type" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.ToBene_Type">
+    <xs:sequence>
+      <xs:element name="Id" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Name" type="string140" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ResidentStatus" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr1" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr2" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Addr3" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Country" type="string2" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Message" type="string1000" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ContactType" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ContactName" type="string140" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ContactAddr" type="string128" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.ToAcct_Type">
+    <xs:sequence>
+      <xs:element name="AcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Branch" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CostCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Location" type="string40" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Name" type="string140" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CurCode" type="string3" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Alias" type="string2048" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AliasType" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AliasName" type="string140" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AliasLegalName" type="string140" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AliasCreationDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AliasMaintDate" type="xs:date" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Amount" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Narrative" type="string255" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OwnAccount" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctUse" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="RestrictMeth" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PmtAuthMethod" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="string20">
+            <xs:enumeration value="AFPONLY"/>
+            <xs:enumeration value="FORCEDEBIT"/>
+            <xs:enumeration value="LIMITONLY"/>
+            <xs:enumeration value="AFPTHENLIMIT"/>
+            <xs:enumeration value="FORCEDEBITLIMIT"/>
+            <xs:enumeration value="AFPPLUSLIMIT"/>
+            <xs:enumeration value="GROUPLIMIT"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="AutoException" type="string1" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.FX_Type">
+    <xs:sequence>
+      <xs:element name="ItemNo" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FXType" type="string16" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="FXOwner" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DealSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DealGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FXAcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="QuoteId" type="string36" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DealId" type="string36" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ExchRate" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="TranDate" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FromCurCode" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ToCurCode" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FromAmount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ToAmount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BaseAmount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="BaseCurCode" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Type" type="string16" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Commission_Type">
+    <xs:sequence>
+      <xs:element name="AcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Branch" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CostCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctCcy" type="string3" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- Fees_Type has been modified. Retained for backward compatibility-->
+  <xs:complexType name="com.anz.Fees_Type">
+    <xs:sequence>
+      <xs:element name="ItemId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Consolidate" type="string1" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="From" type="com.anz.From_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="To" type="com.anz.To_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FX" type="com.anz.FX_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Branch" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CostCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Ccy" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Amt" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Narrative" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Commission" type="com.anz.Commission_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ChargeBearer" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="string3">
+            <xs:enumeration value="OUR"/>
+            <xs:enumeration value="BEN"/>
+            <xs:enumeration value="SHA"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="CurCode" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FeeType" type="com.anz.FeeType_Type" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.FeeType_Type">
+    <xs:sequence>
+      <xs:element name="ItemId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Code" type="string10" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Amount" type="xs:decimal" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="CurCode" type="string3" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Narrative" type="string160" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="com.anz.AcctUse_Type">
+    <xs:restriction base="string10">
+      <xs:enumeration value="BUSINESS"/>
+      <xs:enumeration value="SUSPENSE"/>
+      <xs:enumeration value="PERSONAL"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="com.anz.From_Type">
+    <xs:sequence>
+      <xs:element name="AcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Branch" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CostCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Ccy" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Amt" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Narrative" type="string255" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PmtAuthMethod" minOccurs="0" maxOccurs="1">
+        <xs:simpleType>
+          <xs:restriction base="string20">
+            <xs:enumeration value="AFPONLY"/>
+            <xs:enumeration value="FORCEDEBIT"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="com.anz.To_Type">
+    <xs:sequence>
+      <xs:element name="AcctId" type="string34" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctSys" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AcctGrp" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Branch" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CostCentre" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Ccy" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Amt" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Narrative" type="string255" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+
+
+  <xs:simpleType name="string1">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string2">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="2"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string3">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="3"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string4">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="4"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string6">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="6"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string10">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="10"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string11">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="11"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string15">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="15"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string16">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="16"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string20">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="20"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string25">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="20"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string30">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="30"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string34">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="34"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string35">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="35"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string36">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="36"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string40">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="40"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string60">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="60"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string12">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="12"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string80">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="80"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string128">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="128"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string140">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="140"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string150">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="150"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string160">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="160"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string200">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="200"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string255">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="255"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string350">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="350"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string1000">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="1000"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="string2048">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="2048"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="com.anz.PmtAddRs_Type">
+    <xs:sequence>
+      <xs:element name="RqUID" type="string36" minOccurs="1" maxOccurs="1"/>
+      <!--ClientInfo to be set with same length as that in PmtAddRq_Type-->
+      <xs:element name="ClientInfo" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DestinationName" type="string10" minOccurs="0"/>
+      <xs:element name="ClientName" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MsgHdr" type="com.anz.Req_MsgHdr_Pac_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OutcomeQueue" type="string80" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PayHdr" type="com.anz.Res_PayHdr_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="Status" type="com.anz.Status_Type" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="FX" type="com.anz.FX_Response_Type2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Message" type="com.anz.Message_Type2" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="Returned" type="com.anz.Returned_Type" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+    <xs:attribute name="id" type="xs:string"/>
+    <!-- GCIS / CorpDP optional id field used for XML Signature -->
+  </xs:complexType>
+
+  <xs:complexType name="com.anz.PmtRsAck_Type">
+    <xs:sequence>
+      <xs:element name="RqUID" type="string36" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="StatusCode" type="string4" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="StatusDesc" type="string255" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClientInfo" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DestinationName" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClientName" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="OutcomeQueue" type="string80" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MsgHdr" type="com.anz.Req_MsgHdr_Pac_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PayHdr" type="com.anz.Res_PayHdr_Type" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Status" type="com.anz.Status_Type" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Res_PayHdr_Type">
+    <xs:sequence>
+      <xs:element name="PaymentID" type="string35" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="PaymentBatchID" type="string35" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ItemId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClearPref" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClearSubPref" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="MOP" type="string16" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Status_Type">
+    <xs:sequence>
+      <xs:element name="StatusCode" type="string4" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="StatusDesc" type="string255" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Duplicate" type="string10" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AddStatusCode" type="string4" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="AddStatusDesc" type="string255" minOccurs="0" maxOccurs="1"/>
+      <!-- Retained AdditionalStatus for backward compatibility -->
+      <xs:element name="AdditionalStatus" type="com.anz.AdditionalStatus_Type" minOccurs="0"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.AdditionalStatus_Type">
+    <xs:sequence>
+      <xs:element name="StatusCode" type="string20" minOccurs="1" maxOccurs="1"/>
+      <xs:element name="StatusDesc" type="string255" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Returned_Type">
+    <xs:sequence>
+      <xs:element name="DRBalance" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CRBalance" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DRLedgerBalance" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="CRLedgerBalance" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PaymentReference" type="string36" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="PODSId" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClearMethod" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ClearSubMethod" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Message" type="com.anz.Message_Type" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="LienId" type="string36" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Timestamps" type="com.anz.Timestamps_Type" minOccurs="0"
+        maxOccurs="unbounded"/>
+      <xs:element name="FX" type="com.anz.FX_Response_Type" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Message_Type">
+    <xs:sequence>
+      <xs:element name="Status" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Detail" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Type" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Text" type="xs:string" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Id" type="string36" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Message_Type2">
+    <xs:sequence>
+      <xs:element name="ItemId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="StatusCode" type="string4" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="StatusDesc" type="string255" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.FX_Response_Type">
+    <xs:sequence>
+      <xs:element name="ItemNo" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ItemId" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="DealId" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ExchRate" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Rate" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FromAmount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="FromCurCode" type="string3" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ToAmount" type="xs:decimal" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="ToCurCode" type="string3" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.FX_Response_Type2">
+    <xs:sequence>
+      <xs:element name="ItemNo" type="string20" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="StatusCode" type="string4" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="StatusDesc" type="string255" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="com.anz.Timestamps_Type">
+    <xs:sequence>
+      <xs:element name="Type" type="string16" minOccurs="0" maxOccurs="1"/>
+      <xs:element name="Timestamp" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="PmtAddRq" type="com.anz.PmtAddRq_Type"/>
+  <xs:element name="PmtAddRs" type="com.anz.PmtAddRs_Type"/>
+  <xs:element name="PmtRsAck" type="com.anz.PmtRsAck_Type"/>
+  <xs:element name="PmtEnqRq" type="com.anz.PmtEnqRq_Type"/>
+</xs:schema>
