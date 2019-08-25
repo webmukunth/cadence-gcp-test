@@ -2,6 +2,13 @@ debug: true
 spring:
   application:
     name: ${projectName}
+  jackson:
+    default-property-inclusion: non_empty
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+
+
+
 
 opentracing:
   jaeger:

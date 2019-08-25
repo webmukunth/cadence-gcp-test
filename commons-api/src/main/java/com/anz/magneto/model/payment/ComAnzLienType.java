@@ -1,5 +1,7 @@
 package com.anz.magneto.model.payment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -54,6 +56,7 @@ public class ComAnzLienType {
 
   @XmlElement(name = "ExpiryDate")
   @XmlSchemaType(name = "date")
+  @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
   XMLGregorianCalendar expiryDate;
 
   @XmlElement(name = "ReasonCode")

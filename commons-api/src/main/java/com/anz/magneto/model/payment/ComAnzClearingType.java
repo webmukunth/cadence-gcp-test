@@ -1,5 +1,7 @@
 package com.anz.magneto.model.payment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.math.BigDecimal;
 import java.util.List;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -118,6 +120,7 @@ public class ComAnzClearingType {
 
   @XmlElement(name = "Date")
   @XmlSchemaType(name = "date")
+  @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
   XMLGregorianCalendar date;
 
   @XmlElement(name = "PurposeCode")

@@ -17,6 +17,7 @@ dependencies {
 
     /* spring book dep */
     compileOnly "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
+    compileOnly "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
     compileOnly "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
 }

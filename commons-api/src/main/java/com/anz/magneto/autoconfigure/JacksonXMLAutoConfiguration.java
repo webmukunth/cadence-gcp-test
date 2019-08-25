@@ -1,14 +1,11 @@
 package com.anz.magneto.autoconfigure;
 
-import com.anz.magneto.model.payment.ComAnzPmtAddRqType;
 import com.ctc.wstx.api.WstxInputProperties;
 import com.ctc.wstx.stax.WstxInputFactory;
 import com.ctc.wstx.stax.WstxOutputFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-import java.io.File;
-import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -16,12 +13,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
+import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConverter;
 
 @Configuration
 @ConditionalOnClass(value = {XmlFactory.class, WstxInputFactory.class})
 @AutoConfigureAfter(JacksonAutoConfiguration.class)
 @Slf4j
 public class JacksonXMLAutoConfiguration {
+
   @Bean
   @ConditionalOnMissingBean
   public XmlMapper xmlMapper() {
@@ -38,5 +38,15 @@ public class JacksonXMLAutoConfiguration {
     xmlMapper.registerModule(new JaxbAnnotationModule());
     log.info("new instance of XmlMapper version {} created", xmlMapper.version());
     return xmlMapper;
+  }
+
+  @Bean
+  @Primary
+  @ConditionalOnMissingBean
+  public MappingJackson2XmlHttpMessageConverter xmlHttpMessageConverter(
+      XmlMapper xmlMapper) {
+    final var ret = new MappingJackson2XmlHttpMessageConverter(xmlMapper);
+    log.info("new instance of jackson2xml http Converter created: {}", ret);
+    return ret;
   }
 }

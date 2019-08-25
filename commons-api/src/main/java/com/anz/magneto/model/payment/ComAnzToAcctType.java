@@ -1,5 +1,7 @@
 package com.anz.magneto.model.payment;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import java.math.BigDecimal;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -124,10 +126,12 @@ public class ComAnzToAcctType {
 
   @XmlElement(name = "AliasCreationDate")
   @XmlSchemaType(name = "date")
+  @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
   XMLGregorianCalendar aliasCreationDate;
 
   @XmlElement(name = "AliasMaintDate")
   @XmlSchemaType(name = "date")
+  @JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
   XMLGregorianCalendar aliasMaintDate;
 
   @XmlElement(name = "Amount", required = true)
