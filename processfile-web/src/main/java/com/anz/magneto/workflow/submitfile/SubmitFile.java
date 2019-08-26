@@ -63,9 +63,8 @@ public class SubmitFile {
   )
   @Timed(description = "Transform request V1")
   ComAnzPmtAddRqType transformV1(InputStream inputStream) throws IOException {
-    log.info("Got a request to transform");
     final var ret = xmlMapper.readValue(inputStream, ComAnzPmtAddRqType.class);
-    log.info("Response: {}", ret);
+    log.info("Request V1: {}", ret);
     return ret;
   }
 
@@ -76,7 +75,7 @@ public class SubmitFile {
   )
   @Timed(description = "Transform request V2")
   ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request) {
-    log.info("Request: {}", request);
+    log.info("Request V2: {}", request);
     return request;
   }
 }
