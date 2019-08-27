@@ -86,7 +86,6 @@ subprojects {
     }
 }
 
-imageRepo += imageRepo != '' ? '/' : ''
 
 /* All subprojects other than api are spring boot projects */
 configure(subprojects.findAll { !it.name.endsWith('api') }) {
@@ -122,6 +121,10 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
             image = 'gcr.io/distroless/java:11'
         }
         to {
+            imageRepo += (
+                    imageRepo != ''
+                    && imageRepo.lastIndexOf('/') < (imageRepo.length() - 1)
+                ) ? '/' : ''
             image = "${imageRepo}magneto/${project.name}:${version}"
             credHelper = 'gcr'
         }
