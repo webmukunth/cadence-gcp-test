@@ -1,29 +1,21 @@
 description = "Commons API"
 
-apply plugin: 'io.spring.dependency-management'
-
 dependencies {
-    /* cadence workflow */
-    compileOnly "com.uber.cadence:cadence-client:${uberCadenceClientVersion}"
+    /* spring boot dep */
+    compileOnly "org.springframework.boot:spring-boot-starter-actuator"
+    compileOnly "org.springframework.boot:spring-boot-starter-web"
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
     /* jackson xml */
-    compileOnly "javax.xml.bind:jaxb-api:${jaxbAPIVersion}"
-    compileOnly "com.fasterxml.woodstox:woodstox-core:${woodstoxVersion}"
-    compileOnly "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}"
-    compileOnly "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:${jacksonVersion}"
+    compileOnly "javax.xml.bind:jaxb-api"
+    compileOnly "com.fasterxml.woodstox:woodstox-core"
+    compileOnly "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
+    compileOnly "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
 
     /* tracing */
-    compileOnly "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:${javaSpringJaegerVersion}"
+    compileOnly "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter"
 
-    /* spring book dep */
-    compileOnly "org.springframework.boot:spring-boot-starter-actuator:${springBootVersion}"
-    compileOnly "org.springframework.boot:spring-boot-starter-web:${springBootVersion}"
-    compileOnly "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor:${springBootVersion}"
-}
-
-dependencyManagement {
-    imports {
-        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-    }
+    /* cadence workflow */
+    compileOnly "com.uber.cadence:cadence-client"
 }

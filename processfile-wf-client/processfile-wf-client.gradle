@@ -4,5 +4,5 @@ dependencies {
     api project(":processfile-api")
 
     /* cadence workflow */
-    implementation "com.uber.cadence:cadence-client:${uberCadenceClientVersion}"
+    implementation "com.uber.cadence:cadence-client"
 }

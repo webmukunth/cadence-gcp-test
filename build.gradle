@@ -3,29 +3,19 @@ plugins {
     id 'idea'
     id 'com.gradle.build-scan' version '2.3'
     id 'net.ltgt.errorprone' version '0.8.1' apply false
-    id 'org.springframework.boot' version '2.1.7.RELEASE' apply false
     id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
+    id 'org.springframework.boot' version '2.1.7.RELEASE' apply false
     id 'com.google.cloud.tools.jib' version '1.4.0' apply false
 }
 
 ext {
     springBootVersion = '2.1.7.RELEASE'
-    springCloudVersion = 'Greenwich.SR2'
     javaSpringJaegerVersion = '2.0.0'
-    micrometerPrometheusVersion = '1.2.0'
     uberCadenceClientVersion = '2.5.2'
     guavaVersion = '28.0-jre'
-    lombokVersion = '1.18.8'
-    jaxbAPIVersion = '2.3.1'
-    jacksonVersion = '2.9.9'
-    jodaTimeVersion = '2.10.3'
-    woodstoxVersion = '5.3.0'
     errorProneVersion = 'latest.release'
-
     imageRepo = 'gcr.io/phonomania-fd0bb0'
 }
-
-imageRepo += imageRepo != '' ? '/' : ''
 
 /* Common configuration for all sub projects */
 subprojects {
@@ -34,6 +24,7 @@ subprojects {
     apply plugin: 'java-library'
     apply plugin: 'maven'
     apply plugin: 'net.ltgt.errorprone'
+    apply plugin: 'io.spring.dependency-management'
 
     repositories {
         jcenter()
@@ -72,24 +63,39 @@ subprojects {
     }
 
     dependencies {
-        implementation "com.google.guava:guava:${guavaVersion}"
-        implementation "joda-time:joda-time:${jodaTimeVersion}"
-        implementation "org.projectlombok:lombok:${lombokVersion}"
-        annotationProcessor "org.projectlombok:lombok:${lombokVersion}"
-        errorprone "com.google.errorprone:error_prone_core:${errorProneVersion}"
+        constraints {
+            implementation "com.google.guava:guava:${guavaVersion}"
+            implementation "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:${javaSpringJaegerVersion}"
+            implementation "com.uber.cadence:cadence-client:${uberCadenceClientVersion}"
+            errorprone "com.google.errorprone:error_prone_core:${errorProneVersion}"
+        }
     }
 
+    dependencies {
+        implementation "joda-time:joda-time"
+        implementation "com.google.guava:guava"
+        implementation "org.projectlombok:lombok"
+        annotationProcessor "org.projectlombok:lombok"
+        errorprone "com.google.errorprone:error_prone_core"
+    }
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        }
+    }
 }
+
+imageRepo += imageRepo != '' ? '/' : ''
 
 /* All subprojects other than api are spring boot projects */
 configure(subprojects.findAll { !it.name.endsWith('api') }) {
 
     apply plugin: 'org.springframework.boot'
-    apply plugin: 'io.spring.dependency-management'
     apply plugin: 'com.google.cloud.tools.jib'
 
     dependencies {
-        implementation project(':commons-api')
+        api project(':commons-api')
 
         /* Spring Boot */
         implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -100,17 +106,11 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
 
         /* jackson json */
         implementation 'org.springframework.boot:spring-boot-starter-json'
-        implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda:${jacksonVersion}"
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda"
 
         /* Observability stack */
-        implementation "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:${javaSpringJaegerVersion}"
-        implementation "io.micrometer:micrometer-registry-prometheus:${micrometerPrometheusVersion}"
-    }
-
-    dependencyManagement {
-        imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
-        }
+        implementation "io.micrometer:micrometer-registry-prometheus"
+        implementation "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter"
     }
 
     processResources {

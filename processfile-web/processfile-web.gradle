@@ -4,11 +4,11 @@ dependencies {
     api project(":processfile-api")
 
     /* cadence workflow */
-    implementation "com.uber.cadence:cadence-client:${uberCadenceClientVersion}"
+    implementation "com.uber.cadence:cadence-client"
 
     /* jackson xml */
-    implementation "javax.xml.bind:jaxb-api:${jaxbAPIVersion}"
-    implementation "com.fasterxml.woodstox:woodstox-core:${woodstoxVersion}"
-    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:${jacksonVersion}"
+    implementation "javax.xml.bind:jaxb-api"
+    implementation "com.fasterxml.woodstox:woodstox-core"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
+    implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
 }
