@@ -1,6 +1,6 @@
 # Uber Cadence Workflow Sample
 
-[Uber Cadence](https://cadenceworkflow.io/) is an [opensource](https://github.com/uber/cadence)  workflow implementation from Uber, it's roots goes back to Amazon's SWF (Simple Workflow).
+[Uber Cadence](https://cadenceworkflow.io/) is an [opensource](https://github.com/uber/cadence)  workflow implementation from Uber, based of Amazon's SWF (Simple Workflow).
 
 ## More info ##
  - [Cadence: The Only Workflow Platform You'll Ever Need](https://www.youtube.com/watch?v=llmsBGKOuWI)
