@@ -19,7 +19,7 @@
  - Gradle build
  - Docker image build using [JIB](https://github.com/GoogleContainerTools/jib)
  - Deploy to GCP using [helmfile](https://github.com/roboll/helmfile)
- - Deploy to local k3s using [helmfile](https://github.com/roboll/helmfile)
+ - Deploy to local [k3s](https://k3s.io/) using [helmfile](https://github.com/roboll/helmfile)
  
 ## Modules/Directory ##
  
