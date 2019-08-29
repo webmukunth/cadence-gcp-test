@@ -8,6 +8,6 @@ echo "POST http://localhost:8080/transform" \
         -body ~/Documents/work/psp/sample-messages/sample.xml \
     | tee build/results-${RATE}-${DUR}.bin \
     | vegeta report  \
-    | tee build/results-${RATE}-${DUR}.sum 
+    | tee build/results-${RATE}-${DUR}.report
 
 cat build/results-${RATE}-${DUR}.bin | vegeta plot > build/plot-${RATE}-${DUR}.html
