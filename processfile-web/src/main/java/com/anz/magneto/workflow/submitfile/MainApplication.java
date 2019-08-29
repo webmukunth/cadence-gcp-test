@@ -1,14 +1,17 @@
 package com.anz.magneto.workflow.submitfile;
 
+import com.anz.magneto.data.PaymentRequestRepository;
 import java.net.InetAddress;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Component;
 
 @SpringBootApplication
+@EnableMongoRepositories(basePackageClasses = PaymentRequestRepository.class)
 @Slf4j
 public class MainApplication {
 
