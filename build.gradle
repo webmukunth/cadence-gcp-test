@@ -4,14 +4,14 @@ plugins {
     id 'com.gradle.build-scan' version '2.3'
     id 'net.ltgt.errorprone' version '0.8.1' apply false
     id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
-    id 'org.springframework.boot' version '2.1.7.RELEASE' apply false
-    id 'com.google.cloud.tools.jib' version '1.4.0' apply false
+    id 'org.springframework.boot' version '2.2.0.M5' apply false
+    id 'com.google.cloud.tools.jib' version '1.5.0' apply false
 }
 
 ext {
-    springBootVersion = '2.1.7.RELEASE'
-    javaSpringJaegerVersion = '2.0.0'
-    uberCadenceClientVersion = '2.5.2'
+    springBootVersion = '2.2.0.M5'
+    javaSpringJaegerVersion = '2.0.3'
+    uberCadenceClientVersion = '2.6.0'
     guavaVersion = '28.0-jre'
     errorProneVersion = 'latest.release'
     imageRepo = 'gcr.io/phonomania-fd0bb0'
@@ -28,7 +28,7 @@ subprojects {
 
     repositories {
         jcenter()
-        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
         maven { url 'https://repo.spring.io/libs-release' }
         mavenLocal()
     }
@@ -60,6 +60,12 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_11
         options.encoding = 'UTF-8'
         options.compilerArgs += '-parameters'
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
     }
 
     dependencies {
@@ -108,9 +114,18 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
         implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda"
 
         /* Observability stack */
-        implementation "io.micrometer:micrometer-registry-prometheus"
-        implementation "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter"
+        implementation 'io.micrometer:micrometer-registry-prometheus'
+        implementation('io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter') {
+            /* Not compatible with latest SB version */
+            exclude group: 'io.opentracing.contrib', module: 'opentracing-spring-cloud-mongo-starter'
+        }
+
+        /* Data */
+        // implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+        implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+        implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
     }
+
 
     processResources {
         expand(['projectName': project.name, 'version': version])
@@ -121,12 +136,14 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
             image = 'gcr.io/distroless/java:11'
         }
         to {
-            imageRepo += (
-                    imageRepo != ''
-                    && imageRepo.lastIndexOf('/') < (imageRepo.length() - 1)
-                ) ? '/' : ''
+            /* Append '/' to imageRepo if required */
+            imageRepo += (imageRepo != '' && imageRepo.lastIndexOf('/') < (imageRepo.length() - 1)) ? '/' : ''
+
             image = "${imageRepo}magneto/${project.name}:${version}"
             credHelper = 'gcr'
         }
     }
+}
+
+configurations {
 }

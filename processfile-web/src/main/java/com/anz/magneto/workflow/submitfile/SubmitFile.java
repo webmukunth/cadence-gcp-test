@@ -2,6 +2,8 @@ package com.anz.magneto.workflow.submitfile;
 
 import com.anz.magneto.api.download.FileProcessingWorkflow;
 import com.anz.magneto.commons.Constants;
+import com.anz.magneto.data.PaymentRequest;
+import com.anz.magneto.data.PaymentRequestRepository;
 import com.anz.magneto.model.payment.ComAnzPmtAddRqType;
 import com.anz.magneto.utils.TraceUtil;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -10,9 +12,11 @@ import com.uber.cadence.client.WorkflowOptions;
 import io.micrometer.core.annotation.Timed;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,18 +25,22 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @EnableAutoConfiguration
+@EnableMongoRepositories(basePackageClasses = PaymentRequestRepository.class)
 @Slf4j
 public class SubmitFile {
 
   private WorkflowClient wfClient;
   private TraceUtil traceUtil;
   private XmlMapper xmlMapper;
+  private PaymentRequestRepository repository;
 
   @Autowired
-  public SubmitFile(WorkflowClient wfClient, TraceUtil traceUtil, XmlMapper xmlMapper) {
+  public SubmitFile(WorkflowClient wfClient, TraceUtil traceUtil, XmlMapper xmlMapper,
+      PaymentRequestRepository repository) {
     this.wfClient = wfClient;
     this.traceUtil = traceUtil;
     this.xmlMapper = xmlMapper;
+    this.repository = repository;
     log.info("workflowClient: {}", wfClient);
   }
 
@@ -75,7 +83,9 @@ public class SubmitFile {
   )
   @Timed(description = "Transform request V2")
   ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request) {
-    log.info("Request V2: {}", request);
-    return request;
+    String id = UUID.randomUUID().toString();
+    log.info("Id: {}", id);
+    repository.save(new PaymentRequest(id, request));
+    return repository.findById(id).get().getPmtAddRqType();
   }
 }
