@@ -10,4 +10,4 @@ echo "POST http://localhost:8080/transform" \
     | vegeta report  \
     | tee build/results-${RATE}-${DUR}.report
 
-cat build/results-${RATE}-${DUR}.bin | vegeta plot > build/plot-${RATE}-${DUR}.html
+cat build/results-${RATE}-${DUR}.bin | vegeta plot > build/results-${RATE}-${DUR}.html
