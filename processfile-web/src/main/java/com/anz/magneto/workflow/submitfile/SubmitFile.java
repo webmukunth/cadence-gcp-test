@@ -3,7 +3,7 @@ package com.anz.magneto.workflow.submitfile;
 import com.anz.magneto.api.download.FileProcessingWorkflow;
 import com.anz.magneto.commons.Constants;
 import com.anz.magneto.data.PaymentRequest;
-import com.anz.magneto.data.PaymentRequestRepository;
+import com.anz.magneto.data.PaymentRequestService;
 import com.anz.magneto.model.payment.ComAnzPmtAddRqType;
 import com.anz.magneto.utils.TraceUtil;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
@@ -28,15 +28,15 @@ public class SubmitFile {
   private WorkflowClient wfClient;
   private TraceUtil traceUtil;
   private XmlMapper xmlMapper;
-  private PaymentRequestRepository repository;
+  private PaymentRequestService paymentRequestService;
 
   @Autowired
   public SubmitFile(WorkflowClient wfClient, TraceUtil traceUtil, XmlMapper xmlMapper,
-      PaymentRequestRepository repository) {
+      PaymentRequestService paymentRequestService) {
     this.wfClient = wfClient;
     this.traceUtil = traceUtil;
     this.xmlMapper = xmlMapper;
-    this.repository = repository;
+    this.paymentRequestService = paymentRequestService;
     log.info("workflowClient: {}", wfClient);
   }
 
@@ -78,10 +78,10 @@ public class SubmitFile {
       produces = "application/vnd.gpa.v2+json"
   )
   @Timed(description = "Transform request V2")
-  ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request) {
+  ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request)
+      throws IOException {
     String id = UUID.randomUUID().toString();
-    log.info("Id: {}", id);
-    repository.save(new PaymentRequest(id, request));
-    return repository.findById(id).orElseThrow().getPmtAddRqType();
+    paymentRequestService.save(new PaymentRequest(id, request));
+    return paymentRequestService.findById(id).getPmtAddRqType();
   }
 }
