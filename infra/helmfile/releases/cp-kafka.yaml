@@ -1,0 +1,24 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 300
+  force: true
+  recreatePods: true
+
+releases:
+  - name: cp-kafka
+    chart: ../charts/cp-kafka
+    version: "0.1.0"
+    installed: true
+    namespace: default
+    wait: true
+    labels:
+      component: data
+      package-manager: helmfile
+      chart: cp-kafka
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+environments:
+  default: {}
+  gke: {}

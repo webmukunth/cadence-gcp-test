@@ -16,6 +16,7 @@ helmfiles:
   - releases/local-path-storage.yaml
   - releases/traefik.yaml
   - releases/cassandra-db.yaml
+  - releases/cp-kafka.yaml
   - releases/jaeger.yaml
   - releases/prometheus.yaml
   - releases/cadence.yaml
