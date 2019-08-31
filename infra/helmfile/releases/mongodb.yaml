@@ -6,15 +6,15 @@ helmDefaults:
   recreatePods: true
 
 releases:
-  - name: cp-kafka
-    chart: ../charts/cp-kafka
+  - name: mongodb
+    chart: stable/mongodb
     installed: true
     namespace: default
     wait: true
     labels:
       component: data
       package-manager: helmfile
-      chart: cp-kafka
+      chart: mongodb
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 

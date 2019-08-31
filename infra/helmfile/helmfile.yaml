@@ -17,6 +17,8 @@ helmfiles:
   - releases/traefik.yaml
   - releases/cassandra-db.yaml
   - releases/cp-kafka.yaml
+  - releases/mongodb.yaml
+  - releases/redis.yaml
   - releases/jaeger.yaml
   - releases/prometheus.yaml
   - releases/cadence.yaml
