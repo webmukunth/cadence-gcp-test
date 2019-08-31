@@ -1,6 +1,6 @@
 server:
   image:
-    tag: 0.7.3
+    tag: 0.8.6
   history:
     numHistoryShards: 64
 web:
