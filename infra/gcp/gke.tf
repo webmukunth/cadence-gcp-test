@@ -96,6 +96,8 @@ resource "google_container_cluster" "gke" {
       "initial_node_count",
       "network",
       "subnetwork",
+      "instance_group_urls",
+      "node_config[0].oauth_scopes",
     ]
   }
 
@@ -138,6 +140,15 @@ resource "google_container_node_pool" "gke-np" {
       "logging-write",
       "monitoring",
       "storage-ro"
+    ]
+  }
+
+  lifecycle {
+    ignore_changes = [
+      # Ensure cluster is not recreated when pool configuration changes
+      "initial_node_count",
+      "instance_group_urls",
+      "node_config[0].oauth_scopes",
     ]
   }
 

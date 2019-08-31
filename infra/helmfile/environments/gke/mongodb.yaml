@@ -154,7 +154,7 @@ replicaSet:
 
   ## Key used for replica set authentication
   ##
-  key: key
+  key: mongodbrs0
 
   ## Number of replicas per each node type
   ##
