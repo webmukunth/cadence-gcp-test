@@ -6,7 +6,7 @@ helmDefaults:
 
 releases:
   - name: cadence-cassandra-schema-setup
-    chart: incubator/raw
+    chart: ../charts/raw
     wait: true
     installed: true
     namespace: default
@@ -30,7 +30,7 @@ releases:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
   - name: cadence-setup-job
-    chart: incubator/raw
+    chart: ../charts/raw
     wait: true
     installed: true
     namespace: default
@@ -42,7 +42,7 @@ releases:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
   - name: cadence-ingress
-    chart: incubator/raw
+    chart: ../charts/raw
     wait: true
     installed: true
     namespace: default

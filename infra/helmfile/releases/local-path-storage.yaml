@@ -7,7 +7,7 @@ helmDefaults:
 
 releases:
   - name: local-path-storage
-    chart: incubator/raw
+    chart: ../charts/raw
     installed: {{ eq .Environment.Name "default" }}
     namespace: default
     wait: true

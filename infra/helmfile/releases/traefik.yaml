@@ -6,7 +6,7 @@ helmDefaults:
 
 releases:
   - name: traefik
-    chart: stable/traefik
+    chart: ../charts/traefik
     wait: true
     installed: {{ eq .Environment.Name "gke" }}
     namespace: kube-system

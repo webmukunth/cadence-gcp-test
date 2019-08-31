@@ -7,7 +7,7 @@ helmDefaults:
 
 releases:
   - name: mongodb
-    chart: stable/mongodb
+    chart: ../charts/mongodb
     installed: true
     namespace: default
     wait: true
