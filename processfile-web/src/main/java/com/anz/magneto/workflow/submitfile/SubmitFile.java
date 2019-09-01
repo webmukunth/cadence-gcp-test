@@ -79,7 +79,6 @@ public class SubmitFile {
   )
   @Timed(description = "Transform request V2")
   public ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request) {
-    log.info("Request V2: {}", request);
     String id = UUID.randomUUID().toString();
     final var pr = paymentRequestService.save(new PaymentRequest(id, request));
     log.info("Saved {}", pr);
