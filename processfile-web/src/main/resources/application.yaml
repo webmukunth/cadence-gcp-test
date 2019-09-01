@@ -1,4 +1,5 @@
 debug: true
+
 spring:
   application:
     name: ${projectName}
@@ -6,15 +7,19 @@ spring:
     default-property-inclusion: non_empty
     serialization:
       WRITE_DATES_AS_TIMESTAMPS: false
-
-
-
+  data:
+    mongodb:
+      uri: mongodb://magneto:magneto@localhost:27017/magneto
+  redis:
+    password: redis
+    host: localhost
+    port: 6379
 
 opentracing:
   jaeger:
     enabled: true
     http-sender:
-      url: http://jaeger-collector.local/api/traces
+      url: http://localhost:14268/api/traces
     enable-b3-propagation: true
     tags:
       component: ${projectName}
@@ -23,6 +28,7 @@ opentracing:
     cloud:
       async:
         enabled: true
+
 management:
   endpoints:
     web:
@@ -35,11 +41,13 @@ management:
     export:
       prometheus:
         enabled: true
+
 cadence:
-  host: cadence
+  host: localhost
   port: 7933
   emit-metric: true
   retention-period: 1d
+
 logging:
   level:
     com.anz: debug

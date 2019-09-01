@@ -22,12 +22,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @AutoConfigureAfter(TracerAutoConfiguration.class)
+@ConditionalOnClass(value = {Tracer.class, MeterRegistry.class})
 @Slf4j
 public class ObservabilityAutoConfiguration {
 
@@ -54,18 +56,18 @@ public class ObservabilityAutoConfiguration {
   }
 
   @Bean
+  @ConditionalOnMissingBean
   MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
-    return registry -> {
-      registry.config().commonTags(
-          Tags.COMPONENT.getKey(), "cadence",
-          "application", applicationName,
-          "clientDomain", Constants.DOMAIN,
-          "clientInstance", Constants.INSTANCE_NAME
-      );
-    };
+    return registry -> registry.config().commonTags(
+        Tags.COMPONENT.getKey(), "cadence",
+        "application", applicationName,
+        "clientDomain", Constants.DOMAIN,
+        "clientInstance", Constants.INSTANCE_NAME
+    );
   }
 
   @Bean
+  @ConditionalOnMissingBean
   TracerBuilderCustomizer tracerBuilderCustomizer() {
     return builder -> builder.withTags(
         Map.of(

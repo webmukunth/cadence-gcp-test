@@ -42,7 +42,7 @@ public class SubmitFile {
 
   @RequestMapping("/submitfile/{filename}")
   @Timed(description = "Submit file for processing")
-  String submitFile(@PathVariable("filename") String fileName) {
+  public String submitFile(@PathVariable("filename") String fileName) {
     traceUtil.addTag("filename", fileName);
 
     log.info("Got a request to submit file : {}", fileName);
@@ -66,7 +66,7 @@ public class SubmitFile {
       produces = "application/vnd.gpa.v1+json"
   )
   @Timed(description = "Transform request V1")
-  ComAnzPmtAddRqType transformV1(InputStream inputStream) throws IOException {
+  public ComAnzPmtAddRqType transformV1(InputStream inputStream) throws IOException {
     final var ret = xmlMapper.readValue(inputStream, ComAnzPmtAddRqType.class);
     log.info("Request V1: {}", ret);
     return ret;
@@ -78,10 +78,11 @@ public class SubmitFile {
       produces = "application/vnd.gpa.v2+json"
   )
   @Timed(description = "Transform request V2")
-  ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request)
-      throws IOException {
+  public ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request) {
+    log.info("Request V2: {}", request);
     String id = UUID.randomUUID().toString();
-    paymentRequestService.save(new PaymentRequest(id, request));
+    final var pr = paymentRequestService.save(new PaymentRequest(id, request));
+    log.info("Saved {}", pr);
     return paymentRequestService.findById(id).getPmtAddRqType();
   }
 }

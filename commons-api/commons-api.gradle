@@ -16,6 +16,17 @@ dependencies {
     /* tracing */
     compileOnly "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter"
 
+    /* jackson json */
+    compileOnly 'org.springframework.boot:spring-boot-starter-json'
+    compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-joda"
+
+    /* Data */
+    compileOnly 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+    /* Cache */
+    compileOnly 'org.springframework.boot:spring-boot-starter-cache'
+    compileOnly 'org.springframework.boot:spring-boot-starter-data-redis'
+
     /* cadence workflow */
     compileOnly "com.uber.cadence:cadence-client"
 }

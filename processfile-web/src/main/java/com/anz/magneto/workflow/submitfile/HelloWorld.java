@@ -24,7 +24,7 @@ public class HelloWorld {
   @Data
   @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
   @RequiredArgsConstructor
-  static class HelloWorldResponse {
+  public static class HelloWorldResponse {
 
     @NonNull
     final String hello;

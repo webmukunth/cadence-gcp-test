@@ -109,10 +109,6 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-        /* jackson json */
-        implementation 'org.springframework.boot:spring-boot-starter-json'
-        implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda"
-
         /* Observability stack */
         implementation 'io.micrometer:micrometer-registry-prometheus'
         implementation('io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter') {
@@ -120,8 +116,11 @@ configure(subprojects.findAll { !it.name.endsWith('api') }) {
             exclude group: 'io.opentracing.contrib', module: 'opentracing-spring-cloud-mongo-starter'
         }
 
+        /* jackson json */
+        implementation 'org.springframework.boot:spring-boot-starter-json'
+        implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda"
+
         /* Data */
-        // implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
         implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 
         /* Cache */
