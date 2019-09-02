@@ -87,7 +87,7 @@ public class SubmitFile {
           log.debug("partition: {}", r.recordMetadata().partition());
           log.debug("timestamp: {}", r.recordMetadata().timestamp());
         },
-        e -> log.error("Error occured", e),
+        e -> log.error("Error occurred", e),
         () -> log.info("Completed")
     );
 
