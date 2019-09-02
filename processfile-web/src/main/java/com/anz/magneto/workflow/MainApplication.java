@@ -1,6 +1,6 @@
 package com.anz.magneto.workflow;
 
-import com.anz.magneto.data.PaymentRequestRepository;
+import com.anz.magneto.commons.data.PaymentRequestRepository;
 import java.net.InetAddress;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;

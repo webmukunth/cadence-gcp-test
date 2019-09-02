@@ -4,7 +4,7 @@ import com.anz.magneto.api.download.DownloadActivity;
 import com.anz.magneto.api.download.DownloadActivity.TaskListFileNamePair;
 import com.anz.magneto.api.download.FileProcessingWorkflow;
 import com.anz.magneto.api.download.ProcessFileActivity;
-import com.anz.magneto.utils.TraceUtil;
+import com.anz.magneto.commons.utils.TraceUtil;
 import com.uber.cadence.workflow.Workflow;
 import lombok.extern.slf4j.Slf4j;
 

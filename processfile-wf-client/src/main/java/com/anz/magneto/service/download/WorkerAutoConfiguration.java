@@ -2,7 +2,7 @@ package com.anz.magneto.service.download;
 
 import com.anz.magneto.api.download.DownloadActivity;
 import com.anz.magneto.api.download.ProcessFileActivity;
-import com.anz.magneto.autoconfigure.CadenceAutoConfiguration;
+import com.anz.magneto.commons.autoconfigure.CadenceAutoConfiguration;
 import com.anz.magneto.commons.Constants;
 import com.uber.cadence.internal.worker.PollerOptions;
 import com.uber.cadence.serviceclient.WorkflowServiceTChannel;

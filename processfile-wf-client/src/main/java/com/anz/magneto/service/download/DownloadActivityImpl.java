@@ -2,7 +2,7 @@ package com.anz.magneto.service.download;
 
 import com.anz.magneto.api.download.DownloadActivity;
 import com.anz.magneto.commons.Constants;
-import com.anz.magneto.utils.TraceUtil;
+import com.anz.magneto.commons.utils.TraceUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

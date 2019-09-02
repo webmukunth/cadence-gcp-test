@@ -27,6 +27,10 @@ dependencies {
     compileOnly 'org.springframework.boot:spring-boot-starter-cache'
     compileOnly 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    /* Kafka */
+    compileOnly 'io.projectreactor.kafka:reactor-kafka'
+    compileOnly 'org.springframework.kafka:spring-kafka'
+
     /* cadence workflow */
     compileOnly "com.uber.cadence:cadence-client"
 }
