@@ -11,4 +11,8 @@ dependencies {
     implementation "com.fasterxml.woodstox:woodstox-core"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
     implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
+
+    /* Kafka */
+    implementation 'io.projectreactor.kafka:reactor-kafka'
+    implementation 'org.springframework.kafka:spring-kafka'
 }

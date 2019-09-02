@@ -4,14 +4,15 @@ import com.anz.magneto.api.download.FileProcessingWorkflow;
 import com.anz.magneto.commons.Constants;
 import com.anz.magneto.commons.data.PaymentRequest;
 import com.anz.magneto.commons.data.PaymentRequestService;
+import com.anz.magneto.commons.kafka.KafkaProducer;
+import com.anz.magneto.commons.kafka.PaymentEvent;
+import com.anz.magneto.commons.kafka.PaymentEvent.EventType;
 import com.anz.magneto.commons.model.payment.ComAnzPmtAddRqType;
 import com.anz.magneto.commons.utils.TraceUtil;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowOptions;
 import io.micrometer.core.annotation.Timed;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,19 +26,21 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class SubmitFile {
 
-  private WorkflowClient wfClient;
-  private TraceUtil traceUtil;
-  private XmlMapper xmlMapper;
-  private PaymentRequestService paymentRequestService;
+  final private WorkflowClient wfClient;
+  final private TraceUtil traceUtil;
+  final private XmlMapper xmlMapper;
+  final private PaymentRequestService paymentRequestService;
+  final private KafkaProducer kafkaProducer;
 
   @Autowired
   public SubmitFile(WorkflowClient wfClient, TraceUtil traceUtil, XmlMapper xmlMapper,
-      PaymentRequestService paymentRequestService) {
+      PaymentRequestService paymentRequestService, KafkaProducer kafkaProducer) {
     this.wfClient = wfClient;
     this.traceUtil = traceUtil;
     this.xmlMapper = xmlMapper;
     this.paymentRequestService = paymentRequestService;
-    log.info("workflowClient: {}", wfClient);
+    this.kafkaProducer = kafkaProducer;
+    log.info("New instance created");
   }
 
   @RequestMapping("/submitfile/{filename}")
@@ -62,26 +65,33 @@ public class SubmitFile {
 
   @PostMapping(
       path = "/transform",
-      consumes = "application/vnd.gpa.v1+xml",
+      consumes = {"application/vnd.gpa.v1+xml", "application/vnd.gpa.v1+json"},
       produces = "application/vnd.gpa.v1+json"
-  )
-  @Timed(description = "Transform request V1")
-  public ComAnzPmtAddRqType transformV1(InputStream inputStream) throws IOException {
-    final var ret = xmlMapper.readValue(inputStream, ComAnzPmtAddRqType.class);
-    log.info("Request V1: {}", ret);
-    return ret;
-  }
-
-  @PostMapping(
-      path = "/transform",
-      consumes = {"application/vnd.gpa.v2+xml", "application/vnd.gpa.v2+json"},
-      produces = "application/vnd.gpa.v2+json"
   )
   @Timed(description = "Transform request V2")
   public ComAnzPmtAddRqType transformV2(@RequestBody ComAnzPmtAddRqType request) {
     String id = UUID.randomUUID().toString();
+
+    /* Save to mongodb & redis cache */
     final var pr = paymentRequestService.save(new PaymentRequest(id, request));
     log.info("Saved {}", pr);
+
+    /* publish event to kafka */
+    final var ev = new PaymentEvent(EventType.RECEIVED, "test", id);
+    final var result = kafkaProducer.send(ev);
+    result.subscribe(
+        r -> {
+          log.debug("correlationMetadata: {}", r.correlationMetadata());
+          log.debug("offset: {}", r.recordMetadata().offset());
+          log.debug("topic: {}", r.recordMetadata().topic());
+          log.debug("partition: {}", r.recordMetadata().partition());
+          log.debug("timestamp: {}", r.recordMetadata().timestamp());
+        },
+        e -> log.error("Error occured", e),
+        () -> log.info("Completed")
+    );
+
+    /* Get it back from redis cache */
     return paymentRequestService.findById(id).getPmtAddRqType();
   }
 }

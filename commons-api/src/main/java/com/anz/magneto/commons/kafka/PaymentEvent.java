@@ -21,9 +21,9 @@ public class PaymentEvent {
   @NonNull
   final private String id;
   @NonNull
-  final private DateTime dateTime;
+  final private DateTime dateTime = new DateTime();
 
-  enum EventType {
+  public enum EventType {
     RECEIVED,
     ACCEPTED
   }

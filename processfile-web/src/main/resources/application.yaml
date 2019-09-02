@@ -9,9 +9,9 @@ spring:
       WRITE_DATES_AS_TIMESTAMPS: false
   data:
     mongodb:
-      uri: mongodb://magneto:magneto@localhost:27017/magneto
+      #uri: mongodb://magneto:magneto@localhost:27017/magneto
   redis:
-    password: redis
+    #password: redis
     host: localhost
     port: 6379
   kafka:
