@@ -9,7 +9,6 @@ import com.anz.magneto.commons.kafka.PaymentEvent;
 import com.anz.magneto.commons.kafka.PaymentEvent.EventType;
 import com.anz.magneto.commons.model.payment.ComAnzPmtAddRqType;
 import com.anz.magneto.commons.utils.TraceUtil;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowOptions;
 import io.micrometer.core.annotation.Timed;
@@ -28,16 +27,14 @@ public class SubmitFile {
 
   final private WorkflowClient wfClient;
   final private TraceUtil traceUtil;
-  final private XmlMapper xmlMapper;
   final private PaymentRequestService paymentRequestService;
   final private KafkaProducer kafkaProducer;
 
   @Autowired
-  public SubmitFile(WorkflowClient wfClient, TraceUtil traceUtil, XmlMapper xmlMapper,
+  public SubmitFile(WorkflowClient wfClient, TraceUtil traceUtil,
       PaymentRequestService paymentRequestService, KafkaProducer kafkaProducer) {
     this.wfClient = wfClient;
     this.traceUtil = traceUtil;
-    this.xmlMapper = xmlMapper;
     this.paymentRequestService = paymentRequestService;
     this.kafkaProducer = kafkaProducer;
     log.info("New instance created");
