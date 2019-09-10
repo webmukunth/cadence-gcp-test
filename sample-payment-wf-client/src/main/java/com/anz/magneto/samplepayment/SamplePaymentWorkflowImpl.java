@@ -45,8 +45,10 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
 
     if (stopProcessPayment) {
       log.warn("processPayment stopped after enrich");
-      return WorkflowResponse.builder().status(Status.STOPPED)
-          .message("Workflow stopped after enrich").build();
+      return WorkflowResponse.builder()
+          .status(Status.STOPPED)
+          .message("Workflow stopped after enrich")
+          .build();
     }
 
     customerDebitResponse = accountingActivity.debitCustomerCreditFloat(enrichedRequest);
@@ -88,7 +90,6 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
 
   @Override
   public void stopProcessPayment() {
-    log.debug("About to stop payment processing");
     stopProcessPayment = true;
   }
 
