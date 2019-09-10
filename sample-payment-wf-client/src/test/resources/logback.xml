@@ -1,7 +1,9 @@
 <configuration>
   <appender class="ch.qos.logback.core.ConsoleAppender" name="STDOUT">
     <encoder>
-      <pattern>%d{HH:mm:ss.SSS} [%15.15thread] %5level %36.36logger{36} %msg%n</pattern>
+      <pattern>%d{HH:mm:ss.SSS} [%15.15thread] %X{WorkflowID} %2X{ActivityID} %35.35X{ActivityType}
+        %5level %36.36logger{36} %msg%n
+      </pattern>
     </encoder>
   </appender>
   <logger level="DEBUG" name="com.anz"/>

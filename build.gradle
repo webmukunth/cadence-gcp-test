@@ -13,7 +13,7 @@ ext {
     javaSpringJaegerVersion = '2.0.3'
     uberCadenceClientVersion = '2.6.0'
     guavaVersion = '28.0-jre'
-    errorProneVersion = 'latest.release'
+    errorProneVersion = '2.3.3'
     reactorKafkaVersion = '1.1.1.RELEASE'
     imageRepo = 'gcr.io/phonomania-fd0bb0'
 }

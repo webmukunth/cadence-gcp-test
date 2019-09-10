@@ -25,10 +25,8 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     validateActivity = Workflow.newActivityStub(ValidateActivity.class);
     enrichActivity = Workflow.newActivityStub(EnrichActivity.class);
     accountingActivity = Workflow.newActivityStub(AccountingActivity.class);
-    fraudCheckActivity = Workflow
-        .newActivityStub(FraudCheckActivity.class, new ActivityOptions.Builder()
-            .setScheduleToCloseTimeout(Duration.ofSeconds(120))
-            .build());
+    fraudCheckActivity = Workflow.newActivityStub(FraudCheckActivity.class,
+        new ActivityOptions.Builder().setScheduleToCloseTimeout(Duration.ofSeconds(120)).build());
   }
 
   @Override
@@ -38,34 +36,28 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     if (response.isError()) {
       return response;
     }
-    log.debug("Done with validate: {}", response);
 
-    enrichActivity.enrich(request);
-    log.debug("Done with enrich ");
+    var enrichedRequest = enrichActivity.enrich(request);
 
-    var debitCustomerCreditFloatResponse = accountingActivity.debitCustomerCreditFloat(request);
+    var debitCustomerCreditFloatResponse =
+        accountingActivity.debitCustomerCreditFloat(enrichedRequest);
 
     if (debitCustomerCreditFloatResponse.isError()) {
       return WorkflowResponse.builder()
           .status(debitCustomerCreditFloatResponse.getStatus())
           .build();
     }
-    log.debug("Done with accounting");
 
-    enrichActivity.enrich(request);
-    log.debug("Done with enrich");
-
-    WorkflowResponse fraudResponse;
     try {
-      fraudResponse = fraudCheckActivity.fraudCheck(request);
-      log.debug("Done with fraudCheck");
+      response = fraudCheckActivity.fraudCheck(enrichedRequest);
     } catch (ActivityTimeoutException t) {
       log.debug("Fraud timeout, continue with success");
-      fraudResponse = WorkflowResponse.builder().status(Status.SUCCESS).build();
+      response = WorkflowResponse.builder().message("Fraud timedout").status(Status.SUCCESS)
+          .build();
     }
 
-    log.debug("Done with workflow {}", fraudResponse);
+    log.info("Final response {}", response);
 
-    return null;
+    return response;
   }
 }
