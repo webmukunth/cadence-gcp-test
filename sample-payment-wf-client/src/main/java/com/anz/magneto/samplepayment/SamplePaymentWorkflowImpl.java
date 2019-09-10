@@ -21,6 +21,8 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   final private AccountingActivity accountingActivity;
   final private FraudCheckActivity fraudCheckActivity;
 
+  private boolean stopProcessPayment = false;
+
   public SamplePaymentWorkflowImpl() {
     validateActivity = Workflow.newActivityStub(ValidateActivity.class);
     enrichActivity = Workflow.newActivityStub(EnrichActivity.class);
@@ -39,6 +41,12 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
 
     var enrichedRequest = enrichActivity.enrich(request);
 
+    if (stopProcessPayment) {
+      log.warn("processPayment stopped after enrich");
+      return WorkflowResponse.builder().status(Status.STOPPED)
+          .message("Workflow stopped after enrich").build();
+    }
+
     var debitCustomerCreditFloatResponse =
         accountingActivity.debitCustomerCreditFloat(enrichedRequest);
 
@@ -46,6 +54,12 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
       return WorkflowResponse.builder()
           .status(debitCustomerCreditFloatResponse.getStatus())
           .build();
+    }
+
+    if (stopProcessPayment) {
+      log.warn("processPayment stopped after debitCustomerCreditFloat");
+      return WorkflowResponse.builder().status(Status.STOPPED)
+          .message("Workflow stopped after debitCustomerCreditFloat").build();
     }
 
     try {
@@ -56,8 +70,20 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
           .build();
     }
 
+    if (stopProcessPayment) {
+      log.warn("processPayment stopped after fraud check");
+      return WorkflowResponse.builder().status(Status.STOPPED)
+          .message("Workflow stopped after fraudCheck").build();
+    }
+
     log.info("Final response {}", response);
 
     return response;
+  }
+
+  @Override
+  public void stopProcessPayment() {
+    log.debug("About to stop payment processing");
+    stopProcessPayment = true;
   }
 }

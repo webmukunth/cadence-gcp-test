@@ -53,6 +53,12 @@ public class SamplePaymentWorkflowImplTest {
   private Worker worker;
   private WorkflowClient workflowClient;
   private ActivityCompletionClient completionClient;
+  private WorkflowRequest workflowRequest;
+  private ValidateActivity validateActivity;
+  private EnrichActivity enrichActivity;
+  private AccountingActivity accountingActivity;
+  private FraudCheckActivity fraudCheckActivity;
+  private SamplePaymentWorkflow samplePaymentWorkflow;
 
   @Before
   public void setUp() {
@@ -61,26 +67,17 @@ public class SamplePaymentWorkflowImplTest {
     worker.registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
     workflowClient = testEnv.newWorkflowClient();
     completionClient = workflowClient.newActivityCompletionClient();
-  }
 
-  @After
-  public void tearDown() {
-    testEnv.close();
-  }
+    samplePaymentWorkflow = workflowClient.newWorkflowStub(SamplePaymentWorkflow.class);
+    workflowRequest = WorkflowRequest.builder().requestId("processPaymentWithMock").build();
 
-  @Test
-  public void fraudCheckTimeOut()
-      throws InterruptedException, TimeoutException, ExecutionException {
-
-    var workflowRequest = WorkflowRequest.builder().requestId("processPaymentWithMock").build();
-
-    var validateActivity = mock(ValidateActivity.class);
-    var enrichActivity = mock(EnrichActivity.class);
-    var accountingActivity = mock(AccountingActivity.class);
-    var fraudCheckActivity = mock(FraudCheckActivity.class);
-
-    worker.registerActivitiesImplementations(validateActivity, enrichActivity,
-        accountingActivity, fraudCheckActivity);
+    validateActivity = mock(ValidateActivity.class);
+    enrichActivity = mock(EnrichActivity.class);
+    accountingActivity = mock(AccountingActivity.class);
+    fraudCheckActivity = mock(FraudCheckActivity.class);
+    worker.registerActivitiesImplementations(
+        validateActivity, enrichActivity, accountingActivity,
+        fraudCheckActivity);
 
     when(validateActivity.validate(workflowRequest)).then(i -> {
       log.info("validate");
@@ -109,52 +106,26 @@ public class SamplePaymentWorkflowImplTest {
     });
 
     testEnv.start();
+  }
 
-    var samplePaymentWorkflow = workflowClient.newWorkflowStub(SamplePaymentWorkflow.class);
+  @After
+  public void tearDown() {
+    testEnv.close();
+  }
 
-    var future =
-        WorkflowClient.execute(samplePaymentWorkflow::processPayment, workflowRequest);
-
-    var response = future.get(2, TimeUnit.SECONDS);
+  @Test
+  public void fraudCheckTimeOut()
+      throws InterruptedException, TimeoutException, ExecutionException {
+    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
+        workflowRequest);
+    var response = f.get(2, TimeUnit.SECONDS);
     log.debug("workflow {}", response);
-
     Assert.assertEquals("Fraud timedout", response.getMessage());
   }
 
   @Test
   public void fraudCheckPass()
       throws InterruptedException, TimeoutException, ExecutionException {
-
-    var workflowRequest = WorkflowRequest.builder().requestId("processPaymentWithMock").build();
-
-    var validateActivity = mock(ValidateActivity.class);
-    var enrichActivity = mock(EnrichActivity.class);
-    var accountingActivity = mock(AccountingActivity.class);
-    var fraudCheckActivity = mock(FraudCheckActivity.class);
-
-    worker.registerActivitiesImplementations(validateActivity, enrichActivity,
-        accountingActivity, fraudCheckActivity);
-
-    when(validateActivity.validate(workflowRequest)).then(i -> {
-      log.info("validate");
-      return WorkflowResponse.builder()
-          .status(Status.SUCCESS)
-          .build();
-    });
-
-    when(enrichActivity.enrich(workflowRequest)).then(i -> {
-      log.info("enrich");
-      return workflowRequest;
-    });
-
-    when(accountingActivity.debitCustomerCreditFloat(workflowRequest)).then(i -> {
-      log.info("debitCustomerCreditFloat");
-      return AccountingResponse.builder()
-          .accountingId("acctid")
-          .status(Status.SUCCESS)
-          .build();
-    });
-
     when(fraudCheckActivity.fraudCheck(workflowRequest)).then(invocation -> {
       log.info("fraudCheck doNotCompleteOnReturn");
       Activity.doNotCompleteOnReturn();
@@ -168,16 +139,26 @@ public class SamplePaymentWorkflowImplTest {
       return null;
     });
 
-    testEnv.start();
-
-    var samplePaymentWorkflow = workflowClient.newWorkflowStub(SamplePaymentWorkflow.class);
-
-    var future =
-        WorkflowClient.execute(samplePaymentWorkflow::processPayment, workflowRequest);
-
-    var response = future.get(2, TimeUnit.SECONDS);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
+        workflowRequest);
+    var response = f.get(2, TimeUnit.SECONDS);
     log.debug("workflow {}", response);
-
     Assert.assertEquals("No fraud found", response.getMessage());
+  }
+
+  @Test
+  public void stopProcessPaymentAfterEnrich()
+      throws InterruptedException, TimeoutException, ExecutionException {
+
+    when(enrichActivity.enrich(workflowRequest)).then(i -> {
+      log.info("enrich");
+      samplePaymentWorkflow.stopProcessPayment();
+      return workflowRequest;
+    });
+    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
+        workflowRequest);
+    var response = f.get(2, TimeUnit.SECONDS);
+    log.debug("workflow {}", response);
+    Assert.assertEquals("Workflow stopped after enrich", response.getMessage());
   }
 }
