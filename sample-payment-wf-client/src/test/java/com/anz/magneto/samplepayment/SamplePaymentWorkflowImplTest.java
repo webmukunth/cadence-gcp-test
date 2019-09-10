@@ -39,17 +39,16 @@ public class SamplePaymentWorkflowImplTest {
    * Prints a history of the workflow under test in case of a test failure.
    */
   @Rule
-  public TestWatcher watchman =
-      new TestWatcher() {
-        @Override
-        protected void failed(Throwable e, Description description) {
-          if (testEnv != null) {
-            log.debug("diagostics: {}",
-                testEnv.getDiagnostics());
-            testEnv.close();
-          }
-        }
-      };
+  public TestWatcher watchman = new TestWatcher() {
+    @Override
+    protected void failed(Throwable e, Description description) {
+      if (testEnv != null) {
+        log.warn("diagostics: {}", testEnv.getDiagnostics());
+        testEnv.close();
+      }
+    }
+  };
+
   private Worker worker;
   private WorkflowClient workflowClient;
   private ActivityCompletionClient completionClient;
@@ -80,29 +79,18 @@ public class SamplePaymentWorkflowImplTest {
         fraudCheckActivity);
 
     when(validateActivity.validate(workflowRequest)).then(i -> {
-      log.info("validate");
-      return WorkflowResponse.builder()
-          .status(Status.SUCCESS)
-          .build();
+      log.debug("validate");
+      return WorkflowResponse.builder().status(Status.SUCCESS).build();
     });
 
     when(enrichActivity.enrich(workflowRequest)).then(i -> {
-      log.info("enrich");
+      log.debug("enrich");
       return workflowRequest;
     });
 
     when(accountingActivity.debitCustomerCreditFloat(workflowRequest)).then(i -> {
-      log.info("debitCustomerCreditFloat");
-      return AccountingResponse.builder()
-          .accountingId("acctid")
-          .status(Status.SUCCESS)
-          .build();
-    });
-
-    when(fraudCheckActivity.fraudCheck(workflowRequest)).then(invocation -> {
-      log.info("fraudCheck doNotCompleteOnReturn");
-      Activity.doNotCompleteOnReturn();
-      throw new SimulatedTimeoutException();
+      log.debug("debitCustomerCreditFloat");
+      return AccountingResponse.builder().accountingId("acctid").status(Status.SUCCESS).build();
     });
 
     testEnv.start();
@@ -116,33 +104,39 @@ public class SamplePaymentWorkflowImplTest {
   @Test
   public void fraudCheckTimeOut()
       throws InterruptedException, TimeoutException, ExecutionException {
-    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
-        workflowRequest);
+
+    when(fraudCheckActivity.fraudCheck(workflowRequest)).then(invocation -> {
+      Activity.doNotCompleteOnReturn();
+      log.debug("fraudCheck about to throw timeout");
+      throw new SimulatedTimeoutException();
+    });
+
+    var f = WorkflowClient.execute(
+        samplePaymentWorkflow::processPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
-    log.debug("workflow {}", response);
+    log.debug("workflowResponse {}", response);
     Assert.assertEquals("Fraud timedout", response.getMessage());
   }
 
   @Test
   public void fraudCheckPass()
       throws InterruptedException, TimeoutException, ExecutionException {
-    when(fraudCheckActivity.fraudCheck(workflowRequest)).then(invocation -> {
-      log.info("fraudCheck doNotCompleteOnReturn");
-      Activity.doNotCompleteOnReturn();
 
+    when(fraudCheckActivity.fraudCheck(workflowRequest)).then(invocation -> {
+      Activity.doNotCompleteOnReturn();
       byte[] taskToken = Activity.getTaskToken();
       ForkJoinPool.commonPool().execute(() -> {
-        log.info("completing fraudCheck");
+        log.debug("About to complete fraud check");
         completionClient.complete(taskToken,
             WorkflowResponse.builder().status(Status.SUCCESS).message("No fraud found").build());
       });
       return null;
     });
 
-    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
-        workflowRequest);
+    var f = WorkflowClient.execute(
+        samplePaymentWorkflow::processPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
-    log.debug("workflow {}", response);
+    log.debug("workflowResponse {}", response);
     Assert.assertEquals("No fraud found", response.getMessage());
   }
 
@@ -151,14 +145,13 @@ public class SamplePaymentWorkflowImplTest {
       throws InterruptedException, TimeoutException, ExecutionException {
 
     when(enrichActivity.enrich(workflowRequest)).then(i -> {
-      log.info("enrich");
       samplePaymentWorkflow.stopProcessPayment();
       return workflowRequest;
     });
-    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
-        workflowRequest);
+    var f = WorkflowClient.execute(
+        samplePaymentWorkflow::processPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
-    log.debug("workflow {}", response);
+    log.debug("workflowResponse {}", response);
     Assert.assertEquals("Workflow stopped after enrich", response.getMessage());
   }
 }
