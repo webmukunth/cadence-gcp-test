@@ -111,8 +111,8 @@ public class SamplePaymentWorkflowImplTest {
       throw new SimulatedTimeoutException();
     });
 
-    var f = WorkflowClient.execute(
-        samplePaymentWorkflow::processPayment, workflowRequest);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
+        workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     log.debug("workflowResponse {}", response);
     Assert.assertEquals("Fraud timedout", response.getMessage());
@@ -133,8 +133,8 @@ public class SamplePaymentWorkflowImplTest {
       return null;
     });
 
-    var f = WorkflowClient.execute(
-        samplePaymentWorkflow::processPayment, workflowRequest);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
+        workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     log.debug("workflowResponse {}", response);
     Assert.assertEquals("No fraud found", response.getMessage());
@@ -148,10 +148,28 @@ public class SamplePaymentWorkflowImplTest {
       samplePaymentWorkflow.stopProcessPayment();
       return workflowRequest;
     });
-    var f = WorkflowClient.execute(
-        samplePaymentWorkflow::processPayment, workflowRequest);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
+        workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     log.debug("workflowResponse {}", response);
     Assert.assertEquals("Workflow stopped after enrich", response.getMessage());
   }
+
+  @Test
+  public void testQueryCustomerDebitAccoutingResponse() {
+
+    when(accountingActivity.debitCustomerCreditFloat(workflowRequest)).then(i -> {
+      log.debug("debitCustomerCreditFloat");
+      return AccountingResponse.builder().accountingId("testQuery").status(Status.SUCCESS).build();
+    });
+
+    var workflowExecution = WorkflowClient.start(
+        samplePaymentWorkflow::processPayment, workflowRequest);
+    var workflow = workflowClient
+        .newWorkflowStub(SamplePaymentWorkflow.class, workflowExecution.getWorkflowId());
+    var response = workflow.processPayment(null);
+    log.debug("workflowResponse {}", response);
+    Assert.assertEquals("testQuery", workflow.getCustomerDebitResponse().getAccountingId());
+  }
+
 }

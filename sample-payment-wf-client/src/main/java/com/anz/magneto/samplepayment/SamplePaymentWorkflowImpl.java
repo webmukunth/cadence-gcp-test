@@ -1,6 +1,7 @@
 package com.anz.magneto.samplepayment;
 
 import com.anz.magneto.activites.accounting.AccountingActivity;
+import com.anz.magneto.activites.accounting.AccountingResponse;
 import com.anz.magneto.activites.enrich.EnrichActivity;
 import com.anz.magneto.activites.fraudcheck.FraudCheckActivity;
 import com.anz.magneto.activites.validate.ValidateActivity;
@@ -22,6 +23,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   final private FraudCheckActivity fraudCheckActivity;
 
   private boolean stopProcessPayment = false;
+  private AccountingResponse customerDebitResponse;
 
   public SamplePaymentWorkflowImpl() {
     validateActivity = Workflow.newActivityStub(ValidateActivity.class);
@@ -47,33 +49,36 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
           .message("Workflow stopped after enrich").build();
     }
 
-    var debitCustomerCreditFloatResponse =
-        accountingActivity.debitCustomerCreditFloat(enrichedRequest);
+    customerDebitResponse = accountingActivity.debitCustomerCreditFloat(enrichedRequest);
 
-    if (debitCustomerCreditFloatResponse.isError()) {
-      return WorkflowResponse.builder()
-          .status(debitCustomerCreditFloatResponse.getStatus())
-          .build();
+    if (customerDebitResponse.isError()) {
+      return WorkflowResponse.builder().status(customerDebitResponse.getStatus()).build();
     }
 
     if (stopProcessPayment) {
       log.warn("processPayment stopped after debitCustomerCreditFloat");
-      return WorkflowResponse.builder().status(Status.STOPPED)
-          .message("Workflow stopped after debitCustomerCreditFloat").build();
+      return WorkflowResponse.builder()
+          .status(Status.STOPPED)
+          .message("Workflow stopped after debitCustomerCreditFloat")
+          .build();
     }
 
     try {
       response = fraudCheckActivity.fraudCheck(enrichedRequest);
     } catch (ActivityTimeoutException t) {
       log.debug("Fraud timeout, continue with success");
-      response = WorkflowResponse.builder().message("Fraud timedout").status(Status.SUCCESS)
+      response = WorkflowResponse.builder()
+          .message("Fraud timedout")
+          .status(Status.SUCCESS)
           .build();
     }
 
     if (stopProcessPayment) {
       log.warn("processPayment stopped after fraud check");
-      return WorkflowResponse.builder().status(Status.STOPPED)
-          .message("Workflow stopped after fraudCheck").build();
+      return WorkflowResponse.builder()
+          .status(Status.STOPPED)
+          .message("Workflow stopped after fraudCheck")
+          .build();
     }
 
     log.info("Final response {}", response);
@@ -85,5 +90,10 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   public void stopProcessPayment() {
     log.debug("About to stop payment processing");
     stopProcessPayment = true;
+  }
+
+  @Override
+  public AccountingResponse getCustomerDebitResponse() {
+    return customerDebitResponse;
   }
 }
