@@ -2,11 +2,11 @@ package com.anz.magneto.workflow.submitfile;
 
 import com.anz.magneto.api.download.FileProcessingWorkflow;
 import com.anz.magneto.commons.Constants;
+import com.anz.magneto.commons.api.EventType;
+import com.anz.magneto.commons.api.PaymentEvent;
 import com.anz.magneto.commons.data.PaymentRequest;
 import com.anz.magneto.commons.data.PaymentRequestService;
 import com.anz.magneto.commons.kafka.KafkaProducer;
-import com.anz.magneto.commons.kafka.PaymentEvent;
-import com.anz.magneto.commons.kafka.PaymentEvent.EventType;
 import com.anz.magneto.commons.model.payment.ComAnzPmtAddRqType;
 import com.anz.magneto.commons.utils.TraceUtil;
 import com.uber.cadence.client.WorkflowClient;
@@ -54,7 +54,7 @@ public class SubmitFile {
             .build()
     );
 
-    final var ret = WorkflowClient.start(wfInstance::processFile, fileName);
+    var ret = WorkflowClient.start(wfInstance::processFile, fileName);
     traceUtil.addWorkflowExecutionTag(ret);
     log.info("Submitted file for proessing: {}", ret);
     return fileName + ":" + ret.toString() + "\n";
@@ -70,23 +70,16 @@ public class SubmitFile {
     String id = UUID.randomUUID().toString();
 
     /* Save to mongodb & redis cache */
-    final var pr = paymentRequestService.save(new PaymentRequest(id, request));
+    var pr = paymentRequestService.save(new PaymentRequest(id, request));
     log.info("Saved {}", pr);
 
     /* publish event to kafka */
-    final var ev = new PaymentEvent(EventType.RECEIVED, "test", id);
-    final var result = kafkaProducer.send(ev);
-    result.subscribe(
-        r -> {
-          log.debug("correlationMetadata: {}", r.correlationMetadata());
-          log.debug("offset: {}", r.recordMetadata().offset());
-          log.debug("topic: {}", r.recordMetadata().topic());
-          log.debug("partition: {}", r.recordMetadata().partition());
-          log.debug("timestamp: {}", r.recordMetadata().timestamp());
-        },
-        e -> log.error("Error occurred", e),
-        () -> log.info("Completed")
-    );
+    var ev = PaymentEvent.builder()
+        .eventType(EventType.RECEIVED)
+        .client("test")
+        .id(id)
+        .build();
+    kafkaProducer.send(ev);
 
     /* Get it back from redis cache */
     return paymentRequestService.findById(id).getPmtAddRqType();

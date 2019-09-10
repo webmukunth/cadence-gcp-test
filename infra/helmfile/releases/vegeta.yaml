@@ -1,0 +1,23 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 300
+  force: true
+  recreatePods: true
+
+releases:
+  - name: vegeta
+    chart: ../charts/raw
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: test
+      chart: vegeta
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+environments:
+  default: {}
+  gke: {}

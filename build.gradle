@@ -80,21 +80,31 @@ subprojects {
             implementation "com.uber.cadence:cadence-client:${uberCadenceClientVersion}"
             implementation "io.projectreactor.kafka:reactor-kafka:${reactorKafkaVersion}"
             errorprone "com.google.errorprone:error_prone_core:${errorProneVersion}"
+            testImplementation "org.mockito:mockito-all:1.10.19"
+            testImplementation "org.powermock:powermock-api-mockito:1.7.4"
         }
     }
 
     dependencies {
-        implementation "joda-time:joda-time"
-        implementation "com.google.guava:guava"
-        implementation "org.projectlombok:lombok"
-        annotationProcessor "org.projectlombok:lombok"
-        errorprone "com.google.errorprone:error_prone_core"
+        implementation 'joda-time:joda-time'
+        implementation 'com.google.guava:guava'
+        implementation 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        errorprone 'com.google.errorprone:error_prone_core'
+
+        testImplementation 'junit:junit'
+        testImplementation 'org.mockito:mockito-all'
+        testImplementation 'org.powermock:powermock-api-mockito'
     }
 
     dependencyManagement {
         imports {
             mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
         }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
 
@@ -153,5 +163,4 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
     }
 }
 
-configurations {
-}
+

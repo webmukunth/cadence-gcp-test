@@ -41,5 +41,3 @@ kube.config
 
 ### ignore ignore
 .gitignore
-/infra/helmfile/charts/cassandra/
-/infra/helmfile/charts/prometheus-operator/

@@ -60,3 +60,6 @@ cadence:
   host: cadence-frontend
   port: 7933
 
+spring:
+  profiles:
+    active: gke

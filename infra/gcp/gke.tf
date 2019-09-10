@@ -7,30 +7,30 @@ provider "google-beta" {
 }
 
 locals {
-  project  = "phonomania-fd0bb0"
-  gke-name = "magneto-gke"
+  project = "monachism-83bea0"
+  gke-name = "mt-mx-transform-gke"
   location = "us-west2-c"
 }
 
 data "google_container_engine_versions" "gke-version" {
-  project  = "${local.project}"
+  project = "${local.project}"
   location = "${local.location}"
 }
 
 resource "google_container_cluster" "gke" {
   provider = "google-beta"
 
-  project                  = "${local.project}"
-  name                     = "${local.gke-name}"
-  location                 = "${local.location}"
-  initial_node_count       = 1
-  min_master_version       = "${data.google_container_engine_versions.gke-version.latest_master_version}"
-  monitoring_service       = "monitoring.googleapis.com/kubernetes"
-  logging_service          = "logging.googleapis.com/kubernetes"
-  enable_kubernetes_alpha  = false
-  enable_tpu               = false
+  project = "${local.project}"
+  name = "${local.gke-name}"
+  location = "${local.location}"
+  initial_node_count = 1
+  min_master_version = "${data.google_container_engine_versions.gke-version.latest_master_version}"
+  monitoring_service = "monitoring.googleapis.com/kubernetes"
+  logging_service = "logging.googleapis.com/kubernetes"
+  enable_kubernetes_alpha = false
+  enable_tpu = false
   remove_default_node_pool = true
-  enable_legacy_abac       = false
+  enable_legacy_abac = false
 
   master_auth {
     username = ""
@@ -72,33 +72,25 @@ resource "google_container_cluster" "gke" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "39.109.192.0/18"
+      cidr_block = "39.109.192.0/18"
       display_name = "starhub"
     }
     cidr_blocks {
-      cidr_block   = "156.13.70.0/23"
+      cidr_block = "156.13.70.0/23"
       display_name = "work wifi"
     }
     cidr_blocks {
-      cidr_block   = "35.0.0.0/8"
+      cidr_block = "35.0.0.0/8"
       display_name = "cloudbuild"
     }
     cidr_blocks {
-      cidr_block   = "34.0.0.0/8"
+      cidr_block = "34.0.0.0/8"
       display_name = "cloudbuild"
     }
   }
 
   lifecycle {
-    ignore_changes = [
-      # Ensure cluster is not recreated when pool configuration changes
-      "node_pool",
-      "initial_node_count",
-      "network",
-      "subnetwork",
-      "instance_group_urls",
-      "node_config[0].oauth_scopes",
-    ]
+    ignore_changes = all
   }
 
   timeouts {
@@ -109,13 +101,13 @@ resource "google_container_cluster" "gke" {
 }
 
 resource "google_container_node_pool" "gke-np" {
-  name     = "${google_container_cluster.gke.name}-np"
-  project  = "${local.project}"
+  name = "${google_container_cluster.gke.name}-np"
+  project = "${local.project}"
   location = "${local.location}"
-  cluster  = "${google_container_cluster.gke.name}"
+  cluster = "${google_container_cluster.gke.name}"
 
   management {
-    auto_repair  = "true"
+    auto_repair = "true"
     auto_upgrade = "true"
   }
 
@@ -123,14 +115,14 @@ resource "google_container_node_pool" "gke-np" {
 
   autoscaling {
     min_node_count = "1"
-    max_node_count = "5"
+    max_node_count = "6"
   }
 
   node_config {
-    preemptible  = true
+    preemptible = true
     machine_type = "n1-standard-4"
-    disk_size_gb = 100
-    disk_type    = "pd-ssd"
+    disk_size_gb = 50
+    disk_type = "pd-standard"
 
     metadata = {
       disable-legacy-endpoints = "true"
@@ -148,7 +140,7 @@ resource "google_container_node_pool" "gke-np" {
       # Ensure cluster is not recreated when pool configuration changes
       "initial_node_count",
       "instance_group_urls",
-      "node_config[0].oauth_scopes",
+      "node_config"
     ]
   }
 
@@ -162,10 +154,10 @@ resource "google_container_node_pool" "gke-np" {
 data "google_client_config" "current" {}
 
 provider "kubernetes" {
-  load_config_file       = false
-  host                   = "https://${google_container_cluster.gke.endpoint}"
+  load_config_file = false
+  host = "https://${google_container_cluster.gke.endpoint}"
   cluster_ca_certificate = "${base64decode(google_container_cluster.gke.master_auth[0].cluster_ca_certificate)}"
-  token                  = "${data.google_client_config.current.access_token}"
+  token = "${data.google_client_config.current.access_token}"
 }
 
 resource "kubernetes_cluster_role_binding" "make-me-admin" {
@@ -174,12 +166,22 @@ resource "kubernetes_cluster_role_binding" "make-me-admin" {
   }
   role_ref {
     api_group = "rbac.authorization.k8s.io"
-    kind      = "ClusterRole"
-    name      = "cluster-admin"
+    kind = "ClusterRole"
+    name = "cluster-admin"
   }
   subject {
     api_group = "rbac.authorization.k8s.io"
-    kind      = "User"
-    name      = "nataram767579@gmail.com"
+    kind = "User"
+    name = "nataram767579@gmail.com"
+  }
+}
+
+resource "kubernetes_storage_class" "pd-ssd" {
+  metadata {
+    name = "pd-ssd"
+  }
+  storage_provisioner = "kubernetes.io/gce-pd"
+  parameters = {
+    type = "pd-ssd"
   }
 }

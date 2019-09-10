@@ -1,0 +1,8 @@
+description = "Process file workflow implementation"
+
+dependencies {
+    api project(":activities-api")
+
+    /* cadence workflow */
+    implementation "com.uber.cadence:cadence-client"
+}

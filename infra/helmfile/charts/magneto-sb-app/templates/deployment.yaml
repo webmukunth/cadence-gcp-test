@@ -35,18 +35,20 @@ spec:
               value: {{ .Values.jvmOpts | default "" | quote }}
             - name: "SERVER_SERVLET_CONTEXT_PATH"
               value: {{ .Values.contextPath | default "/" | quote }}
+            - name: "SPRING_PROFILES_ACTIVE"
+              value: {{ .Values.spring.profiles.active | default "gke" | quote }}
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /actuator/health
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /actuator/health
-              port: http
+          #livenessProbe:
+          #  httpGet:
+          #    path: /actuator/health
+          #    port: http
+          #readinessProbe:
+          #  httpGet:
+          #    path: /actuator/health
+          #    port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

@@ -1,7 +1,7 @@
 package com.anz.magneto.commons.autoconfigure;
 
+import com.anz.magneto.commons.api.PaymentEvent;
 import com.anz.magneto.commons.kafka.KafkaProducer;
-import com.anz.magneto.commons.kafka.PaymentEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.serialization.StringSerializer;
@@ -25,14 +25,14 @@ public class KafkaAutoConfiguration {
   @ConditionalOnMissingBean
   public KafkaProducer paymentEventProducer(KafkaProperties kafkaProperties,
       ObjectMapper mapper) {
-    final var prop = kafkaProperties.buildProducerProperties();
+    var prop = kafkaProperties.buildProducerProperties();
     log.debug("producer properties: {}", prop);
 
-    final SenderOptions<String, PaymentEvent> so = SenderOptions.create(prop);
+    SenderOptions<String, PaymentEvent> so = SenderOptions.create(prop);
     so.withKeySerializer(new StringSerializer());
     so.withValueSerializer(new JsonSerializer<>(mapper));
 
-    final var ret = new KafkaProducer(KafkaSender.create(so));
+    var ret = new KafkaProducer(KafkaSender.create(so));
     log.info("New paymentEventProducer instance created {}", ret);
     return ret;
   }
