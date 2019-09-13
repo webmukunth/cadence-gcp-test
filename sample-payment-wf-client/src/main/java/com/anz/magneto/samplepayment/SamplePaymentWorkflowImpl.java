@@ -108,6 +108,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     /* Clearing */
     var clearingStatus = clearPayment(request);
     if (clearingStatus == ClearingStatus.REJECTED) {
+      log.info( "About to compensate {}", saga);
       saga.compensate();
       throw new StopWorkflowException("Stopped due to clearingStatus: " + clearingStatus);
     }

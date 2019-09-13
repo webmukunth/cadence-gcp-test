@@ -3,8 +3,12 @@ package com.anz.magneto.samplepayment;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.anz.magneto.activites.accounting.AccountingActivity;
@@ -111,6 +115,19 @@ public class SamplePaymentWorkflowImplTest {
     when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
       WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
       log.debug("mock(debitCustomerCreditFloat): {}", request);
+      return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
+    });
+
+    when(accountingActivity.forceDebitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      log.debug("mock(forceDebitCustomerCreditFloat): {}", request);
+      return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
+    });
+
+    when(accountingActivity.reverseDebitCustomerCreditFloat(any(), any())).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      AccountingResponse origResponse = i.getArgumentAt(1, AccountingResponse.class);
+      log.debug("mock(reverseDebitCustomerCreditFloat): {} {}", request, origResponse);
       return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
     });
 
@@ -417,14 +434,19 @@ public class SamplePaymentWorkflowImplTest {
       return new ClearingResponse(ClearingStatus.REJECTED, "c1");
     });
 
+    var workflowRequest = WorkflowRequest.builder().requestId("clearingRejected").build();
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
-        var workflowRequest = WorkflowRequest.builder().requestId("clearingRejected").build();
         samplePaymentWorkflow.submitPayment(workflowRequest);
       } catch (WorkflowFailureException e) {
         throw e.getCause();
       }
     });
+
+    /* Ensure customer debit is reversed */
+    verify(accountingActivity)
+        .reverseDebitCustomerCreditFloat(eq(workflowRequest), anyObject());
+
     assertEquals("Stopped due to clearingStatus: REJECTED", ex.getMessage());
   }
 
