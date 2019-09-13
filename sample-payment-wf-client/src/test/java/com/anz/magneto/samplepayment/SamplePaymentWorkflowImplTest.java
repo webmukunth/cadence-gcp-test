@@ -10,6 +10,9 @@ import static org.mockito.Mockito.when;
 import com.anz.magneto.activites.accounting.AccountingActivity;
 import com.anz.magneto.activites.accounting.AccountingResponse;
 import com.anz.magneto.activites.accounting.AccountingStatus;
+import com.anz.magneto.activites.clearing.ClearingActivity;
+import com.anz.magneto.activites.clearing.ClearingResponse;
+import com.anz.magneto.activites.clearing.ClearingStatus;
 import com.anz.magneto.activites.clientresponse.ClientResponseActivity;
 import com.anz.magneto.activites.enrich.EnrichActivity;
 import com.anz.magneto.activites.fraudcheck.FraudCheckActivity;
@@ -56,6 +59,7 @@ public class SamplePaymentWorkflowImplTest {
   private FraudCheckActivity fraudCheckActivity;
   private ClientResponseActivity clientResponseActivity;
   private LimitCheckActivity limitCheckActivity;
+  private ClearingActivity clearingActivity;
 
   @Before
   public void setUp() {
@@ -70,12 +74,14 @@ public class SamplePaymentWorkflowImplTest {
     fraudCheckActivity = mock(FraudCheckActivity.class);
     clientResponseActivity = mock(ClientResponseActivity.class);
     limitCheckActivity = mock(LimitCheckActivity.class);
+    clearingActivity = mock(ClearingActivity.class);
 
     Worker worker = testEnv.newWorker(Constants.TASK_LIST);
     worker.registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
     worker.registerActivitiesImplementations(
         validateActivity, enrichActivity, accountingActivity,
-        fraudCheckActivity, clientResponseActivity, limitCheckActivity);
+        fraudCheckActivity, clientResponseActivity, limitCheckActivity,
+        clearingActivity);
 
     testEnv.start();
 
@@ -114,7 +120,13 @@ public class SamplePaymentWorkflowImplTest {
           return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
         });
 
-    /* Mock as well as assert the final response to be success */
+    when(clearingActivity.clearPayment(any(WorkflowRequest.class)))
+        .then(i -> {
+          WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+          log.debug("mock(clearingActivity): {}", request);
+          return new ClearingResponse(ClearingStatus.CLEARED, "c1");
+        });
+
     doAnswer(invocation -> {
       WorkflowRequest request = invocation.getArgumentAt(0, WorkflowRequest.class);
       WorkflowResponse response = invocation.getArgumentAt(1, WorkflowResponse.class);

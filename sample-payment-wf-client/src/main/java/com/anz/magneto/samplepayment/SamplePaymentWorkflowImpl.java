@@ -3,6 +3,9 @@ package com.anz.magneto.samplepayment;
 import com.anz.magneto.activites.accounting.AccountingActivity;
 import com.anz.magneto.activites.accounting.AccountingResponse;
 import com.anz.magneto.activites.accounting.AccountingStatus;
+import com.anz.magneto.activites.clearing.ClearingActivity;
+import com.anz.magneto.activites.clearing.ClearingResponse;
+import com.anz.magneto.activites.clearing.ClearingStatus;
 import com.anz.magneto.activites.clientresponse.ClientResponseActivity;
 import com.anz.magneto.activites.enrich.EnrichActivity;
 import com.anz.magneto.activites.fraudcheck.FraudCheckActivity;
@@ -29,13 +32,16 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   final private AccountingActivity accountingActivity;
   final private FraudCheckActivity fraudCheckActivity;
   final private LimitCheckActivity limitCheckActivity;
+  final private ClearingActivity clearingActivity;
   final private ClientResponseActivity clientResponseActivity;
   final private Saga saga;
 
   private boolean stopProcessPayment = false;
   private boolean releaseFraudCheckHold = false;
+  private boolean paymentCleared = false;
 
   private AccountingResponse customerDebitResponse;
+  private ClearingResponse clearingResponse;
 
   public SamplePaymentWorkflowImpl() {
     validateActivity = Workflow.newActivityStub(ValidateActivity.class);
@@ -44,6 +50,8 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     limitCheckActivity = Workflow.newActivityStub(LimitCheckActivity.class);
     clientResponseActivity = Workflow.newActivityStub(ClientResponseActivity.class);
     fraudCheckActivity = Workflow.newActivityStub(FraudCheckActivity.class);
+    clearingActivity = Workflow.newActivityStub(ClearingActivity.class);
+
     var sagaOpt = new Saga.Options.Builder()
         .setContinueWithError(true)
         .setParallelCompensation(false)
@@ -88,19 +96,31 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     saga.addCompensation(accountingActivity::reverseDebitCustomerCreditFloat, request,
         customerDebitResponse);
 
+    /* Fraud check */
     var fraudCheckOutcome = fraudCheck(request);
-
     if (fraudCheckOutcome != FraudCheckOutcome.PASS) {
       throw new StopWorkflowException("Stopped due to fraudCheckOutcome: " + fraudCheckOutcome);
     }
-
     if (stopProcessPayment) {
       throw new StopWorkflowException("Stopped after fraudCheck");
+    }
+
+    /* Clearing */
+    var clearingStatus = clearPayment(request);
+    if (clearingStatus == ClearingStatus.REJECTED) {
+      saga.compensate();
+      throw new StopWorkflowException("Stopped due to clearingStatus: " + clearingStatus);
+    }
+    if (stopProcessPayment) {
+      throw new StopWorkflowException("Stopped after clearing");
     }
 
     return new WorkflowResponse(WorkflowStatus.SUCCESS, "SUCCESS");
   }
 
+  /**
+   * Fraud Check
+   */
   private FraudCheckOutcome fraudCheck(WorkflowRequest request) {
     try {
       var ret = fraudCheckActivity.fraudCheck(request);
@@ -125,6 +145,9 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     }
   }
 
+  /**
+   * Debit Customer
+   */
   private AccountingStatus debitCustomer(WorkflowRequest request) {
 
     if (request.getLimitType() == LimitType.LIMITONLY) {
@@ -151,6 +174,23 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     }
 
     return customerDebitResponse.getStatus();
+  }
+
+  private ClearingStatus clearPayment(WorkflowRequest request) {
+    clearingResponse = clearingActivity.clearPayment(request);
+
+    /* If the status is submitted, wait for signal */
+    if (clearingResponse.getStatus() == ClearingStatus.SUBMITTED) {
+      if (!Workflow.await(
+          Duration.ofDays(3), () -> paymentCleared || stopProcessPayment)) {
+        /* timeout */
+        log.warn("No response from external clearing system");
+        clearingResponse = clearingResponse.withStatus(ClearingStatus.CLEARED);
+      } else if (paymentCleared) {
+        clearingResponse = clearingResponse.withStatus(ClearingStatus.CLEARED);
+      }
+    }
+    return clearingResponse.getStatus();
   }
 
   @Override
