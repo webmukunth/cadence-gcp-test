@@ -2,8 +2,8 @@ package com.anz.magneto.service.download;
 
 import com.anz.magneto.api.download.DownloadActivity;
 import com.anz.magneto.api.download.ProcessFileActivity;
-import com.anz.magneto.commons.autoconfigure.CadenceAutoConfiguration;
 import com.anz.magneto.commons.Constants;
+import com.anz.magneto.commons.autoconfigure.CadenceAutoConfiguration;
 import com.uber.cadence.internal.worker.PollerOptions;
 import com.uber.cadence.serviceclient.WorkflowServiceTChannel;
 import com.uber.cadence.worker.Worker.Factory;
@@ -35,17 +35,17 @@ public class WorkerAutoConfiguration {
     log.debug("processFileActivity: {}", processFileAct);
 
     /* Create Factory */
-    final var fo = new FactoryOptions.Builder()
+    var fo = new FactoryOptions.Builder()
         .setMetricScope(ms)
         .setDisableStickyExecution(true)
         .setMaxWorkflowThreadCount(4)
         .build();
-    final var f = new Factory(tc, Constants.DOMAIN, fo);
+    var f = new Factory(tc, Constants.DOMAIN, fo);
     log.info("Initialized workerFactory {}", f);
 
     /* Create Main Worker */
 
-    final var worker = f.newWorker(Constants.TASK_LIST,
+    var worker = f.newWorker(Constants.TASK_LIST,
         new WorkerOptions.Builder()
             .setWorkflowPollerOptions(
                 new PollerOptions.Builder()
