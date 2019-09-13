@@ -1,12 +1,13 @@
 package com.anz.magneto.activites.fraudcheck;
 
 import com.anz.magneto.commons.Constants;
-import com.anz.magneto.commons.api.WorkflowRequest;
-import com.anz.magneto.commons.api.WorkflowResponse;
+import com.anz.magneto.commons.api.workflow.WorkflowRequest;
 import com.uber.cadence.activity.ActivityMethod;
+import lombok.NonNull;
 
 public interface FraudCheckActivity {
 
-  @ActivityMethod(taskList = Constants.TASK_LIST)
-  WorkflowResponse fraudCheck(WorkflowRequest workflowRequest);
+  @ActivityMethod(scheduleToCloseTimeoutSeconds = 30, taskList = Constants.TASK_LIST)
+  @NonNull FraudCheckOutcome fraudCheck(@NonNull WorkflowRequest workflowRequest);
+
 }

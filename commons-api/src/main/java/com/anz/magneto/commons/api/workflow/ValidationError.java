@@ -1,4 +1,4 @@
-package com.anz.magneto.activites.accounting;
+package com.anz.magneto.commons.api.workflow;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,11 +8,10 @@ import lombok.experimental.Wither;
 
 @Value
 @Wither
-@Builder(toBuilder = true)
+@Builder
 @AllArgsConstructor
-public class AccountingResponse {
+public class ValidationError {
 
-  @NonNull AccountingStatus status;
-  @NonNull String accountingId;
-
+  @NonNull String code;
+  @NonNull String message;
 }
