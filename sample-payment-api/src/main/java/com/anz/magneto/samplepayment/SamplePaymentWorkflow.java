@@ -11,7 +11,7 @@ import lombok.NonNull;
 
 public interface SamplePaymentWorkflow {
 
-  @WorkflowMethod(taskList = Constants.TASK_LIST, executionStartToCloseTimeoutSeconds = 601)
+  @WorkflowMethod(taskList = Constants.TASK_LIST, executionStartToCloseTimeoutSeconds = 36000)
   WorkflowResponse submitPayment(@NonNull WorkflowRequest request);
 
   @SignalMethod

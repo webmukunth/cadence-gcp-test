@@ -90,9 +90,12 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
 
     var fraudCheckOutcome = fraudCheck(request);
 
-    if (stopProcessPayment || fraudCheckOutcome == FraudCheckOutcome.FAIL) {
-      throw new StopWorkflowException("Stopped after fraudcheck due to stopProcessPayment: "
-          + stopProcessPayment + " or fraudCheckOutcome: " + fraudCheckOutcome);
+    if (fraudCheckOutcome != FraudCheckOutcome.PASS) {
+      throw new StopWorkflowException("Stopped due to fraudCheckOutcome: " + fraudCheckOutcome);
+    }
+
+    if (stopProcessPayment) {
+      throw new StopWorkflowException("Stopped after fraudCheck");
     }
 
     return new WorkflowResponse(WorkflowStatus.SUCCESS, "SUCCESS");
@@ -103,16 +106,16 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
       var ret = fraudCheckActivity.fraudCheck(request);
       /* for hold response from fraud check, wait for another 8 hours */
       if (ret == FraudCheckOutcome.HOLD) {
+
         if (!Workflow.await(
             Duration.ofHours(8), () -> releaseFraudCheckHold || stopProcessPayment)) {
+          log.warn("Fraud check timed out after hold");
           /* no response for last 8 hours means fail */
-          ret = FraudCheckOutcome.FAIL;
-        } else if (releaseFraudCheckHold) {
+          return FraudCheckOutcome.HOLD_TIMEOUT;
+        }
+        if (releaseFraudCheckHold) {
           /* Got signal to release fraud check hold, means good to proceed */
-          ret = FraudCheckOutcome.PASS;
-        } else {
-          /* No signal means fail fraud check */
-          ret = FraudCheckOutcome.FAIL;
+          return FraudCheckOutcome.PASS;
         }
       }
       return ret;

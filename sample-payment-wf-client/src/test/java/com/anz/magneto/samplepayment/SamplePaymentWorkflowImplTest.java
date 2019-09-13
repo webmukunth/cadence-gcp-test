@@ -31,6 +31,7 @@ import com.uber.cadence.client.WorkflowFailureException;
 import com.uber.cadence.testing.SimulatedTimeoutException;
 import com.uber.cadence.testing.TestWorkflowEnvironment;
 import com.uber.cadence.worker.Worker;
+import java.time.Duration;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -211,9 +212,7 @@ public class SamplePaymentWorkflowImplTest {
         throw e.getCause();
       }
     });
-    assertEquals(
-        "Stopped after fraudcheck due to stopProcessPayment: false or fraudCheckOutcome: FAIL",
-        ex.getMessage());
+    assertEquals("Stopped due to fraudCheckOutcome: FAIL", ex.getMessage());
   }
 
   @Test
@@ -234,6 +233,28 @@ public class SamplePaymentWorkflowImplTest {
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, wfRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("SUCCESS", response.getMessage());
+  }
+
+  @Test
+  public void fraudCheckHoldThenTimeOut() {
+
+    when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class))).then(invocation -> {
+      log.debug("Sending {} response for fraudCheck activity", FraudCheckOutcome.HOLD);
+      return FraudCheckOutcome.HOLD;
+    });
+
+    var ex = assertThrows(StopWorkflowException.class, () -> {
+      try {
+        var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckHoldThenRelease")
+            .build();
+        samplePaymentWorkflow.submitPayment(workflowRequest);
+        /* Advance the clock by 9 hours to timeout the wait after hold */
+        testEnv.sleep(Duration.ofHours(9));
+      } catch (WorkflowFailureException e) {
+        throw e.getCause();
+      }
+    });
+    assertEquals("Stopped due to fraudCheckOutcome: HOLD_TIMEOUT", ex.getMessage());
   }
 
   @Test
@@ -340,6 +361,51 @@ public class SamplePaymentWorkflowImplTest {
       }
     });
     assertEquals("Stopped after enrich", ex.getMessage());
+  }
+
+  @Test
+  public void stopProcessAfterDebitCustomer() {
+
+    when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class)))
+        .then(invocation -> {
+          samplePaymentWorkflow.stopProcessPayment();
+
+          log.debug("Sending {} response for forceDebitCustomerCreditFloat",
+              AccountingStatus.SUCCESS);
+          return AccountingResponse.builder()
+              .status(AccountingStatus.SUCCESS)
+              .accountingId("f1-a1")
+              .build();
+        });
+
+    var ex = assertThrows(StopWorkflowException.class, () -> {
+      try {
+        var workflowRequest = WorkflowRequest.builder().requestId("stopProcessAfterEnrich").build();
+        samplePaymentWorkflow.submitPayment(workflowRequest);
+      } catch (WorkflowFailureException e) {
+        throw e.getCause();
+      }
+    });
+    assertEquals("Stopped after debitCustomer", ex.getMessage());
+  }
+
+  @Test
+  public void stopProcessAfterFraudCheck() {
+
+    when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class))).then(invocation -> {
+      samplePaymentWorkflow.stopProcessPayment();
+      return FraudCheckOutcome.PASS;
+    });
+
+    var ex = assertThrows(StopWorkflowException.class, () -> {
+      try {
+        var workflowRequest = WorkflowRequest.builder().requestId("stopProcessAfterEnrich").build();
+        samplePaymentWorkflow.submitPayment(workflowRequest);
+      } catch (WorkflowFailureException e) {
+        throw e.getCause();
+      }
+    });
+    assertEquals("Stopped after fraudCheck", ex.getMessage());
   }
 
   /*
