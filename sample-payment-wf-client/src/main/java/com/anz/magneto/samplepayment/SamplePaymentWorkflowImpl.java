@@ -125,7 +125,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   private AccountingStatus debitCustomer(WorkflowRequest request) {
 
     if (request.getLimitType() == LimitType.LIMITONLY) {
-      /* If the limit type is 'Limit Only', check it first */
+      /* check limit first */
       if (limitCheckActivity.limitCheck(request) == LimitCheckOutcome.FAIL) {
         /* No available limit */
         return AccountingStatus.INSUFFICIENT_LIMIT;

@@ -22,12 +22,4 @@ public class WorkflowResponse {
   final private String message;
   @NonFinal
   private List<ValidationError> validationErrors;
-
-  final public boolean isError() {
-    return workflowStatus == WorkflowStatus.ERROR;
-  }
-
-  final public boolean isSuccess() {
-    return workflowStatus == WorkflowStatus.SUCCESS;
-  }
 }

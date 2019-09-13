@@ -18,6 +18,7 @@ import com.anz.magneto.activites.limitcheck.LimitCheckActivity;
 import com.anz.magneto.activites.limitcheck.LimitCheckOutcome;
 import com.anz.magneto.activites.validate.ValidateActivity;
 import com.anz.magneto.commons.Constants;
+import com.anz.magneto.commons.api.workflow.LimitType;
 import com.anz.magneto.commons.api.workflow.StopWorkflowException;
 import com.anz.magneto.commons.api.workflow.ValidationError;
 import com.anz.magneto.commons.api.workflow.ValidationErrors;
@@ -229,6 +230,64 @@ public class SamplePaymentWorkflowImplTest {
     var wfRequest = WorkflowRequest.builder().requestId("fraudCheckHoldThenRelease").build();
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, wfRequest);
     var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals("SUCCESS", response.getMessage());
+  }
+
+  @Test
+  public void limitOnlyFail()
+      throws InterruptedException, ExecutionException, TimeoutException {
+
+    when(limitCheckActivity.limitCheck(any(WorkflowRequest.class))).then(invocation -> {
+      log.debug("Sending {} response for limitCheck", LimitCheckOutcome.FAIL);
+      return LimitCheckOutcome.FAIL;
+    });
+
+    var request = WorkflowRequest.builder()
+        .requestId("limitOnlyFail")
+        .limitType(LimitType.LIMITONLY)
+        .build();
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, request);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals(LimitType.LIMITONLY, request.getLimitType());
+    assertEquals("debitCustomer failed INSUFFICIENT_LIMIT", response.getMessage());
+  }
+
+  @Test
+  public void afpThenLimitPass()
+      throws InterruptedException, ExecutionException, TimeoutException {
+
+    when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class)))
+        .then(invocation -> {
+          log.debug("Sending {} response for debitCustomerCreditFloat",
+              AccountingStatus.INSUFFICIENT_BALANCE);
+          return AccountingResponse.builder()
+              .status(AccountingStatus.INSUFFICIENT_BALANCE)
+              .accountingId("a1")
+              .build();
+        });
+
+    when(limitCheckActivity.limitCheck(any(WorkflowRequest.class))).then(invocation -> {
+      log.debug("Sending {} response for limitCheck", LimitCheckOutcome.PASS);
+      return LimitCheckOutcome.PASS;
+    });
+
+    when(accountingActivity.forceDebitCustomerCreditFloat(any(WorkflowRequest.class)))
+        .then(invocation -> {
+          log.debug("Sending {} response for forceDebitCustomerCreditFloat",
+              AccountingStatus.SUCCESS);
+          return AccountingResponse.builder()
+              .status(AccountingStatus.SUCCESS)
+              .accountingId("f1-a1")
+              .build();
+        });
+
+    var request = WorkflowRequest.builder()
+        .requestId("afpThenLimitPass")
+        .limitType(LimitType.AFPTHENLIMIT)
+        .build();
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, request);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals(LimitType.AFPTHENLIMIT, request.getLimitType());
     assertEquals("SUCCESS", response.getMessage());
   }
 
