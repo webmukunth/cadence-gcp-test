@@ -36,28 +36,13 @@ import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TestWatcher;
-import org.junit.runner.Description;
 
 @Slf4j
 public class SamplePaymentWorkflowImplTest {
 
   private TestWorkflowEnvironment testEnv;
-  /**
-   * Prints a history of the workflow under test in case of a test failure.
-   */
-  @Rule
-  public TestWatcher watchman = new TestWatcher() {
-    @Override
-    protected void failed(Throwable e, Description description) {
-      if (testEnv != null) {
-        log.warn("diagostics: {}", testEnv.getDiagnostics());
-        testEnv.close();
-      }
-    }
-  };
+  private WorkflowClient workflowClient;
   private ActivityCompletionClient completionClient;
   private SamplePaymentWorkflow samplePaymentWorkflow;
 
@@ -71,10 +56,8 @@ public class SamplePaymentWorkflowImplTest {
   @Before
   public void setUp() {
     testEnv = TestWorkflowEnvironment.newInstance();
-    Worker worker = testEnv.newWorker(Constants.TASK_LIST);
-    WorkflowClient workflowClient = testEnv.newWorkflowClient();
+    workflowClient = testEnv.newWorkflowClient();
     completionClient = workflowClient.newActivityCompletionClient();
-
     samplePaymentWorkflow = workflowClient.newWorkflowStub(SamplePaymentWorkflow.class);
 
     validateActivity = mock(ValidateActivity.class);
@@ -84,6 +67,7 @@ public class SamplePaymentWorkflowImplTest {
     clientResponseActivity = mock(ClientResponseActivity.class);
     limitCheckActivity = mock(LimitCheckActivity.class);
 
+    Worker worker = testEnv.newWorker(Constants.TASK_LIST);
     worker.registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
     worker.registerActivitiesImplementations(
         validateActivity, enrichActivity, accountingActivity,
@@ -147,7 +131,8 @@ public class SamplePaymentWorkflowImplTest {
       throws InterruptedException, ExecutionException, TimeoutException {
     var workflowRequest = WorkflowRequest.builder().requestId("successfulPayment").build();
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
-    f.get(2, TimeUnit.SECONDS);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals("SUCCESS", response.getMessage());
   }
 
   @Test
@@ -162,7 +147,8 @@ public class SamplePaymentWorkflowImplTest {
 
     var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckTimeOut").build();
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
-    f.get(2, TimeUnit.SECONDS);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals("SUCCESS", response.getMessage());
   }
 
   @Test
@@ -173,7 +159,7 @@ public class SamplePaymentWorkflowImplTest {
       Activity.doNotCompleteOnReturn();
       byte[] taskToken = Activity.getTaskToken();
       ForkJoinPool.commonPool().execute(() -> {
-        log.debug("Sending pass response for fraudCheck activity");
+        log.debug("Sending {} response for fraudCheck activity", FraudCheckOutcome.PASS);
         completionClient.complete(taskToken, FraudCheckOutcome.PASS);
       });
       return null;
@@ -181,7 +167,8 @@ public class SamplePaymentWorkflowImplTest {
 
     var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckPassResponse").build();
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
-    f.get(2, TimeUnit.SECONDS);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals("SUCCESS", response.getMessage());
   }
 
   @Test
@@ -205,6 +192,26 @@ public class SamplePaymentWorkflowImplTest {
         throw e.getCause();
       }
     });
+  }
+
+  @Test
+  public void fraudCheckHoldThenRelease()
+      throws InterruptedException, ExecutionException, TimeoutException {
+
+    when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class))).then(invocation -> {
+      log.debug("Sending {} response for fraudCheck activity", FraudCheckOutcome.HOLD);
+      var workflowId = Activity.getWorkflowExecution().getWorkflowId();
+      ForkJoinPool.commonPool().execute(() -> {
+        var wfInstance = workflowClient.newWorkflowStub(SamplePaymentWorkflow.class, workflowId);
+        wfInstance.releaseFraudCheckHold();
+      });
+      return FraudCheckOutcome.HOLD;
+    });
+
+    var wfRequest = WorkflowRequest.builder().requestId("fraudCheckHoldThenRelease").build();
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, wfRequest);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals("SUCCESS", response.getMessage());
   }
 
   /*
@@ -240,6 +247,14 @@ public class SamplePaymentWorkflowImplTest {
     log.debug("workflowResponse {}", response);
     Assert.assertEquals("testQuery", workflow.getCustomerDebitResponse().getAccountingId());
   }
+   */
+
+  /*
+   * Prints a history of the workflow under test in case of a test failure.
+   *
+   * @Rule public TestWatcher watchman = new TestWatcher() {
+   * @Override protected void failed(Throwable e, Description description) { if (testEnv != null) {
+   * log.warn("diagostics: {}", testEnv.getDiagnostics()); testEnv.close(); } } };
    */
 
 }

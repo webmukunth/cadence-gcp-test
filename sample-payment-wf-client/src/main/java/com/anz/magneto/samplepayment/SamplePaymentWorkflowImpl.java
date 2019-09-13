@@ -52,9 +52,10 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   }
 
   @Override
-  public void submitPayment(WorkflowRequest request) {
+  public WorkflowResponse submitPayment(WorkflowRequest request) {
     var response = doProcessPayment(request);
     clientResponseActivity.sendResponse(request, response);
+    return response;
   }
 
   private WorkflowResponse doProcessPayment(WorkflowRequest r) {
@@ -151,11 +152,13 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
 
   @Override
   public void stopProcessPayment() {
+    log.info("stopProcessPayment");
     stopProcessPayment = true;
   }
 
   @Override
   public void releaseFraudCheckHold() {
+    log.info("releaseFraudCheckHold");
     releaseFraudCheckHold = true;
   }
 
