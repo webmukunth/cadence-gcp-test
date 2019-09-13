@@ -126,10 +126,10 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
       var ret = fraudCheckActivity.fraudCheck(request);
       /* for hold response from fraud check, wait for another 8 hours */
       if (ret == FraudCheckOutcome.HOLD) {
-
+        log.info("Waiting for fraudCheck signal");
         if (!Workflow.await(
             Duration.ofHours(8), () -> releaseFraudCheckHold || stopProcessPayment)) {
-          log.warn("Fraud check timed out after hold");
+          log.warn("Fraud check hold timed out");
           /* no response for last 8 hours means fail */
           return FraudCheckOutcome.HOLD_TIMEOUT;
         }
@@ -181,6 +181,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
 
     /* If the status is submitted, wait for signal */
     if (clearingResponse.getStatus() == ClearingStatus.SUBMITTED) {
+      log.info("Waiting for clearing signal");
       if (!Workflow.await(
           Duration.ofDays(3), () -> paymentCleared || stopProcessPayment)) {
         /* timeout */
@@ -203,6 +204,12 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   public void releaseFraudCheckHold() {
     log.info("releaseFraudCheckHold");
     releaseFraudCheckHold = true;
+  }
+
+  @Override
+  public void paymentCleared() {
+    log.info("paymentCleared");
+    paymentCleared = true;
   }
 
   @Override

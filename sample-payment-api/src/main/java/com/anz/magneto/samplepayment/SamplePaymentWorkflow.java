@@ -21,6 +21,9 @@ public interface SamplePaymentWorkflow {
   @SignalMethod
   void releaseFraudCheckHold();
 
+  @SignalMethod
+  void paymentCleared();
+
   @QueryMethod
   @NonNull AccountingResponse getCustomerDebitResponse();
 

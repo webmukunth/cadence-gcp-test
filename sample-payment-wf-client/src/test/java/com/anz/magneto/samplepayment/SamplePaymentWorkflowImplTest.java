@@ -371,17 +371,12 @@ public class SamplePaymentWorkflowImplTest {
   @Test
   public void stopProcessAfterDebitCustomer() {
 
-    when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class)))
-        .then(invocation -> {
-          samplePaymentWorkflow.stopProcessPayment();
-
-          log.debug("Sending {} response for forceDebitCustomerCreditFloat",
-              AccountingStatus.SUCCESS);
-          return AccountingResponse.builder()
-              .status(AccountingStatus.SUCCESS)
-              .accountingId("f1-a1")
-              .build();
-        });
+    when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
+      samplePaymentWorkflow.stopProcessPayment();
+      log.debug("Sending {} response for forceDebitCustomerCreditFloat", AccountingStatus.SUCCESS);
+      return AccountingResponse.builder().status(AccountingStatus.SUCCESS).accountingId("f1-a1")
+          .build();
+    });
 
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
@@ -399,6 +394,7 @@ public class SamplePaymentWorkflowImplTest {
 
     when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class))).then(invocation -> {
       samplePaymentWorkflow.stopProcessPayment();
+      log.debug("mock(fraudCheckActivity): {}", FraudCheckOutcome.PASS);
       return FraudCheckOutcome.PASS;
     });
 
@@ -417,7 +413,7 @@ public class SamplePaymentWorkflowImplTest {
   public void clearingRejected() {
 
     when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      log.debug("mock(clearingActivity): {}", ClearingStatus.REJECTED);
       return new ClearingResponse(ClearingStatus.REJECTED, "c1");
     });
 
@@ -430,6 +426,44 @@ public class SamplePaymentWorkflowImplTest {
       }
     });
     assertEquals("Stopped due to clearingStatus: REJECTED", ex.getMessage());
+  }
+
+  @Test
+  public void clearingSubmittedAndTimeOut()
+      throws InterruptedException, ExecutionException, TimeoutException {
+
+    when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
+      log.debug("mock(clearingActivity): {}", ClearingStatus.SUBMITTED);
+      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1");
+    });
+
+    var request = WorkflowRequest.builder().requestId("clearingTimeout").build();
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, request);
+    /* Advance the clock by 3 days to timeout the wait*/
+    testEnv.sleep(Duration.ofDays(3));
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals("SUCCESS", response.getMessage());
+  }
+
+  @Test
+  public void clearingSubmittedCleared()
+      throws InterruptedException, ExecutionException, TimeoutException {
+
+    when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
+      var workflowId = Activity.getWorkflowExecution().getWorkflowId();
+      ForkJoinPool.commonPool().execute(() -> {
+        var wfInstance = workflowClient.newWorkflowStub(SamplePaymentWorkflow.class, workflowId);
+        wfInstance.paymentCleared();
+      });
+
+      log.debug("mock(clearingActivity): {}", ClearingStatus.SUBMITTED);
+      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1");
+    });
+
+    var wfRequest = WorkflowRequest.builder().requestId("clearingSubmittedCleared").build();
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, wfRequest);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals("SUCCESS", response.getMessage());
   }
 
   @Test
