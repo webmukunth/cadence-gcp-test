@@ -408,47 +408,30 @@ public class SamplePaymentWorkflowImplTest {
     assertEquals("Stopped after fraudCheck", ex.getMessage());
   }
 
-  /*
-  @Test
-  public void stopProcessPaymentAfterEnrich()
-      throws InterruptedException, TimeoutException, ExecutionException {
-
-    when(enrichActivity.enrich(workflowRequest)).then(i -> {
-      samplePaymentWorkflow.stopProcessPayment();
-      return workflowRequest;
-    });
-    final var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
-        workflowRequest);
-    final var response = f.get(2, TimeUnit.SECONDS);
-    log.debug("workflowResponse {}", response);
-    Assert.assertEquals("Workflow stopped after enrich", response.getMessage());
-  }
-
   @Test
   public void testQueryCustomerDebitAccoutingResponse() {
 
-    when(accountingActivity.debitCustomerCreditFloat(workflowRequest)).then(i -> {
-      log.debug("debitCustomerCreditFloat");
-      return AccountingResponse.builder().accountingId("testQuery").status(WorkflowStatus.SUCCESS)
-          .build();
-    });
+    var accoutingResponse = AccountingResponse.builder()
+        .status(AccountingStatus.SUCCESS)
+        .accountingId("testQueryCustomerDebitAccoutingResponse")
+        .build();
+
+    when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class)))
+        .then(i -> accoutingResponse);
+
+    var workflowRequest = WorkflowRequest.builder().requestId("testQuery").build();
 
     final var workflowExecution = WorkflowClient.start(
-        samplePaymentWorkflow::processPayment, workflowRequest);
-    final var workflow = workflowClient
+        samplePaymentWorkflow::submitPayment, workflowRequest);
+
+    final var workflowInstance = workflowClient
         .newWorkflowStub(SamplePaymentWorkflow.class, workflowExecution.getWorkflowId());
-    final var response = workflow.processPayment(null);
+
+    /* below invocation will not trigger the workflow, rather get the final response */
+    final var response = workflowInstance.submitPayment(null);
     log.debug("workflowResponse {}", response);
-    Assert.assertEquals("testQuery", workflow.getCustomerDebitResponse().getAccountingId());
+
+    final var actualResponse = workflowInstance.getCustomerDebitResponse();
+    assertEquals(accoutingResponse, actualResponse);
   }
-   */
-
-  /*
-   * Prints a history of the workflow under test in case of a test failure.
-   *
-   * @Rule public TestWatcher watchman = new TestWatcher() {
-   * @Override protected void failed(Throwable e, Description description) { if (testEnv != null) {
-   * log.warn("diagostics: {}", testEnv.getDiagnostics()); testEnv.close(); } } };
-   */
-
 }
