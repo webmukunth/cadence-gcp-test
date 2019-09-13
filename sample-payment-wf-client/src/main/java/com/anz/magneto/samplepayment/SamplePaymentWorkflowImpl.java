@@ -52,19 +52,12 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   }
 
   @Override
-  public WorkflowResponse processPayment(WorkflowRequest request) {
-    WorkflowResponse response;
-    try {
-      response = doProcessPayment(request);
-      clientResponseActivity.sendResponse(request, response);
-    } catch (StopWorkflowException e) {
-      log.error("Eception occured. request={}", request, e);
-      response = new WorkflowResponse(WorkflowStatus.STOPPED, e.getMessage());
-    }
-    return response;
+  public void submitPayment(WorkflowRequest request) {
+    var response = doProcessPayment(request);
+    clientResponseActivity.sendResponse(request, response);
   }
 
-  private WorkflowResponse doProcessPayment(WorkflowRequest r) throws StopWorkflowException {
+  private WorkflowResponse doProcessPayment(WorkflowRequest r) {
 
     WorkflowRequest request = r;
 

@@ -1,6 +1,7 @@
 package com.anz.magneto.samplepayment;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -17,16 +18,19 @@ import com.anz.magneto.activites.limitcheck.LimitCheckActivity;
 import com.anz.magneto.activites.limitcheck.LimitCheckOutcome;
 import com.anz.magneto.activites.validate.ValidateActivity;
 import com.anz.magneto.commons.Constants;
+import com.anz.magneto.commons.api.workflow.StopWorkflowException;
 import com.anz.magneto.commons.api.workflow.WorkflowRequest;
 import com.anz.magneto.commons.api.workflow.WorkflowResponse;
 import com.uber.cadence.activity.Activity;
 import com.uber.cadence.client.ActivityCompletionClient;
 import com.uber.cadence.client.WorkflowClient;
+import com.uber.cadence.client.WorkflowFailureException;
 import com.uber.cadence.testing.SimulatedTimeoutException;
 import com.uber.cadence.testing.TestWorkflowEnvironment;
 import com.uber.cadence.worker.Worker;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import lombok.extern.slf4j.Slf4j;
@@ -142,7 +146,7 @@ public class SamplePaymentWorkflowImplTest {
   public void successfulPayment()
       throws InterruptedException, ExecutionException, TimeoutException {
     var workflowRequest = WorkflowRequest.builder().requestId("successfulPayment").build();
-    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment, workflowRequest);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     f.get(2, TimeUnit.SECONDS);
   }
 
@@ -157,34 +161,53 @@ public class SamplePaymentWorkflowImplTest {
     });
 
     var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckTimeOut").build();
-    var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment, workflowRequest);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     f.get(2, TimeUnit.SECONDS);
   }
 
-  /*
   @Test
-  public void fraudCheckPass()
+  public void fraudCheckPassResponse()
       throws InterruptedException, TimeoutException, ExecutionException {
 
-    when(fraudCheckActivity.fraudCheck(workflowRequest)).then(invocation -> {
+    when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class))).then(invocation -> {
       Activity.doNotCompleteOnReturn();
-      final byte[] taskToken = Activity.getTaskToken();
+      byte[] taskToken = Activity.getTaskToken();
       ForkJoinPool.commonPool().execute(() -> {
-        log.debug("About to complete fraud check");
-        completionClient.complete(taskToken,
-            WorkflowResponse.builder().workflowStatus(WorkflowStatus.SUCCESS)
-                .message("No fraud found").build());
+        log.debug("Sending pass response for fraudCheck activity");
+        completionClient.complete(taskToken, FraudCheckOutcome.PASS);
       });
       return null;
     });
 
-    final var f = WorkflowClient.execute(samplePaymentWorkflow::processPayment,
-        workflowRequest);
-    final var response = f.get(2, TimeUnit.SECONDS);
-    log.debug("workflowResponse {}", response);
-    Assert.assertEquals("No fraud found", response.getMessage());
+    var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckPassResponse").build();
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
+    f.get(2, TimeUnit.SECONDS);
   }
 
+  @Test
+  public void fraudCheckFailResponse() {
+
+    when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class))).then(invocation -> {
+      Activity.doNotCompleteOnReturn();
+      byte[] taskToken = Activity.getTaskToken();
+      ForkJoinPool.commonPool().execute(() -> {
+        log.debug("Sending {} response for fraudCheck activity", FraudCheckOutcome.FAIL);
+        completionClient.complete(taskToken, FraudCheckOutcome.FAIL);
+      });
+      return null;
+    });
+
+    assertThrows(StopWorkflowException.class, () -> {
+      try {
+        var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckFailResponse").build();
+        samplePaymentWorkflow.submitPayment(workflowRequest);
+      } catch (WorkflowFailureException e) {
+        throw e.getCause();
+      }
+    });
+  }
+
+  /*
   @Test
   public void stopProcessPaymentAfterEnrich()
       throws InterruptedException, TimeoutException, ExecutionException {
