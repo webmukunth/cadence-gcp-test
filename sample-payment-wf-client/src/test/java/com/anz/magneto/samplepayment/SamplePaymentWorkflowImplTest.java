@@ -19,6 +19,8 @@ import com.anz.magneto.activites.limitcheck.LimitCheckOutcome;
 import com.anz.magneto.activites.validate.ValidateActivity;
 import com.anz.magneto.commons.Constants;
 import com.anz.magneto.commons.api.workflow.StopWorkflowException;
+import com.anz.magneto.commons.api.workflow.ValidationError;
+import com.anz.magneto.commons.api.workflow.ValidationErrors;
 import com.anz.magneto.commons.api.workflow.WorkflowRequest;
 import com.anz.magneto.commons.api.workflow.WorkflowResponse;
 import com.uber.cadence.activity.Activity;
@@ -115,7 +117,6 @@ public class SamplePaymentWorkflowImplTest {
       WorkflowRequest request = (WorkflowRequest) invocation.getArguments()[0];
       WorkflowResponse response = (WorkflowResponse) invocation.getArguments()[1];
       log.debug("mock(clientResponse) response={} request={}", response, request);
-      assertEquals("SUCCESS", response.getMessage());
       return null;
     }).when(clientResponseActivity)
         .sendResponse(any(WorkflowRequest.class), any(WorkflowResponse.class));
@@ -133,6 +134,23 @@ public class SamplePaymentWorkflowImplTest {
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("SUCCESS", response.getMessage());
+  }
+
+  @Test
+  public void validationErrors()
+      throws InterruptedException, TimeoutException, ExecutionException {
+
+    when(validateActivity.validate(any(WorkflowRequest.class)))
+        .then(invocation -> ValidationErrors.builder()
+            .error(new ValidationError("c1", "c1 failed"))
+            .error(new ValidationError("c2", "c2 failed"))
+            .build().getErrors());
+
+    var workflowRequest = WorkflowRequest.builder().requestId("validationErrors").build();
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals("Validation failed", response.getMessage());
+    assertEquals(2, response.getValidationErrors().size());
   }
 
   @Test
