@@ -79,53 +79,46 @@ public class SamplePaymentWorkflowImplTest {
     Worker worker = testEnv.newWorker(Constants.TASK_LIST);
     worker.registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
     worker.registerActivitiesImplementations(
-        validateActivity, enrichActivity, accountingActivity,
-        fraudCheckActivity, clientResponseActivity, limitCheckActivity,
-        clearingActivity);
+        validateActivity, enrichActivity, accountingActivity, fraudCheckActivity,
+        clientResponseActivity, limitCheckActivity, clearingActivity);
 
     testEnv.start();
 
-    when(validateActivity.validate(any(WorkflowRequest.class)))
-        .then(i -> {
-          WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
-          log.debug("mock(validate): {}", request);
-          return null;
-        });
+    when(validateActivity.validate(any(WorkflowRequest.class))).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      log.debug("mock(validate): {}", request);
+      return null;
+    });
 
-    when(enrichActivity.enrich(any(WorkflowRequest.class)))
-        .then(i -> {
-          WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
-          log.debug("mock(enrich): {}", request);
-          return request;
-        });
+    when(enrichActivity.enrich(any(WorkflowRequest.class))).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      log.debug("mock(enrich): {}", request);
+      return request;
+    });
 
-    when(limitCheckActivity.limitCheck(any(WorkflowRequest.class)))
-        .then(i -> {
-          WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
-          log.debug("mock(limitCheck): {}", request);
-          return LimitCheckOutcome.PASS;
-        });
+    when(limitCheckActivity.limitCheck(any(WorkflowRequest.class))).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      log.debug("mock(limitCheck): {}", request);
+      return LimitCheckOutcome.PASS;
+    });
 
-    when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class)))
-        .then(i -> {
-          WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
-          log.debug("mock(fraudCheck): {}", request);
-          return FraudCheckOutcome.PASS;
-        });
+    when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class))).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      log.debug("mock(fraudCheck): {}", request);
+      return FraudCheckOutcome.PASS;
+    });
 
-    when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class)))
-        .then(i -> {
-          WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
-          log.debug("mock(debitCustomerCreditFloat): {}", request);
-          return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
-        });
+    when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      log.debug("mock(debitCustomerCreditFloat): {}", request);
+      return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
+    });
 
-    when(clearingActivity.clearPayment(any(WorkflowRequest.class)))
-        .then(i -> {
-          WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
-          log.debug("mock(clearingActivity): {}", request);
-          return new ClearingResponse(ClearingStatus.CLEARED, "c1");
-        });
+    when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      log.debug("mock(clearingActivity): {}", request);
+      return new ClearingResponse(ClearingStatus.CLEARED, "c1");
+    });
 
     doAnswer(invocation -> {
       WorkflowRequest request = invocation.getArgumentAt(0, WorkflowRequest.class);
@@ -418,6 +411,25 @@ public class SamplePaymentWorkflowImplTest {
       }
     });
     assertEquals("Stopped after fraudCheck", ex.getMessage());
+  }
+
+  @Test
+  public void clearingRejected() {
+
+    when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
+      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      return new ClearingResponse(ClearingStatus.REJECTED, "c1");
+    });
+
+    var ex = assertThrows(StopWorkflowException.class, () -> {
+      try {
+        var workflowRequest = WorkflowRequest.builder().requestId("clearingRejected").build();
+        samplePaymentWorkflow.submitPayment(workflowRequest);
+      } catch (WorkflowFailureException e) {
+        throw e.getCause();
+      }
+    });
+    assertEquals("Stopped due to clearingStatus: REJECTED", ex.getMessage());
   }
 
   @Test
