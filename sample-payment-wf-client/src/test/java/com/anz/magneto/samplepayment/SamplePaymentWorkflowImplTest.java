@@ -115,8 +115,8 @@ public class SamplePaymentWorkflowImplTest {
 
     /* Mock as well as assert the final response to be success */
     doAnswer(invocation -> {
-      WorkflowRequest request = (WorkflowRequest) invocation.getArguments()[0];
-      WorkflowResponse response = (WorkflowResponse) invocation.getArguments()[1];
+      WorkflowRequest request = invocation.getArgumentAt(0, WorkflowRequest.class);
+      WorkflowResponse response = invocation.getArgumentAt(1, WorkflowResponse.class);
       log.debug("mock(clientResponse) response={} request={}", response, request);
       return null;
     }).when(clientResponseActivity)
@@ -203,7 +203,7 @@ public class SamplePaymentWorkflowImplTest {
       return null;
     });
 
-    assertThrows(StopWorkflowException.class, () -> {
+    var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
         var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckFailResponse").build();
         samplePaymentWorkflow.submitPayment(workflowRequest);
@@ -211,6 +211,9 @@ public class SamplePaymentWorkflowImplTest {
         throw e.getCause();
       }
     });
+    assertEquals(
+        "Stopped after fraudcheck due to stopProcessPayment: false or fraudCheckOutcome: FAIL",
+        ex.getMessage());
   }
 
   @Test
@@ -289,6 +292,54 @@ public class SamplePaymentWorkflowImplTest {
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals(LimitType.AFPTHENLIMIT, request.getLimitType());
     assertEquals("SUCCESS", response.getMessage());
+  }
+
+  @Test
+  public void afpThenLimitFail()
+      throws InterruptedException, ExecutionException, TimeoutException {
+
+    when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class)))
+        .then(invocation -> {
+          log.debug("Sending {} response for debitCustomerCreditFloat",
+              AccountingStatus.INSUFFICIENT_BALANCE);
+          return AccountingResponse.builder()
+              .status(AccountingStatus.INSUFFICIENT_BALANCE)
+              .accountingId("a1")
+              .build();
+        });
+
+    when(limitCheckActivity.limitCheck(any(WorkflowRequest.class))).then(invocation -> {
+      log.debug("Sending {} response for limitCheck", LimitCheckOutcome.FAIL);
+      return LimitCheckOutcome.FAIL;
+    });
+
+    var request = WorkflowRequest.builder()
+        .requestId("afpThenLimitFail")
+        .limitType(LimitType.AFPTHENLIMIT)
+        .build();
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, request);
+    var response = f.get(2, TimeUnit.SECONDS);
+    assertEquals(LimitType.AFPTHENLIMIT, request.getLimitType());
+    assertEquals("debitCustomer failed INSUFFICIENT_LIMIT", response.getMessage());
+  }
+
+  @Test
+  public void stopProcessAfterEnrich() {
+
+    when(enrichActivity.enrich(any(WorkflowRequest.class))).then(invocation -> {
+      samplePaymentWorkflow.stopProcessPayment();
+      return invocation.getArgumentAt(0, WorkflowRequest.class);
+    });
+
+    var ex = assertThrows(StopWorkflowException.class, () -> {
+      try {
+        var workflowRequest = WorkflowRequest.builder().requestId("stopProcessAfterEnrich").build();
+        samplePaymentWorkflow.submitPayment(workflowRequest);
+      } catch (WorkflowFailureException e) {
+        throw e.getCause();
+      }
+    });
+    assertEquals("Stopped after enrich", ex.getMessage());
   }
 
   /*
