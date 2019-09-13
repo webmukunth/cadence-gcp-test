@@ -467,6 +467,31 @@ public class SamplePaymentWorkflowImplTest {
   }
 
   @Test
+  public void clearingSubmittedStopped() {
+
+    when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
+      var workflowId = Activity.getWorkflowExecution().getWorkflowId();
+      ForkJoinPool.commonPool().execute(() -> {
+        var wfInstance = workflowClient.newWorkflowStub(SamplePaymentWorkflow.class, workflowId);
+        wfInstance.stopProcessPayment();
+      });
+
+      log.debug("mock(clearingActivity): {}", ClearingStatus.SUBMITTED);
+      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1");
+    });
+
+    var ex = assertThrows(StopWorkflowException.class, () -> {
+      try {
+        var workflowRequest = WorkflowRequest.builder().requestId("clearingStopped").build();
+        samplePaymentWorkflow.submitPayment(workflowRequest);
+      } catch (WorkflowFailureException e) {
+        throw e.getCause();
+      }
+    });
+    assertEquals("Stopped after clearing", ex.getMessage());
+  }
+
+  @Test
   public void testQueryCustomerDebitAccoutingResponse() {
 
     var accoutingResponse = AccountingResponse.builder()
