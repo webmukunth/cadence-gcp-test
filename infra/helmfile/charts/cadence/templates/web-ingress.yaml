@@ -1,7 +1,7 @@
 {{- if .Values.web.ingress.enabled -}}
-{{- $serviceName := include "cadence.fullname" . -}}-web
+{{- $serviceName := include "cadence.fullname" . -}}
 {{- $servicePort := .Values.web.service.port -}}
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: {{ include "cadence.componentname" (list . "web") }}
@@ -36,7 +36,7 @@ spec:
         paths:
           - path: /{{ rest $url | join "/" }}
             backend:
-              serviceName: {{ $serviceName }}
+              serviceName: {{ $serviceName }}-web
               servicePort: {{ $servicePort }}
   {{- end}}
 {{- end }}

@@ -5,7 +5,7 @@ helmDefaults:
   force: true
 
 releases:
-  - name: cadence-cassandra-schema-setup
+  - name: cadence-create-keyspace
     chart: ../charts/raw
     wait: true
     installed: true
@@ -13,7 +13,7 @@ releases:
     labels:
       component: workflow
       package-manager: helmfile
-      chart: cadence-cassandra-schema-setup
+      chart: cadence-create-keyspace
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
@@ -38,18 +38,6 @@ releases:
       package-manager: helmfile
       component: workflow
       chart: cadence-setup-job
-    values:
-      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
-
-  - name: cadence-ingress
-    chart: ../charts/raw
-    wait: true
-    installed: true
-    namespace: default
-    labels:
-      package-manager: helmfile
-      component: workflow
-      chart: cadence-ingress
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
