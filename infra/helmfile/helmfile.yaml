@@ -22,7 +22,7 @@ helmfiles:
   - releases/jaeger.yaml
   - releases/prometheus.yaml
   - releases/cadence.yaml
-  - releases/magneto.yaml
+#  - releases/magneto.yaml
 
 environments:
   defaults: {}

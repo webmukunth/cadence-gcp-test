@@ -402,7 +402,7 @@ rbac:
 ## set to true to enable metric collection by prometheus
 metrics:
   prometheus:
-    enabled: false
+    enabled: true
     ## If true, prevents exposing port 8080 on the main Traefik service, reserving
     ## it to the dashboard service only
     restrictAccess: false
