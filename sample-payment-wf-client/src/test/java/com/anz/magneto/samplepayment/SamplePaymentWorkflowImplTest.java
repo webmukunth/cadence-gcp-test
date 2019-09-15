@@ -10,19 +10,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.anz.magneto.activites.accounting.AccountingActivity;
-import com.anz.magneto.activites.accounting.AccountingResponse;
-import com.anz.magneto.activites.accounting.AccountingStatus;
-import com.anz.magneto.activites.clearing.ClearingActivity;
-import com.anz.magneto.activites.clearing.ClearingResponse;
-import com.anz.magneto.activites.clearing.ClearingStatus;
-import com.anz.magneto.activites.clientresponse.ClientResponseActivity;
-import com.anz.magneto.activites.enrich.EnrichActivity;
-import com.anz.magneto.activites.fraudcheck.FraudCheckActivity;
-import com.anz.magneto.activites.fraudcheck.FraudCheckOutcome;
-import com.anz.magneto.activites.limitcheck.LimitCheckActivity;
-import com.anz.magneto.activites.limitcheck.LimitCheckOutcome;
-import com.anz.magneto.activites.validate.ValidateActivity;
+import com.anz.magneto.activities.accounting.AccountingActivity;
+import com.anz.magneto.activities.accounting.AccountingResponse;
+import com.anz.magneto.activities.accounting.AccountingStatus;
+import com.anz.magneto.activities.clearing.ClearingActivity;
+import com.anz.magneto.activities.clearing.ClearingResponse;
+import com.anz.magneto.activities.clearing.ClearingStatus;
+import com.anz.magneto.activities.clientresponse.ClientResponseActivity;
+import com.anz.magneto.activities.enrich.EnrichActivity;
+import com.anz.magneto.activities.fraudcheck.FraudCheckActivity;
+import com.anz.magneto.activities.fraudcheck.FraudCheckOutcome;
+import com.anz.magneto.activities.limitcheck.LimitCheckActivity;
+import com.anz.magneto.activities.limitcheck.LimitCheckOutcome;
+import com.anz.magneto.activities.validate.ValidateActivity;
 import com.anz.magneto.commons.Constants;
 import com.anz.magneto.commons.api.workflow.LimitType;
 import com.anz.magneto.commons.api.workflow.StopWorkflowException;
@@ -47,6 +47,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.junit4.SpringRunner;
 
 @Slf4j
 public class SamplePaymentWorkflowImplTest {

@@ -1,6 +1,6 @@
 package com.anz.magneto.samplepayment;
 
-import com.anz.magneto.activites.accounting.AccountingResponse;
+import com.anz.magneto.activities.accounting.AccountingResponse;
 import com.anz.magneto.commons.Constants;
 import com.anz.magneto.commons.api.workflow.WorkflowRequest;
 import com.anz.magneto.commons.api.workflow.WorkflowResponse;

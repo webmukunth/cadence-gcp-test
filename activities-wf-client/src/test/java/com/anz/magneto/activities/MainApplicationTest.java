@@ -7,6 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 class MainApplicationTest {
 
   @Test
-  void main() {
+  public void contextLoads() throws Exception {
   }
 }

@@ -98,6 +98,8 @@ subprojects {
         testImplementation 'junit:junit'
         testImplementation 'org.mockito:mockito-all'
         testImplementation 'org.powermock:powermock-api-mockito'
+        testImplementation 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
     }
 
     dependencyManagement {
