@@ -14,5 +14,7 @@ public class AccountingResponse {
 
   @NonNull AccountingStatus status;
   @NonNull String accountingId;
+  @NonNull String paymentId;
+  @NonNull String rqUID;
 
 }

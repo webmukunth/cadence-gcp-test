@@ -1,4 +1,4 @@
-package com.anz.magneto.web.samplepayment;
+package com.anz.magneto.web.samplepayment.service;
 
 import com.anz.magneto.commons.Constants;
 import com.anz.magneto.commons.api.EventType;
@@ -11,20 +11,18 @@ import com.anz.magneto.commons.kafka.KafkaProducer;
 import com.anz.magneto.commons.model.payment.ComAnzPmtAddRqType;
 import com.anz.magneto.commons.utils.TraceUtil;
 import com.anz.magneto.samplepayment.SamplePaymentWorkflow;
+import com.uber.cadence.WorkflowExecution;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowOptions;
-import io.micrometer.core.annotation.Timed;
 import java.time.Duration;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Service;
 
-@RestController
 @Slf4j
-public class SubmitPayment {
+@Service
+public class SubmitPaymentWorkflowClient {
 
   final private WorkflowClient wfClient;
   final private TraceUtil traceUtil;
@@ -32,40 +30,31 @@ public class SubmitPayment {
   final private KafkaProducer kafkaProducer;
 
   @Autowired
-  public SubmitPayment(WorkflowClient wfClient, TraceUtil traceUtil,
+  public SubmitPaymentWorkflowClient(WorkflowClient wfClient, TraceUtil traceUtil,
       PaymentRequestService paymentRequestService, KafkaProducer kafkaProducer) {
     this.wfClient = wfClient;
     this.traceUtil = traceUtil;
     this.paymentRequestService = paymentRequestService;
     this.kafkaProducer = kafkaProducer;
-    log.info("New instance created");
   }
 
-  @PostMapping(
-      path = "/submitPayment",
-      consumes = {"application/vnd.gpa.v1+xml", "application/vnd.gpa.v1+json"},
-      produces = "application/vnd.wf-res.v1+json"
-  )
-  @Timed(description = "Transform request V2")
-  public WorkflowRequest submitPayment(@RequestBody ComAnzPmtAddRqType request) {
 
+  public WorkflowExecution submitPayment(ComAnzPmtAddRqType request) {
     String id = UUID.randomUUID().toString();
-    /* Save to mongodb & redis cache */
-    var pr = paymentRequestService.save(new PaymentRequest(id, request));
-    log.info("Saved {}", pr);
-
-    /* publish event to kafka */
-    var ev = PaymentEvent.builder()
-        .eventType(EventType.RECEIVED)
-        .client("test")
-        .id(id)
-        .build();
-    kafkaProducer.send(ev);
 
     final var workflowRequest = WorkflowRequest.builder()
-        .requestId(id)
+        .id(id)
+        .rqUID(request.getRqUID())
+        .clientName(request.getMsgHdr().getClientName())
         .limitType(LimitType.valueOf(request.getFromAcct().getPmtAuthMethod()))
         .build();
+
+    /* Save to mongodb & redis cache */
+    var pr = paymentRequestService.save(new PaymentRequest(id, request));
+    log.info("Saved paymentRequest {}", pr);
+
+    /* publish event to kafka */
+    kafkaProducer.send(PaymentEvent.newInstance(EventType.RECEIVED, workflowRequest));
 
     log.info("About to submitPayment {}", workflowRequest);
 
@@ -76,8 +65,7 @@ public class SubmitPayment {
             .setExecutionStartToCloseTimeout(Duration.ofDays(4))
             .build()
     );
-    WorkflowClient.start(wfInstance::submitPayment, workflowRequest);
     /* Get it back from redis cache */
-    return workflowRequest;
+    return WorkflowClient.start(wfInstance::submitPayment, workflowRequest);
   }
 }

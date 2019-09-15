@@ -47,8 +47,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.junit4.SpringRunner;
 
 @Slf4j
 public class SamplePaymentWorkflowImplTest {
@@ -65,6 +63,8 @@ public class SamplePaymentWorkflowImplTest {
   private ClientResponseActivity clientResponseActivity;
   private LimitCheckActivity limitCheckActivity;
   private ClearingActivity clearingActivity;
+  private WorkflowRequest workflowRequest;
+  private AccountingResponse successAccountingResponse;
 
   @Before
   public void setUp() {
@@ -88,6 +88,19 @@ public class SamplePaymentWorkflowImplTest {
         clientResponseActivity, limitCheckActivity, clearingActivity);
 
     testEnv.start();
+
+    workflowRequest = WorkflowRequest.builder()
+        .id(UUID.randomUUID().toString())
+        .rqUID(UUID.randomUUID().toString())
+        .clientName("junit")
+        .build();
+
+    successAccountingResponse = AccountingResponse.builder()
+        .status(AccountingStatus.SUCCESS)
+        .accountingId(UUID.randomUUID().toString())
+        .paymentId(UUID.randomUUID().toString())
+        .rqUID(UUID.randomUUID().toString())
+        .build();
 
     when(validateActivity.validate(any(WorkflowRequest.class))).then(i -> {
       WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
@@ -116,26 +129,26 @@ public class SamplePaymentWorkflowImplTest {
     when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
       WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
       log.debug("mock(debitCustomerCreditFloat): {}", request);
-      return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
+      return successAccountingResponse;
     });
 
     when(accountingActivity.forceDebitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
       WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
       log.debug("mock(forceDebitCustomerCreditFloat): {}", request);
-      return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
+      return successAccountingResponse;
     });
 
     when(accountingActivity.reverseDebitCustomerCreditFloat(any(), any())).then(i -> {
       WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
       AccountingResponse origResponse = i.getArgumentAt(1, AccountingResponse.class);
       log.debug("mock(reverseDebitCustomerCreditFloat): {} {}", request, origResponse);
-      return new AccountingResponse(AccountingStatus.SUCCESS, UUID.randomUUID().toString());
+      return successAccountingResponse;
     });
 
     when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
       WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
       log.debug("mock(clearingActivity): {}", request);
-      return new ClearingResponse(ClearingStatus.CLEARED, "c1");
+      return new ClearingResponse(ClearingStatus.CLEARED, "c1", "1", "1");
     });
 
     doAnswer(invocation -> {
@@ -155,7 +168,6 @@ public class SamplePaymentWorkflowImplTest {
   @Test
   public void successfulPayment()
       throws InterruptedException, ExecutionException, TimeoutException {
-    var workflowRequest = WorkflowRequest.builder().requestId("successfulPayment").build();
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("SUCCESS", response.getMessage());
@@ -171,7 +183,6 @@ public class SamplePaymentWorkflowImplTest {
             .error(new ValidationError("c2", "c2 failed"))
             .build().getErrors());
 
-    var workflowRequest = WorkflowRequest.builder().requestId("validationErrors").build();
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("Validation failed", response.getMessage());
@@ -188,7 +199,6 @@ public class SamplePaymentWorkflowImplTest {
       throw new SimulatedTimeoutException();
     });
 
-    var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckTimeOut").build();
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("SUCCESS", response.getMessage());
@@ -208,7 +218,6 @@ public class SamplePaymentWorkflowImplTest {
       return null;
     });
 
-    var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckPassResponse").build();
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("SUCCESS", response.getMessage());
@@ -229,7 +238,6 @@ public class SamplePaymentWorkflowImplTest {
 
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
-        var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckFailResponse").build();
         samplePaymentWorkflow.submitPayment(workflowRequest);
       } catch (WorkflowFailureException e) {
         throw e.getCause();
@@ -252,8 +260,7 @@ public class SamplePaymentWorkflowImplTest {
       return FraudCheckOutcome.HOLD;
     });
 
-    var wfRequest = WorkflowRequest.builder().requestId("fraudCheckHoldThenRelease").build();
-    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, wfRequest);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("SUCCESS", response.getMessage());
   }
@@ -268,8 +275,6 @@ public class SamplePaymentWorkflowImplTest {
 
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
-        var workflowRequest = WorkflowRequest.builder().requestId("fraudCheckHoldThenRelease")
-            .build();
         samplePaymentWorkflow.submitPayment(workflowRequest);
         /* Advance the clock by 9 hours to timeout the wait after hold */
         testEnv.sleep(Duration.ofHours(9));
@@ -289,10 +294,7 @@ public class SamplePaymentWorkflowImplTest {
       return LimitCheckOutcome.FAIL;
     });
 
-    var request = WorkflowRequest.builder()
-        .requestId("limitOnlyFail")
-        .limitType(LimitType.LIMITONLY)
-        .build();
+    var request = workflowRequest.withLimitType(LimitType.LIMITONLY);
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, request);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals(LimitType.LIMITONLY, request.getLimitType());
@@ -310,6 +312,8 @@ public class SamplePaymentWorkflowImplTest {
           return AccountingResponse.builder()
               .status(AccountingStatus.INSUFFICIENT_BALANCE)
               .accountingId("a1")
+              .rqUID("1")
+              .paymentId("1")
               .build();
         });
 
@@ -322,16 +326,10 @@ public class SamplePaymentWorkflowImplTest {
         .then(invocation -> {
           log.debug("Sending {} response for forceDebitCustomerCreditFloat",
               AccountingStatus.SUCCESS);
-          return AccountingResponse.builder()
-              .status(AccountingStatus.SUCCESS)
-              .accountingId("f1-a1")
-              .build();
+          return successAccountingResponse;
         });
 
-    var request = WorkflowRequest.builder()
-        .requestId("afpThenLimitPass")
-        .limitType(LimitType.AFPTHENLIMIT)
-        .build();
+    var request = workflowRequest.withLimitType(LimitType.AFPTHENLIMIT);
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, request);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals(LimitType.AFPTHENLIMIT, request.getLimitType());
@@ -349,6 +347,8 @@ public class SamplePaymentWorkflowImplTest {
           return AccountingResponse.builder()
               .status(AccountingStatus.INSUFFICIENT_BALANCE)
               .accountingId("a1")
+              .rqUID("1")
+              .paymentId("1")
               .build();
         });
 
@@ -357,10 +357,7 @@ public class SamplePaymentWorkflowImplTest {
       return LimitCheckOutcome.FAIL;
     });
 
-    var request = WorkflowRequest.builder()
-        .requestId("afpThenLimitFail")
-        .limitType(LimitType.AFPTHENLIMIT)
-        .build();
+    var request = workflowRequest.withLimitType(LimitType.AFPTHENLIMIT);
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, request);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals(LimitType.AFPTHENLIMIT, request.getLimitType());
@@ -377,7 +374,6 @@ public class SamplePaymentWorkflowImplTest {
 
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
-        var workflowRequest = WorkflowRequest.builder().requestId("stopProcessAfterEnrich").build();
         samplePaymentWorkflow.submitPayment(workflowRequest);
       } catch (WorkflowFailureException e) {
         throw e.getCause();
@@ -392,13 +388,11 @@ public class SamplePaymentWorkflowImplTest {
     when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
       samplePaymentWorkflow.stopProcessPayment();
       log.debug("Sending {} response for forceDebitCustomerCreditFloat", AccountingStatus.SUCCESS);
-      return AccountingResponse.builder().status(AccountingStatus.SUCCESS).accountingId("f1-a1")
-          .build();
+      return successAccountingResponse;
     });
 
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
-        var workflowRequest = WorkflowRequest.builder().requestId("stopProcessAfterEnrich").build();
         samplePaymentWorkflow.submitPayment(workflowRequest);
       } catch (WorkflowFailureException e) {
         throw e.getCause();
@@ -418,7 +412,6 @@ public class SamplePaymentWorkflowImplTest {
 
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
-        var workflowRequest = WorkflowRequest.builder().requestId("stopProcessAfterEnrich").build();
         samplePaymentWorkflow.submitPayment(workflowRequest);
       } catch (WorkflowFailureException e) {
         throw e.getCause();
@@ -432,10 +425,9 @@ public class SamplePaymentWorkflowImplTest {
 
     when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
       log.debug("mock(clearingActivity): {}", ClearingStatus.REJECTED);
-      return new ClearingResponse(ClearingStatus.REJECTED, "c1");
+      return new ClearingResponse(ClearingStatus.REJECTED, "c1", "1", "1");
     });
 
-    var workflowRequest = WorkflowRequest.builder().requestId("clearingRejected").build();
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
         samplePaymentWorkflow.submitPayment(workflowRequest);
@@ -457,11 +449,10 @@ public class SamplePaymentWorkflowImplTest {
 
     when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
       log.debug("mock(clearingActivity): {}", ClearingStatus.SUBMITTED);
-      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1");
+      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1", "1", "1");
     });
 
-    var request = WorkflowRequest.builder().requestId("clearingTimeout").build();
-    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, request);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     /* Advance the clock by 3 days to timeout the wait*/
     testEnv.sleep(Duration.ofDays(3));
     var response = f.get(2, TimeUnit.SECONDS);
@@ -480,11 +471,10 @@ public class SamplePaymentWorkflowImplTest {
       });
 
       log.debug("mock(clearingActivity): {}", ClearingStatus.SUBMITTED);
-      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1");
+      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1", "1", "1");
     });
 
-    var wfRequest = WorkflowRequest.builder().requestId("clearingSubmittedCleared").build();
-    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, wfRequest);
+    var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("SUCCESS", response.getMessage());
   }
@@ -500,12 +490,11 @@ public class SamplePaymentWorkflowImplTest {
       });
 
       log.debug("mock(clearingActivity): {}", ClearingStatus.SUBMITTED);
-      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1");
+      return new ClearingResponse(ClearingStatus.SUBMITTED, "c1", "1", "1");
     });
 
     var ex = assertThrows(StopWorkflowException.class, () -> {
       try {
-        var workflowRequest = WorkflowRequest.builder().requestId("clearingStopped").build();
         samplePaymentWorkflow.submitPayment(workflowRequest);
       } catch (WorkflowFailureException e) {
         throw e.getCause();
@@ -515,17 +504,10 @@ public class SamplePaymentWorkflowImplTest {
   }
 
   @Test
-  public void testQueryCustomerDebitAccoutingResponse() {
-
-    var accoutingResponse = AccountingResponse.builder()
-        .status(AccountingStatus.SUCCESS)
-        .accountingId("testQueryCustomerDebitAccoutingResponse")
-        .build();
+  public void testQueryCustomerDebitAccountingResponse() {
 
     when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class)))
-        .then(i -> accoutingResponse);
-
-    var workflowRequest = WorkflowRequest.builder().requestId("testQuery").build();
+        .then(i -> successAccountingResponse);
 
     final var workflowExecution = WorkflowClient.start(
         samplePaymentWorkflow::submitPayment, workflowRequest);
@@ -538,6 +520,6 @@ public class SamplePaymentWorkflowImplTest {
     log.debug("workflowResponse {}", response);
 
     final var actualResponse = workflowInstance.getCustomerDebitResponse();
-    assertEquals(accoutingResponse, actualResponse);
+    assertEquals(successAccountingResponse, actualResponse);
   }
 }

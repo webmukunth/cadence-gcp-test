@@ -14,5 +14,7 @@ public class ClearingResponse {
 
   @NonNull ClearingStatus status;
   @NonNull String clearingId;
+  @NonNull String rqUID;
+  @NonNull String paymentId;
 
 }

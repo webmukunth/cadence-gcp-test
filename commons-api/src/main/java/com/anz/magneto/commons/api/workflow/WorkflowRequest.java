@@ -11,8 +11,11 @@ import lombok.experimental.Wither;
 public class WorkflowRequest {
 
   @NonNull
-  String requestId;
-
+  String id;
+  @NonNull
+  String rqUID;
+  @NonNull
+  String clientName;
   @NonNull
   @Builder.Default
   LimitType limitType = LimitType.AFPONLY;

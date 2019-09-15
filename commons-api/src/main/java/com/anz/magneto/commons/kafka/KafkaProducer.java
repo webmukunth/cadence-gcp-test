@@ -22,7 +22,7 @@ public class KafkaProducer {
   public Disposable send(PaymentEvent event) {
     SenderRecord<String, PaymentEvent, String> senderRecord =
         SenderRecord.create(Constants.PAYMENT_TOPIC, null,
-            System.currentTimeMillis(), event.getClient(), event, event.getId());
+            System.currentTimeMillis(), event.getClientName(), event, event.getId());
     var ret = kafkaSender.send(Mono.just(senderRecord))
         .subscribe(
             r -> {

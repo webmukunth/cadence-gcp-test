@@ -9,7 +9,7 @@ plugins {
 }
 
 ext {
-    springBootVersion = '2.2.0.M5'
+    springBootVersion = '2.2.0.M6'
     javaSpringJaegerVersion = '2.0.3'
     uberCadenceClientVersion = '2.6.0'
     guavaVersion = '28.0-jre'
@@ -147,6 +147,13 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
         /* Cache */
         implementation 'org.springframework.boot:spring-boot-starter-cache'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+        /* cadence workflow */
+        implementation "com.uber.cadence:cadence-client"
+
+        /* Kafka */
+        implementation 'io.projectreactor.kafka:reactor-kafka'
+        implementation 'org.springframework.kafka:spring-kafka'
     }
 
 
