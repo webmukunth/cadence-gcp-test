@@ -63,8 +63,10 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
 
   @Override
   public WorkflowResponse submitPayment(WorkflowRequest request) {
+    log.debug( "submitPayment: {}", request);
     var response = doProcessPayment(request);
     clientResponseActivity.sendResponse(request, response);
+    log.debug( "response: {}", response);
     return response;
   }
 
@@ -78,12 +80,14 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
       /* Send validation errors to client */
       return new WorkflowResponse(WorkflowStatus.ERROR, "Validation failed", validationErrors);
     }
+    log.debug( "validateActivity completed" );
 
     /* Enrich payment request */
     request = enrichActivity.enrich(request);
     if (stopProcessPayment) {
       throw new StopWorkflowException("Stopped after enrich");
     }
+    log.debug( "enrichActivity completed" );
 
     /* Debit customer */
     var accountingStatus = debitCustomer(request);
@@ -93,6 +97,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     if (stopProcessPayment) {
       throw new StopWorkflowException("Stopped after debitCustomer");
     }
+    log.debug( "debitCustomer completed" );
 
     /* Add customer debit to Saga for compensation */
     saga.addCompensation(accountingActivity::reverseDebitCustomerCreditFloat, request,
@@ -106,6 +111,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     if (stopProcessPayment) {
       throw new StopWorkflowException("Stopped after fraudCheck");
     }
+    log.debug( "fraudCheck completed" );
 
     /* Clearing */
     var clearingStatus = clearPayment(request);
@@ -117,6 +123,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     if (stopProcessPayment) {
       throw new StopWorkflowException("Stopped after clearing");
     }
+    log.debug( "clearPayment completed" );
 
     return new WorkflowResponse(WorkflowStatus.SUCCESS, "SUCCESS");
   }
