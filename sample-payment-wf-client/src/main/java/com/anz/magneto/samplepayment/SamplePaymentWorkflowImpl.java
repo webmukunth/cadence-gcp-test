@@ -18,6 +18,7 @@ import com.anz.magneto.commons.api.workflow.StopWorkflowException;
 import com.anz.magneto.commons.api.workflow.WorkflowRequest;
 import com.anz.magneto.commons.api.workflow.WorkflowResponse;
 import com.anz.magneto.commons.api.workflow.WorkflowStatus;
+import com.uber.cadence.activity.ActivityOptions;
 import com.uber.cadence.workflow.ActivityTimeoutException;
 import com.uber.cadence.workflow.Saga;
 import com.uber.cadence.workflow.Workflow;
@@ -49,8 +50,9 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     accountingActivity = Workflow.newActivityStub(AccountingActivity.class);
     limitCheckActivity = Workflow.newActivityStub(LimitCheckActivity.class);
     clientResponseActivity = Workflow.newActivityStub(ClientResponseActivity.class);
-    fraudCheckActivity = Workflow.newActivityStub(FraudCheckActivity.class);
     clearingActivity = Workflow.newActivityStub(ClearingActivity.class);
+    fraudCheckActivity = Workflow.newActivityStub(FraudCheckActivity.class,
+        new ActivityOptions.Builder().setScheduleToCloseTimeout(Duration.ofHours(4)).build());
 
     var sagaOpt = new Saga.Options.Builder()
         .setContinueWithError(true)
@@ -108,7 +110,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     /* Clearing */
     var clearingStatus = clearPayment(request);
     if (clearingStatus == ClearingStatus.REJECTED) {
-      log.info( "About to compensate {}", saga);
+      log.info("About to compensate {}", saga);
       saga.compensate();
       throw new StopWorkflowException("Stopped due to clearingStatus: " + clearingStatus);
     }

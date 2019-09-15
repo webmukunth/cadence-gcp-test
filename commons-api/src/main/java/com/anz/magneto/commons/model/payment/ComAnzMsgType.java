@@ -4,7 +4,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Wither;
 
 
 /**
@@ -39,7 +43,11 @@ import lombok.Data;
     "text"
 })
 @Data
-class ComAnzMsgType {
+@Wither
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class ComAnzMsgType {
 
   @XmlElement(name = "Status")
   String status;

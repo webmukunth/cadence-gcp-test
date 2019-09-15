@@ -7,7 +7,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Wither;
 
 
 /**
@@ -64,7 +68,11 @@ import lombok.Data;
     "type"
 })
 @Data
-class ComAnzFXType {
+@Wither
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class ComAnzFXType {
 
   @XmlElement(name = "ItemNo")
   String itemNo;

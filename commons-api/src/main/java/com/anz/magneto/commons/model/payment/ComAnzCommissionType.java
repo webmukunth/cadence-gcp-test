@@ -4,8 +4,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Wither;
 
 /**
  * <p>Java class for com.anz.Commission_Type complex type.
@@ -39,7 +42,11 @@ import lombok.Data;
     "acctCcy"
 })
 @Data
-class ComAnzCommissionType {
+@Wither
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class ComAnzCommissionType {
 
   @XmlElement(name = "AcctId")
   String acctId;

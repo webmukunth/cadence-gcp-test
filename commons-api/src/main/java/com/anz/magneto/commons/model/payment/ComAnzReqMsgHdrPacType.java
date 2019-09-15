@@ -4,7 +4,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Wither;
 
 
 /**
@@ -31,7 +35,11 @@ import lombok.Data;
     "country"
 })
 @Data
-class ComAnzReqMsgHdrPacType {
+@Wither
+@Builder(toBuilder = true)
+@RequiredArgsConstructor
+@AllArgsConstructor
+public class ComAnzReqMsgHdrPacType {
 
   @XmlElement(name = "ClientName")
   String clientName;

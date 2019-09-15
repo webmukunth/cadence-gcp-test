@@ -6,7 +6,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Wither;
 
 
 /**
@@ -52,7 +56,11 @@ import lombok.Data;
     "returned"
 })
 @Data
-class ComAnzPmtAddRsType {
+@Wither
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class ComAnzPmtAddRsType {
 
   @XmlElement(name = "RqUID", required = true)
   String rqUID;

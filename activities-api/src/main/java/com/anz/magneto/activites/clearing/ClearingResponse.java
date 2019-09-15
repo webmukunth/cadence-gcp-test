@@ -1,6 +1,5 @@
 package com.anz.magneto.activites.clearing;
 
-import com.anz.magneto.activites.accounting.AccountingStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NonNull;

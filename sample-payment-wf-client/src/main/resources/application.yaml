@@ -9,7 +9,7 @@ spring:
   kafka:
     producer:
       batch-size: 1MB
-      client-id: mt-mx-transform-poc
+      client-id: sample-payment-wf-client
       acks: 1
 opentracing:
   jaeger:
@@ -47,3 +47,5 @@ logging:
     com.anz: debug
     org.apache.kafka: debug
     io.jaegertracing.internal.reporters.LoggingReporter: warn
+server:
+  port: 8091

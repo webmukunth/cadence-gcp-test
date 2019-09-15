@@ -4,8 +4,11 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Wither;
 
 /**
  * <p>Java class for com.anz.ContactInfo_Type complex type.
@@ -33,7 +36,11 @@ import lombok.Data;
     "contactAddr"
 })
 @Data
-class ComAnzContactInfoType {
+@Wither
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@RequiredArgsConstructor
+public class ComAnzContactInfoType {
 
   @XmlElement(name = "ContactType")
   String contactType;

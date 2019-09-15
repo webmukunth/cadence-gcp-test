@@ -1,7 +1,7 @@
 description = "Process file workflow web endpoint"
 
 dependencies {
-    api project(":processfile-api")
+    api project(":sample-payment-api")
 
     /* cadence workflow */
     implementation "com.uber.cadence:cadence-client"

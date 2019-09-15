@@ -2,7 +2,6 @@ package com.anz.magneto.commons.model.payment;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlType;
-import lombok.ToString;
 
 
 /**
@@ -22,7 +21,6 @@ import lombok.ToString;
  */
 @XmlType(name = "com.anz.AcctUse_Type")
 @XmlEnum
-@ToString
 public enum ComAnzAcctUseType {
 
   BUSINESS,

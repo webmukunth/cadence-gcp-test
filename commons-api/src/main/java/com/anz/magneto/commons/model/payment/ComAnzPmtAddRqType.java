@@ -6,7 +6,11 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.Wither;
 
 
 /**
@@ -60,6 +64,10 @@ import lombok.Data;
     "fees"
 })
 @Data
+@Wither
+@Builder(toBuilder = true)
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class ComAnzPmtAddRqType {
 
   @XmlElement(name = "RqUID", required = true)
