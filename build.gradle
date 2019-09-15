@@ -55,8 +55,11 @@ subprojects {
             disableWarningsInGeneratedCode = true
             /* Bug in error prone
              * https://github.com/google/error-prone/issues/1321
+             * https://github.com/google/error-prone/issues/780
              */
             disable("UnusedVariable")
+            disable("ReferenceEquality")
+            disable("FallThrough")
         }
     }
 

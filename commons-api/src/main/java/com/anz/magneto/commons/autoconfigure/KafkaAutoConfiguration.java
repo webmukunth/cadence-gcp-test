@@ -4,6 +4,7 @@ import com.anz.magneto.commons.api.PaymentEvent;
 import com.anz.magneto.commons.kafka.KafkaProducer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -23,16 +24,19 @@ public class KafkaAutoConfiguration {
 
   @Bean
   @ConditionalOnMissingBean
-  public KafkaProducer paymentEventProducer(KafkaProperties kafkaProperties,
-      ObjectMapper mapper) {
-    var prop = kafkaProperties.buildProducerProperties();
+  public KafkaProducer paymentEventProducer(KafkaProperties kafkaProperties, ObjectMapper mapper) {
+    final var prop = kafkaProperties.buildProducerProperties();
+    // Trigger the send for every second or batch fills (configured in applicaiton.yaml)
+    prop.put(ProducerConfig.LINGER_MS_CONFIG, "1000");
     log.debug("producer properties: {}", prop);
 
-    SenderOptions<String, PaymentEvent> so = SenderOptions.create(prop);
-    so.withKeySerializer(new StringSerializer());
-    so.withValueSerializer(new JsonSerializer<>(mapper));
+    final SenderOptions<String, PaymentEvent> so =
+        SenderOptions.<String, PaymentEvent>create(prop)
+            .withKeySerializer(new StringSerializer())
+            .withValueSerializer(new JsonSerializer<>(mapper))
+            .maxInFlight(32);
 
-    var ret = new KafkaProducer(KafkaSender.create(so));
+    final KafkaProducer ret = new KafkaProducer(KafkaSender.create(so));
     log.info("New paymentEventProducer instance created {}", ret);
     return ret;
   }

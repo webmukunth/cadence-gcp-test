@@ -1,14 +1,20 @@
 package com.anz.magneto.samplepayment;
 
+import com.anz.magneto.commons.data.PaymentRequestRepository;
 import java.net.InetAddress;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.kafka.KafkaAutoConfiguration;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.stereotype.Component;
 
-@SpringBootApplication
+@SpringBootApplication(exclude = {KafkaAutoConfiguration.class})
+@EnableMongoRepositories(basePackageClasses = PaymentRequestRepository.class)
+@EnableCaching
 @Slf4j
 public class MainApplication {
 

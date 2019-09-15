@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.http.codec.CodecsAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +19,7 @@ import org.springframework.http.converter.xml.MappingJackson2XmlHttpMessageConve
 
 @Configuration
 @ConditionalOnClass(value = {XmlFactory.class, WstxInputFactory.class})
-@AutoConfigureAfter(JacksonAutoConfiguration.class)
+@AutoConfigureAfter(value = {JacksonAutoConfiguration.class, CodecsAutoConfiguration.class})
 @Slf4j
 public class JacksonXMLAutoConfiguration {
 
@@ -43,8 +44,7 @@ public class JacksonXMLAutoConfiguration {
   @Bean
   @Primary
   @ConditionalOnMissingBean
-  public MappingJackson2XmlHttpMessageConverter xmlHttpMessageConverter(
-      XmlMapper xmlMapper) {
+  public MappingJackson2XmlHttpMessageConverter xmlHttpMessageConverter(XmlMapper xmlMapper) {
     final var ret = new MappingJackson2XmlHttpMessageConverter(xmlMapper);
     log.info("new instance of jackson2xml http Converter created: {} {}", xmlMapper, ret);
     return ret;

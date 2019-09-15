@@ -11,12 +11,9 @@ import org.joda.time.DateTime;
 @Builder(toBuilder = true)
 public class PaymentEvent {
 
-  @NonNull
-  final private EventType eventType;
-  @NonNull
-  final private String client;
-  @NonNull
-  final private String id;
+  String id;
+  EventType eventType;
+  String client;
   @Builder.Default
-  final private DateTime dateTime = new DateTime();
+  DateTime dateTime = new DateTime();
 }
