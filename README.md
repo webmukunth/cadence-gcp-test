@@ -25,6 +25,8 @@
  
  - `infra` Directory contains IaC (Infrastructure as Code) for GCP deployment using helmfile
  - `commons-api` Module contains SB Autoconfiguration for Cadence, Tracer and Metrics
- - `processfile-api` Module contains workflow and activity API (interface) definition
- - `processfile-wf-client` Module contains workflow and activity implementation (invoked by cadence to execute workflow)
- - `processfile-web` Module contains API for submitting workflow request
+ - `activities-api` Module contains activity API (interface) definition
+ - `activities-wf-client` Module contains activity implementation (invoked by cadence to execute workflow)
+ - `sample-payment-api` Module contains workflow API (interface) definition
+ - `sample-payment-wf-client` Module contains workflow implementation (invoked by cadence to execute workflow)
+ - `sample-payment-web` Module contains API for submitting workflow request
