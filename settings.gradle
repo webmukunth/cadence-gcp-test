@@ -16,9 +16,6 @@ pluginManagement {
 rootProject.name = "magneto"
 
 include "commons-api"
-include "processfile-api"
-include "processfile-wf-client"
-include "processfile-web"
 include "activities-api"
 include "activities-wf-client"
 include "sample-payment-api"
