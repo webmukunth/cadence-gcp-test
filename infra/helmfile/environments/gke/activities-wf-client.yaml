@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/monachism-83bea0/magneto/activities-wf-client
-  tag: master-f031d12
+  tag: master-ce65256
 
 imagePullSecrets: []
 

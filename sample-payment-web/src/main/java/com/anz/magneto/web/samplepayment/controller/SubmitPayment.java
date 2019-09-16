@@ -34,6 +34,7 @@ public class SubmitPayment {
       produces = APPLICATION_VND_WF_RES_V_1_JSON_VALUE
   )
   @Timed(
+      value = "http_submit_payment_requests",
       description = "Submit Payment",
       histogram = true,
       percentiles = {0.8, 0.9, 0.95, 0.99},
