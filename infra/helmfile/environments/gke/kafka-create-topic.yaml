@@ -1,0 +1,29 @@
+resources:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: kafka-create-topic
+    spec:
+      activeDeadlineSeconds: 300
+      backoffLimit: 6
+      completions: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - env:
+                - name: KAFKA_ZOOKEEPER_CONNECT
+                  value: cp-kafka-cp-zookeeper-headless:2181
+                - name: TOPIC_NAME
+                  value: "magneto.payments"
+              image: confluentinc/cp-kafka:5.3.0
+              name: kafka-create-topic
+              command:
+                - sh
+                - '-c'
+                - |
+                  # Create the topic
+                  set -ex
+                  kafka-topics --zookeeper ${KAFKA_ZOOKEEPER_CONNECT} --topic ${TOPIC_NAME} --create --partitions 2 --replication-factor 2 --if-not-exists
+          terminationGracePeriodSeconds: 30
+          restartPolicy: OnFailure

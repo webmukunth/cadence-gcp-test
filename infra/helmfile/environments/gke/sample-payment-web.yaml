@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/monachism-83bea0/magneto/sample-payment-web
-  tag: master-ce65256
+  tag: master-6e535b7
 
 imagePullSecrets: []
 

@@ -18,6 +18,18 @@ releases:
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
+  - name: kafka-create-topic
+    chart: ../charts/raw
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      component: workflow
+      package-manager: helmfile
+      chart: kafka-create-topic
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
 environments:
   default: {}
   gke: {}
