@@ -53,13 +53,9 @@ jvmOpts: "-Xms128m -Xmx256m"
 
 contextPath: "/"
 
-jaeger:
-  collectorHost: jaeger-collector:14268
-
-cadence:
-  host: cadence-frontend
-  port: 7933
-
 spring:
   profiles:
     active: gke
+
+configmap:
+  gke: {}

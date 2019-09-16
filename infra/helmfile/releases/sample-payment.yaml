@@ -6,26 +6,38 @@ helmDefaults:
   recreatePods: true
 
 releases:
-  - name: processfile-wf-client
+  - name: activities-wf-client
     chart: ../charts/magneto-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
-      component: processfile-wf-client
+      component: activities-wf-client
       chart: magneto-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
-  - name: processfile-web
+  - name: sample-payment-wf-client
     chart: ../charts/magneto-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
-      component: processfile-wf-client
+      component: sample-payment-wf-client
+      chart: magneto-sb-app
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+  - name: sample-payment-web
+    chart: ../charts/magneto-sb-app
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: sample-payment-web
       chart: magneto-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml

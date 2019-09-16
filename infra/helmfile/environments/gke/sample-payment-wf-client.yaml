@@ -5,9 +5,8 @@
 replicaCount: 1
 
 image:
-  repository: gcr.io/phonomania-fd0bb0/magneto/processfile-web
-  tag: 0.0.1-SNAPSHOT
-  pullPolicy: Always
+  repository: gcr.io/monachism-83bea0/magneto/sample-payment-wf-client
+  tag: master-f031d12
 
 imagePullSecrets: []
 
@@ -23,7 +22,7 @@ ingress:
   annotations:
     kubernetes.io/ingress.class: traefik
   hosts:
-    - host: wf-web.gke
+    - host: wf-wf.gke
       paths:
         - /
   tls: []
@@ -31,17 +30,17 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 500m
+    memory: 512Mi
 
 nodeSelector: {}
 
@@ -49,11 +48,29 @@ tolerations: []
 
 affinity: {}
 
-jvmOpts: "-Xms128m -Xmx256m"
+jvmOpts: "-Xms512m -Xmx512m"
 
-jaeger:
-  collectorHost: jaeger-collector:14268
-
-cadence:
-  host: cadence-frontend
-  port: 7933
+configmap:
+  gke: |-
+    debug: false
+    opentracing:
+      jaeger:
+        log-spans: false
+        http-sender:
+          url: http://jaeger-collector:14268/api/traces
+        probabilistic-sampler:
+          sampling-rate: 0.10
+    spring:
+      kafka:
+        bootstrap-servers: cp-kafka:9092
+      data:
+        mongodb:
+          uri: mongodb://magneto:magneto@mongodb:27017/magneto
+      redis:
+        password: redis
+        host: redis-slave
+        port: 6379
+    cadence:
+      host: cadence-frontend
+    server:
+      port: 8080

@@ -8,6 +8,15 @@ opentracing:
       sampling-rate: 0.10
 spring:
   kafka:
-    bootstrap-servers: cp-kafka:9092
+    bootstrap-servers: cp-kafka-headless:9092
+  data:
+    mongodb:
+      uri: mongodb://magneto:magneto@mongodb-headless:27017/magneto
+  redis:
+    password: redis
+    host: redis-headless
+    port: 6379
+cadence:
+  host: cadence-frontend-headless
 server:
   port: 8080

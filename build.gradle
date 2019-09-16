@@ -5,7 +5,25 @@ plugins {
     id 'net.ltgt.errorprone' version '0.8.1' apply false
     id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
     id 'org.springframework.boot' version '2.2.0.M6' apply false
-    id 'com.google.cloud.tools.jib' version '1.5.0' apply false
+    id 'com.google.cloud.tools.jib' version '1.6.0' apply false
+}
+
+def getGitBranch = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+def getGitHash = { ->
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
 }
 
 ext {
@@ -15,7 +33,8 @@ ext {
     guavaVersion = '28.0-jre'
     errorProneVersion = '2.3.3'
     reactorKafkaVersion = '1.1.1.RELEASE'
-    imageRepo = 'gcr.io/phonomania-fd0bb0'
+    imageRepo = 'gcr.io/monachism-83bea0'
+    imageTag = "${getGitBranch()}-${getGitHash()}"
 }
 
 /* Common configuration for all sub projects */
@@ -89,7 +108,7 @@ subprojects {
     }
 
     dependencies {
-        implementation 'joda-time:joda-time'
+        //implementation 'joda-time:joda-time'
         implementation 'com.google.guava:guava'
         implementation 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
@@ -139,7 +158,7 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
 
         /* jackson json */
         implementation 'org.springframework.boot:spring-boot-starter-json'
-        implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda"
+        //implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda"
 
         /* Data */
         implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
@@ -168,11 +187,17 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
         to {
             /* Append '/' to imageRepo if required */
             imageRepo += (imageRepo != '' && imageRepo.lastIndexOf('/') < (imageRepo.length() - 1)) ? '/' : ''
-
-            image = "${imageRepo}magneto/${project.name}:${version}"
+            image = "${imageRepo}magneto/${project.name}:${imageTag}"
             credHelper = 'gcr'
         }
+        container {
+            format = 'OCI'
+            labels = [
+                    'git-branch' : "${getGitBranch()}".toString(),
+                    'git-version': "${getGitHash()}".toString()
+            ]
+        }
     }
+
+    tasks.build.dependsOn tasks.jib
 }
-
-

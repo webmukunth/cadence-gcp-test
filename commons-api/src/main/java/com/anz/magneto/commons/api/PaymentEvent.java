@@ -1,11 +1,12 @@
 package com.anz.magneto.commons.api;
 
 import com.anz.magneto.commons.api.workflow.WorkflowRequest;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import lombok.Builder;
 import lombok.NonNull;
 import lombok.Value;
 import lombok.experimental.Wither;
-import org.joda.time.DateTime;
 
 @Value
 @Wither
@@ -18,7 +19,7 @@ public class PaymentEvent {
   @NonNull String clientName;
   @NonNull
   @Builder.Default
-  DateTime dateTime = new DateTime();
+  LocalTime dateTime = LocalTime.now(ZoneId.of("GMT"));
 
   public static PaymentEvent newInstance(EventType ev, WorkflowRequest request) {
     return PaymentEvent.builder()
