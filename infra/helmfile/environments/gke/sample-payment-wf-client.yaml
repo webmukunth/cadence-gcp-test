@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/monachism-83bea0/magneto/sample-payment-wf-client
-  tag: master-6e535b7
+  tag: master-e6f0f44
 
 imagePullSecrets: []
 
