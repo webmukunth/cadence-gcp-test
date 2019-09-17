@@ -2,5 +2,4 @@ description = "Process file workflow implementation"
 
 dependencies {
     api project(":sample-payment-api")
-    api project(":activities-api")
 }

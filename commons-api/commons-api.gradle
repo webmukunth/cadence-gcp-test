@@ -18,7 +18,6 @@ dependencies {
 
     /* jackson json */
     compileOnly 'org.springframework.boot:spring-boot-starter-json'
-    //compileOnly "com.fasterxml.jackson.datatype:jackson-datatype-joda"
 
     /* Data */
     compileOnly 'org.springframework.boot:spring-boot-starter-data-mongodb'

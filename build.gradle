@@ -108,7 +108,11 @@ subprojects {
     }
 
     dependencies {
-        //implementation 'joda-time:joda-time'
+        if (!project.name.equals('commons-api')) {
+            api project(':commons-api')
+            implementation "com.uber.cadence:cadence-client"
+        }
+
         implementation 'com.google.guava:guava'
         implementation 'org.projectlombok:lombok'
         annotationProcessor 'org.projectlombok:lombok'
@@ -158,7 +162,6 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
 
         /* jackson json */
         implementation 'org.springframework.boot:spring-boot-starter-json'
-        //implementation "com.fasterxml.jackson.datatype:jackson-datatype-joda"
 
         /* Data */
         implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'

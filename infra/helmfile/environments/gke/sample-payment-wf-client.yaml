@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/monachism-83bea0/cadence/sample-payment-wf-client
-  tag: master-e6f0f44
+  tag: master-872c5e2
 
 imagePullSecrets: []
 
