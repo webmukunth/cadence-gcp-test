@@ -7,38 +7,38 @@ helmDefaults:
 
 releases:
   - name: activities-wf-client
-    chart: ../charts/magneto-sb-app
+    chart: ../charts/cadence-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
       component: activities-wf-client
-      chart: magneto-sb-app
+      chart: cadence-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
   - name: sample-payment-wf-client
-    chart: ../charts/magneto-sb-app
+    chart: ../charts/cadence-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
       component: sample-payment-wf-client
-      chart: magneto-sb-app
+      chart: cadence-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
   - name: sample-payment-web
-    chart: ../charts/magneto-sb-app
+    chart: ../charts/cadence-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
       component: sample-payment-web
-      chart: magneto-sb-app
+      chart: cadence-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 

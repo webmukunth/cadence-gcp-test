@@ -39,7 +39,7 @@ ext {
 
 /* Common configuration for all sub projects */
 subprojects {
-    group = 'com.anz.bs.magneto'
+    group = 'com.anz.bs.cadence'
 
     apply plugin: 'java-library'
     apply plugin: 'maven'
@@ -187,7 +187,7 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
         to {
             /* Append '/' to imageRepo if required */
             imageRepo += (imageRepo != '' && imageRepo.lastIndexOf('/') < (imageRepo.length() - 1)) ? '/' : ''
-            image = "${imageRepo}magneto/${project.name}:${imageTag}"
+            image = "${imageRepo}cadence/${project.name}:${imageTag}"
             credHelper = 'gcr'
         }
         container {

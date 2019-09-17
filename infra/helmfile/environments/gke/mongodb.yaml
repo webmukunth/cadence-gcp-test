@@ -75,9 +75,9 @@ mongodbRootPassword: mongo
 ## MongoDB custom user and database
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#creating-a-user-and-database-on-first-run
 ##
-mongodbUsername: magneto
-mongodbPassword: magneto
-mongodbDatabase: magneto
+mongodbUsername: cadence
+mongodbPassword: cadence
+mongodbDatabase: cadence
 
 ## Whether enable/disable IPv6 on MongoDB
 ## ref: https://github.com/bitnami/bitnami-docker-mongodb/blob/master/README.md#enabling/disabling-ipv6

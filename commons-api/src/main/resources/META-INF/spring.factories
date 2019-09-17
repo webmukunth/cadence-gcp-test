@@ -1,7 +1,7 @@
 # Auto Configure
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.anz.magneto.commons.autoconfigure.CadenceAutoConfiguration, \
-  com.anz.magneto.commons.autoconfigure.ObservabilityAutoConfiguration, \
-  com.anz.magneto.commons.autoconfigure.JacksonXMLAutoConfiguration, \
-  com.anz.magneto.commons.autoconfigure.KafkaAutoConfiguration, \
-  com.anz.magneto.commons.data.PaymentRequestAutoConfiguration
+  com.anz.cadence.commons.autoconfigure.CadenceAutoConfiguration, \
+  com.anz.cadence.commons.autoconfigure.ObservabilityAutoConfiguration, \
+  com.anz.cadence.commons.autoconfigure.JacksonXMLAutoConfiguration, \
+  com.anz.cadence.commons.autoconfigure.KafkaAutoConfiguration, \
+  com.anz.cadence.commons.data.PaymentRequestAutoConfiguration

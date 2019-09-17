@@ -11,7 +11,7 @@ spring:
     bootstrap-servers: cp-kafka-headless:9092
   data:
     mongodb:
-      uri: mongodb://magneto:magneto@mongodb-headless:27017/magneto
+      uri: mongodb://cadence:cadence@mongodb-headless:27017/cadence
   redis:
     password: redis
     host: redis-headless

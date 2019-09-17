@@ -23,6 +23,6 @@ resources:
                 - '-c'
                 - |
                   #!/bin/bash -ex
-                  cadence --domain=magneto domain register --global_domain false
+                  cadence --domain=cadence domain register --global_domain false
           terminationGracePeriodSeconds: 30
           restartPolicy: OnFailure

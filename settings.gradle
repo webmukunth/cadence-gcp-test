@@ -13,7 +13,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "magneto"
+rootProject.name = "cadence"
 
 include "commons-api"
 include "activities-api"
