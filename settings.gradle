@@ -16,11 +16,11 @@ pluginManagement {
 rootProject.name = "cadence"
 
 include "commons-api"
-include "activities-api"
-include "activities-wf-client"
-include "sample-payment-api"
+include "sample-payment-workflow-api"
+include "sample-payment-workflow-client"
+include "sample-payment-activities-api"
+include "sample-payment-activities-client"
 include "sample-payment-web"
-include "sample-payment-wf-client"
 
 /* configure modules build file */
 rootProject.children.each {project ->

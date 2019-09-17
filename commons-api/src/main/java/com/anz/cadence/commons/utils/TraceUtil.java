@@ -4,14 +4,12 @@ import com.uber.cadence.WorkflowExecution;
 import com.uber.cadence.activity.Activity;
 import com.uber.cadence.activity.ActivityTask;
 import com.uber.cadence.internal.logging.LoggerTag;
-import com.uber.cadence.workflow.Workflow;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
-import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -119,11 +117,8 @@ public class TraceUtil {
       throw Activity.wrap(ex);
     } finally {
       sample.stop(Timer.builder(standardMetricName(act))
-          .publishPercentiles(0.5, 0.8, 0.95, 0.99)
+          .publishPercentiles(0.8, 0.9, 0.95, 0.99)
           .publishPercentileHistogram()
-          .sla(Duration.ofMillis(100))
-          .minimumExpectedValue(Duration.ofMillis(1))
-          .maximumExpectedValue(Duration.ofSeconds(10))
           .tags("taskList", act.getTaskList())
           .tags("domain", act.getWorkflowDomain())
           .tags("exception", exceptionClass)
@@ -131,56 +126,4 @@ public class TraceUtil {
       span.finish();
     }
   }
-
-  public <T> T traceAndMeasureWorkflow(Callable<T> callable) {
-
-    if (tracer == null || registry == null) {
-      try {
-        return callable.call();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-
-    /* start timer */
-    final var sample = Timer.start(registry);
-    var exceptionClass = "none";
-
-    var workFlowType = MDC.get(LoggerTag.WORKFLOW_TYPE);
-
-    if (workFlowType == null) {
-      workFlowType = "Unknown";
-    }
-
-    /* start tracing */
-    final var sb = tracer.buildSpan(workFlowType)
-        .withTag(Tags.COMPONENT, "workflow")
-        .withTag(Tags.SPAN_KIND, Tags.SPAN_KIND_CLIENT);
-
-    /* Copy the MDC header key,value to span */
-    MDC.getCopyOfContextMap().forEach(sb::withTag);
-
-    final var span = sb.start();
-
-    try (Scope scope = tracer.activateSpan(span)) {
-      log.trace("scope: {}", scope);
-      return callable.call();
-    } catch (Exception ex) {
-      log.error("Exception occurred", ex);
-      exceptionClass = ex.getClass().getSimpleName();
-      onError(ex, span);
-      throw Workflow.wrap(ex);
-    } finally {
-      sample.stop(Timer.builder(standardMetricName(workFlowType))
-          .publishPercentiles(0.5, 0.8, 0.95, 0.99)
-          .publishPercentileHistogram()
-          .sla(Duration.ofMillis(100))
-          .minimumExpectedValue(Duration.ofMillis(1))
-          .maximumExpectedValue(Duration.ofSeconds(10))
-          .tags("exception", exceptionClass)
-          .register(registry));
-      span.finish();
-    }
-  }
-
 }

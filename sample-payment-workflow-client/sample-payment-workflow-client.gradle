@@ -1,0 +1,5 @@
+description = "Process file workflow implementation"
+
+dependencies {
+    api project(":sample-payment-workflow-api")
+}

@@ -1,7 +1,7 @@
 description = "Process file workflow web endpoint"
 
 dependencies {
-    api project(":sample-payment-api")
+    api project(":sample-payment-workflow-api")
 
     /* jackson xml */
     implementation "javax.xml.bind:jaxb-api"

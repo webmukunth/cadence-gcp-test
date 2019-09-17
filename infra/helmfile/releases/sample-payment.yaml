@@ -6,26 +6,26 @@ helmDefaults:
   recreatePods: true
 
 releases:
-  - name: activities-wf-client
+  - name: sample-payment-activities-client
     chart: ../charts/cadence-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
-      component: activities-wf-client
+      component: sample-payment-activities-client
       chart: cadence-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
-  - name: sample-payment-wf-client
+  - name: sample-payment-workflow-client
     chart: ../charts/cadence-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
-      component: sample-payment-wf-client
+      component: sample-payment-workflow-client
       chart: cadence-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml

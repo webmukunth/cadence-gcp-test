@@ -16,8 +16,13 @@
  - Spring Framework 5
  - [Opentracing](https://opentracing.io/) with [Jaeger](https://www.jaegertracing.io/) as implementation
  - [Micrometer](http://micrometer.io/) with [Prometheus](https://prometheus.io/) as implementation
+ - MongoDB
+ - Redis Cache
+ - Kafka
+ - Reactive Programming (reactor-kafka)
  - Gradle build
  - Docker image build using [JIB](https://github.com/GoogleContainerTools/jib)
+ - Terraform
  - Deploy to GCP using [helmfile](https://github.com/roboll/helmfile)
  - Deploy to local [k3s](https://k3s.io/) using [helmfile](https://github.com/roboll/helmfile)
  
@@ -25,8 +30,8 @@
  
  - `infra` Directory contains IaC (Infrastructure as Code) for GCP deployment using helmfile
  - `commons-api` Module contains SB Autoconfiguration for Cadence, Tracer and Metrics
- - `activities-api` Module contains activity API (interface) definition
- - `activities-wf-client` Module contains activity implementation (invoked by cadence to execute workflow)
- - `sample-payment-api` Module contains workflow API (interface) definition
- - `sample-payment-wf-client` Module contains workflow implementation (invoked by cadence to execute workflow)
+ - `sample-payment-activities-api` Module contains activity API (interface) definition
+ - `sample-payment-activities-client` Module contains activity implementation (invoked by cadence to execute workflow)
+ - `sample-payment-workflow-api` Module contains workflow API (interface) definition
+ - `sample-payment-workflow-client` Module contains workflow implementation (invoked by cadence to execute workflow)
  - `sample-payment-web` Module contains API for submitting workflow request

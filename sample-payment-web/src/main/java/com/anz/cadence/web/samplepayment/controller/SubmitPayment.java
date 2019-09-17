@@ -7,6 +7,7 @@ import static com.anz.cadence.commons.Constants.APPLICATION_VND_WF_RES_V_1_JSON_
 import static org.springframework.http.ResponseEntity.ok;
 
 import com.anz.cadence.commons.model.payment.ComAnzPmtAddRqType;
+import com.anz.cadence.commons.utils.TraceUtil;
 import com.anz.cadence.web.samplepayment.service.SubmitPaymentWorkflowClient;
 import com.uber.cadence.WorkflowExecution;
 import io.micrometer.core.annotation.Timed;
@@ -22,10 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class SubmitPayment {
 
   final private SubmitPaymentWorkflowClient wfClient;
+  final private TraceUtil traceUtil;
 
   @Autowired
-  public SubmitPayment(SubmitPaymentWorkflowClient wfClient) {
+  public SubmitPayment(SubmitPaymentWorkflowClient wfClient, TraceUtil traceUtil) {
     this.wfClient = wfClient;
+    this.traceUtil = traceUtil;
   }
 
   @PostMapping(
@@ -42,6 +45,8 @@ public class SubmitPayment {
   )
   public ResponseEntity<WorkflowExecution> submitPayment(@RequestBody ComAnzPmtAddRqType request) {
     final var response = wfClient.submitPayment(request);
+    /* Capture workflow information into tracing tags */
+    traceUtil.addWorkflowExecutionTag(response);
     log.info("submitPayment response={}", response);
     return ok()
         .contentType(APPLICATION_VND_WF_RES_V1_JSON)

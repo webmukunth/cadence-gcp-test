@@ -8,7 +8,7 @@ provider "google-beta" {
 
 locals {
   project  = "monachism-83bea0"
-  gke-name = "mt-mx-transform-gke"
+  gke-name = "cadence-gke"
   location = "us-west2-c"
 }
 
