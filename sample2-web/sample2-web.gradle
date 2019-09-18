@@ -1,0 +1,11 @@
+description = "Sample2 REST API"
+
+dependencies {
+    api project(":sample2-workflow-api")
+
+    /* jackson xml */
+    implementation "javax.xml.bind:jaxb-api"
+    implementation "com.fasterxml.woodstox:woodstox-core"
+    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
+    implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
+}

@@ -1,0 +1,51 @@
+debug: true
+spring:
+  application:
+    name: activities-wf-client
+  jackson:
+    default-property-inclusion: non_empty
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  kafka:
+    producer:
+      batch-size: 1MB
+      client-id: activities-wf-client
+      acks: 1
+opentracing:
+  jaeger:
+    enabled: true
+    log-spans: true
+    enable-b3-propagation: true
+    tags:
+      component: workflow
+    service-name: activities-wf-client
+  spring:
+    cloud:
+      async:
+        enabled: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+cadence:
+  host: localhost
+  port: 7933
+  emit-metric: true
+  retention-period: 1d
+logging:
+  level:
+    com.anz: debug
+    org.apache.kafka: debug
+    io.jaegertracing.internal.reporters.LoggingReporter: warn
+  pattern:
+    level: "%36.36X{WorkflowID} %2.2X{ActivityID} %35.35X{ActivityType} %5p"
+server:
+  port: 8092

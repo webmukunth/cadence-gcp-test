@@ -1,4 +1,4 @@
-description = "Process file workflow implementation"
+description = "Sample1 Workflow Implementation"
 
 dependencies {
     api project(":sample-payment-workflow-api")

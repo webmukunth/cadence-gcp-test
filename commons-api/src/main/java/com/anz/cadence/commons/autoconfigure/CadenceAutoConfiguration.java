@@ -1,6 +1,7 @@
 package com.anz.cadence.commons.autoconfigure;
 
 import com.anz.cadence.commons.Constants;
+import com.uber.cadence.client.ActivityCompletionClient;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.serviceclient.WorkflowServiceTChannel;
 import com.uber.cadence.workflow.Workflow;
@@ -68,5 +69,11 @@ public class CadenceAutoConfiguration {
     log.info("Initialized WorkflowServiceTChannel {}", ret);
 
     return ret;
+  }
+
+  @Bean
+  @ConditionalOnMissingBean
+  public ActivityCompletionClient activityCompletionClient(WorkflowClient workflowClient) {
+    return workflowClient.newActivityCompletionClient();
   }
 }

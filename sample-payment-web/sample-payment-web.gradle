@@ -1,4 +1,4 @@
-description = "Process file workflow web endpoint"
+description = "Sample1 REST API"
 
 dependencies {
     api project(":sample-payment-workflow-api")

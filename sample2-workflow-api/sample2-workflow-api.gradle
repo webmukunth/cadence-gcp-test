@@ -1,0 +1,5 @@
+description = "Sample2 Workflow API Definition"
+
+dependencies {
+    api project(':sample2-activities-api')
+}

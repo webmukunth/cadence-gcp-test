@@ -1,0 +1,13 @@
+debug: false
+opentracing:
+  jaeger:
+    log-spans: false
+    http-sender:
+      url: http://jaeger-collector:14268/api/traces
+    probabilistic-sampler:
+      sampling-rate: 0.10
+spring:
+  kafka:
+    bootstrap-servers: cp-kafka:9092
+server:
+  port: 8080

@@ -1,0 +1,5 @@
+description = "Sample2 Activity Implementation "
+
+dependencies {
+    api project(":sample2-activities-api")
+}

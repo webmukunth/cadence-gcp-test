@@ -1,15 +1,20 @@
 package com.anz.cadence.commons.utils;
 
+import static io.opentracing.tag.Tags.COMPONENT;
+import static io.opentracing.tag.Tags.ERROR;
+import static io.opentracing.tag.Tags.SPAN_KIND;
+import static io.opentracing.tag.Tags.SPAN_KIND_CLIENT;
+
 import com.uber.cadence.WorkflowExecution;
 import com.uber.cadence.activity.Activity;
 import com.uber.cadence.activity.ActivityTask;
 import com.uber.cadence.internal.logging.LoggerTag;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.Timer.Sample;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
-import io.opentracing.tag.Tags;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -34,21 +39,6 @@ public class TraceUtil {
   public TraceUtil(Tracer tracer, MeterRegistry registry) {
     this.tracer = tracer;
     this.registry = registry;
-  }
-
-
-  private static void onError(Throwable throwable, Span span) {
-    Tags.ERROR.set(span, Boolean.TRUE);
-    if (throwable != null) {
-      span.log(errorLogs(throwable));
-    }
-  }
-
-  private static Map<String, Object> errorLogs(Throwable throwable) {
-    Map<String, Object> errorLogs = new HashMap<>(2);
-    errorLogs.put("event", Tags.ERROR.getKey());
-    errorLogs.put("error.object", throwable);
-    return errorLogs;
   }
 
   private static String standardMetricName(ActivityTask act) {
@@ -88,42 +78,81 @@ public class TraceUtil {
     addTag(LoggerTag.WORKFLOW_ID, exe.getWorkflowId());
   }
 
-  public <T> T traceAndMeasureActivity(Callable<T> callable) {
-    /* start timer */
-    assert registry != null;
-    final var sample = Timer.start(registry);
-    var exceptionClass = "none";
+  public TracerAndTimer getTracerAndTimer(String spanName, String... tags) {
+    return new TracerAndTimer(tracer, registry, spanName, tags);
+  }
 
+  public <T> T traceAndMeasureActivity(Callable<T> callable) {
+    var exceptionClass = "none";
     final var act = Activity.getTask();
 
-    /* start tracing */
-    assert tracer != null;
-    final var sb = tracer.buildSpan(act.getActivityType())
-        .withTag(Tags.COMPONENT, "activity")
-        .withTag(Tags.SPAN_KIND, Tags.SPAN_KIND_CLIENT);
+    final var tracerAndTimer = this.getTracerAndTimer(act.getActivityType(),
+        COMPONENT.getKey(), "activity", SPAN_KIND.getKey(), SPAN_KIND_CLIENT);
 
-    /* Copy the MDC header key,value to span */
-    MDC.getCopyOfContextMap().forEach(sb::withTag);
-
-    final var span = sb.start();
-
-    try (Scope scope = tracer.activateSpan(span)) {
-      log.trace("scope: {}", scope);
+    try {
       return callable.call();
     } catch (Exception ex) {
       log.error("Exception occurred", ex);
       exceptionClass = ex.getClass().getSimpleName();
-      onError(ex, span);
+      tracerAndTimer.logError(ex);
       throw Activity.wrap(ex);
     } finally {
-      sample.stop(Timer.builder(standardMetricName(act))
+      tracerAndTimer.close(standardMetricName(act),
+          "taskList", act.getTaskList(),
+          "domain", act.getWorkflowDomain(),
+          "exception", exceptionClass);
+    }
+  }
+
+  @Slf4j
+  public static class TracerAndTimer {
+
+    final private MeterRegistry registry;
+    final private Sample sample;
+    final private Span span;
+    final private Scope scope;
+
+    public TracerAndTimer(Tracer tracer, MeterRegistry registry, String spanName,
+        String... spanTags) {
+      this.registry = registry;
+
+      /* Start the clock */
+      this.sample = Timer.start(registry);
+
+      /* Start tracing */
+      final var spanBuilder = tracer.buildSpan(spanName);
+      if (spanTags != null) {
+        for (int i = 0; i < spanTags.length / 2; i += 2) {
+          spanBuilder.withTag(spanTags[i], spanTags[i + 1]);
+        }
+      }
+      MDC.getCopyOfContextMap().forEach(spanBuilder::withTag);
+      span = spanBuilder.start();
+      scope = tracer.activateSpan(span);
+    }
+
+    private static Map<String, Object> errorLogs(Throwable throwable) {
+      Map<String, Object> errorLogs = new HashMap<>(2);
+      errorLogs.put("event", ERROR.getKey());
+      errorLogs.put("error.object", throwable);
+      return errorLogs;
+    }
+
+    public void close(String metricName, String... tags) {
+      sample.stop(Timer.builder(metricName)
           .publishPercentiles(0.8, 0.9, 0.95, 0.99)
           .publishPercentileHistogram()
-          .tags("taskList", act.getTaskList())
-          .tags("domain", act.getWorkflowDomain())
-          .tags("exception", exceptionClass)
+          .tags(tags)
           .register(registry));
+      scope.close();
       span.finish();
+    }
+
+    public void logError(Throwable throwable) {
+      ERROR.set(span, Boolean.TRUE);
+      if (throwable != null) {
+        span.log(errorLogs(throwable));
+      }
     }
   }
 }

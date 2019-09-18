@@ -1,0 +1,22 @@
+debug: false
+opentracing:
+  jaeger:
+    log-spans: false
+    http-sender:
+      url: http://jaeger-collector:14268/api/traces
+    probabilistic-sampler:
+      sampling-rate: 0.10
+spring:
+  kafka:
+    bootstrap-servers: cp-kafka-headless:9092
+  data:
+    mongodb:
+      uri: mongodb://cadence:cadence@mongodb-headless:27017/cadence
+  redis:
+    password: redis
+    host: redis-headless
+    port: 6379
+cadence:
+  host: cadence-frontend-headless
+server:
+  port: 8080

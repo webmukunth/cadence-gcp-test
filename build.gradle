@@ -80,6 +80,7 @@ subprojects {
             disable("UnusedVariable")
             disable("ReferenceEquality")
             disable("FallThrough")
+            disable("ThreadJoinLoop")
         }
     }
 
