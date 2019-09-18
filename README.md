@@ -35,3 +35,7 @@
  - `sample-payment-workflow-api` Module contains workflow API (interface) definition
  - `sample-payment-workflow-client` Module contains workflow implementation (invoked by cadence to execute workflow)
  - `sample-payment-web` Module contains API for submitting workflow request
+ 
+### Sample 2 ###
+
+![Sample 2 workflow](./sample2.png)
