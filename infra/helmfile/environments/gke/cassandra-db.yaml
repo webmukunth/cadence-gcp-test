@@ -110,10 +110,10 @@ persistence:
 ##
 resources:
   requests:
-    memory: 2Gi
+    memory: 4.1Gi
     cpu: 1
   limits:
-    memory: 4Gi
+    memory: 8.1Gi
     cpu: 2
 
 ## Secret with keystore, keystore password, truststore, truststore password
@@ -142,8 +142,8 @@ jvm:
   ## Extra JVM Settings
   ##
   extraOpts:
-  maxHeapSize: 2G
-  newHeapSize: 500M
+  maxHeapSize: 4G
+  newHeapSize: 1G
 
 ## Database credentials
 ##
