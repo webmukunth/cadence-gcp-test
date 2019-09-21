@@ -17,4 +17,4 @@ sources:
 - https://github.com/prometheus/node_exporter
 - https://github.com/kubernetes/kube-state-metrics
 tillerVersion: '>=2.8.0'
-version: 9.1.0
+version: 9.1.1

@@ -15,4 +15,4 @@ maintainers:
 name: cadence
 sources:
 - https://github.com/uber/cadence
-version: 0.3.2
+version: 0.3.3
