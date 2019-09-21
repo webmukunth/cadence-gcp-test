@@ -7,6 +7,7 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.8.RELEASE' apply false
     id 'org.springframework.boot' version '2.2.0.M6' apply false
     id 'com.google.cloud.tools.jib' version '1.6.0' apply false
+    id "com.github.lkishalmi.gatling" version "3.2.9" apply false
 }
 
 def getGitBranch = { ->
@@ -34,6 +35,8 @@ ext {
     guavaVersion = '28.0-jre'
     errorProneVersion = '2.3.3'
     reactorKafkaVersion = '1.1.1.RELEASE'
+    gatlingVersion = '3.2.1'
+    scalaLibVersion = '2.12.8'
     imageRepo = 'gcr.io/monachism-83bea0'
     imageTag = "${getGitBranch()}-${getGitHash()}"
 }

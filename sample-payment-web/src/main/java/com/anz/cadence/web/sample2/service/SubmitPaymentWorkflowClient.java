@@ -15,6 +15,7 @@ import com.uber.cadence.WorkflowExecution;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowOptions;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +41,7 @@ public class SubmitPaymentWorkflowClient {
 
 
   public WorkflowExecution submitPayment(ComAnzPmtAddRqType request) {
-    String id = UUID.randomUUID().toString();
+    final var id = Optional.ofNullable(request.getId()).orElse(UUID.randomUUID().toString());
 
     final var workflowRequest = WorkflowRequest.builder()
         .id(id)

@@ -1,5 +1,7 @@
 description = "Sample1 REST API"
 
+apply plugin: 'com.github.lkishalmi.gatling'
+
 dependencies {
     api project(":sample-payment-workflow-api")
 
@@ -8,4 +10,13 @@ dependencies {
     implementation "com.fasterxml.woodstox:woodstox-core"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-xml"
     implementation "com.fasterxml.jackson.module:jackson-module-jaxb-annotations"
+    gatlingRuntime "org.scala-lang:scala-library:${scalaLibVersion}"
+}
+
+gatling {
+    toolVersion = "${gatlingVersion}"
+    scalaVersion = "${scalaLibVersion}"
+    systemProperties = ['file.encoding': 'UTF-8']
+    logLevel = 'DEBUG'
+    jvmArgs = ['-server', '-Xmx1G']
 }
