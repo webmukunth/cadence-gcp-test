@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/monachism-83bea0/cadence/sample-payment-web
-  tag: master-8925fd9
+  tag: master-07d0d7d
 
 imagePullSecrets: []
 
