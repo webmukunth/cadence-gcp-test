@@ -1,5 +1,6 @@
 package com.anz.cadence.samplepayment
 
+import java.time.{LocalDateTime, ZoneId}
 import java.util.UUID.randomUUID
 
 import io.gatling.core.Predef._
@@ -9,8 +10,8 @@ class BasicSimulation extends Simulation {
 
   private val bodyTemplate = StringBody(
     """<?xml version="1.0" encoding="UTF-8"?>
-      |<ns0:PmtAddRq xmlns:ns0="http://schema.cmo.anz/PmtAdd" id="${rqUID}">
-      |  <RqUID>2018112006154270346993400008</RqUID>
+      |<ns0:PmtAddRq xmlns:ns0="http://schema.cmo.anz/PmtAdd" id="${id}">
+      |  <RqUID>${rqUID}</RqUID>
       |  <MsgHdr>
       |    <ClientDt>2018-11-20T08:44:29.934Z</ClientDt>
       |    <ClientName>TGO</ClientName>
@@ -92,12 +93,16 @@ class BasicSimulation extends Simulation {
     .check(
       status.is(200),
       headerRegex(HttpHeaderNames.ContentType, "application/vnd.wf-res.v1\\+json"),
-      jsonPath("$[?(@.workflowId == '${rqUID}')]").exists
+      jsonPath("$[?(@.workflowId == '${id}')]").exists
     )
 
   /* sample payment scenario */
   private val scn = scenario("Basic Simulation")
-    .exec { session => session.set("rqUID", randomUUID.toString) }
+    .exec { session =>
+      session
+        .set("id", randomUUID.toString)
+        .set("rqUID", LocalDateTime.now(ZoneId.of("GMT")).toString)
+    }
     .exec { session => println(session); session }
     .exec(samplePayment)
 
