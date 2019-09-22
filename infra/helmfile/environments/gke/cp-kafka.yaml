@@ -46,8 +46,9 @@ configurationOverrides:
   ## - https://cwiki.apache.org/confluence/display/KAFKA/KIP-103%3A+Separation+of+Internal+and+External+traffic
   ##
   ## Setting "advertised.listeners" here appends to "PLAINTEXT://${POD_IP}:9092,"
+  #  EXTERNAL://${HOST_IP}:$((31090 + ${KAFKA_BROKER_ID}))
   "advertised.listeners": |-
-    EXTERNAL://${HOST_IP}:$((31090 + ${KAFKA_BROKER_ID}))
+    EXTERNAL://kafka.gke:$((31090 + ${KAFKA_BROKER_ID}))
   "listener.security.protocol.map": |-
     PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
 
@@ -116,7 +117,7 @@ prometheus:
     port: 5556
 
 nodeport:
-  enabled: false
+  enabled: true
   servicePort: 19092
   firstListenerPort: 31090
 
