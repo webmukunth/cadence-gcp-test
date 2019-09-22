@@ -1,0 +1,18 @@
+substitutions:
+  _GATLING_VERSION: "3.2.1"
+steps:
+  - name: gcr.io/cloud-builders/docker
+    args:
+    - 'build'
+    - '--build-arg'
+    - 'GATLING_VERSION=${_GATLING_VERSION}'
+    - '-t'
+    - 'gcr.io/$PROJECT_ID/gatling:${_GATLING_VERSION}'
+    - '.'
+images: ['gcr.io/$PROJECT_ID/gatling:${_GATLING_VERSION}']
+timeout: 1800s
+tags:
+  - gatling
+  - gcloud
+  - jdk11
+  - gsutil
