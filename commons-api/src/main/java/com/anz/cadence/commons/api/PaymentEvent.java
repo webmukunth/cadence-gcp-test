@@ -1,7 +1,7 @@
 package com.anz.cadence.commons.api;
 
 import com.anz.cadence.commons.api.workflow.WorkflowRequest;
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import lombok.Builder;
 import lombok.NonNull;
@@ -19,7 +19,7 @@ public class PaymentEvent {
   @NonNull String clientName;
   @NonNull
   @Builder.Default
-  LocalTime dateTime = LocalTime.now(ZoneId.of("GMT"));
+  LocalDateTime dateTime = LocalDateTime.now(ZoneId.of("GMT"));
 
   public static PaymentEvent newInstance(EventType ev, WorkflowRequest request) {
     return PaymentEvent.builder()

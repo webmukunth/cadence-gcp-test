@@ -17,6 +17,7 @@ gatling {
     toolVersion = "${gatlingVersion}"
     scalaVersion = "${scalaLibVersion}"
     systemProperties = ['file.encoding': 'UTF-8']
-    logLevel = 'DEBUG'
     jvmArgs = ['-server', '-Xmx1G']
+    includeMainOutput = false
+    includeTestOutput = false
 }
