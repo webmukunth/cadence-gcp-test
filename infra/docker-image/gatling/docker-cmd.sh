@@ -5,8 +5,3 @@ set -exuo pipefail
 env | sort
 
 gatling.sh --run-description "${RUN_DESC:-Run at $(date)}"
-
-gcloud info
-gsutil ls
-
-

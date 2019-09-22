@@ -13,6 +13,4 @@ images: ['gcr.io/$PROJECT_ID/gatling:${_GATLING_VERSION}']
 timeout: 1800s
 tags:
   - gatling
-  - gcloud
   - jdk11
-  - gsutil
