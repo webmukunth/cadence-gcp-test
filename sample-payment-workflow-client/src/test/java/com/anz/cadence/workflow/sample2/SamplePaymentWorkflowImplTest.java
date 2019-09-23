@@ -38,6 +38,7 @@ import com.uber.cadence.testing.SimulatedTimeoutException;
 import com.uber.cadence.testing.TestWorkflowEnvironment;
 import com.uber.cadence.worker.Worker;
 import java.time.Duration;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
@@ -105,7 +106,7 @@ public class SamplePaymentWorkflowImplTest {
     when(validateActivity.validate(any(WorkflowRequest.class))).then(i -> {
       WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
       log.debug("mock(validate): {}", request);
-      return null;
+      return Optional.empty();
     });
 
     when(enrichActivity.enrich(any(WorkflowRequest.class))).then(i -> {
@@ -181,12 +182,12 @@ public class SamplePaymentWorkflowImplTest {
         .then(invocation -> ValidationErrors.builder()
             .error(new ValidationError("c1", "c1 failed"))
             .error(new ValidationError("c2", "c2 failed"))
-            .build().getErrors());
+            .build().getOptionalErrors());
 
     var f = WorkflowClient.execute(samplePaymentWorkflow::submitPayment, workflowRequest);
     var response = f.get(2, TimeUnit.SECONDS);
     assertEquals("Validation failed", response.getMessage());
-    assertEquals(2, response.getValidationErrors().size());
+    assertEquals(2, response.getValidationErrors().get().size());
   }
 
   @Test

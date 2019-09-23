@@ -9,7 +9,7 @@ import com.anz.cadence.commons.data.PaymentRequestService;
 import com.anz.cadence.commons.kafka.KafkaProducer;
 import com.anz.cadence.commons.utils.TraceUtil;
 import java.util.List;
-import javax.annotation.Nullable;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -29,8 +29,7 @@ public class ValidateActivityImpl implements ValidateActivity {
   }
 
   @Override
-  public @Nullable
-  List<ValidationError> validate(WorkflowRequest request) {
+  public Optional<List<ValidationError>> validate(WorkflowRequest request) {
     return traceUtil.traceAndMeasureActivity(() -> {
       log.info("validate: {}", request);
 
@@ -44,7 +43,7 @@ public class ValidateActivityImpl implements ValidateActivity {
         .error(new ValidationError("c2", "Testing 2"))
         .build()
         .getErrors(); */
-      return null;
+      return Optional.empty();
     });
   }
 }

@@ -84,6 +84,7 @@ subprojects {
             disable("ReferenceEquality")
             disable("FallThrough")
             disable("ThreadJoinLoop")
+            disable("OptionalEquality")
         }
     }
 

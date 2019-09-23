@@ -42,7 +42,7 @@ public class Sample2WorkflowImpl implements Sample2Workflow {
 
     if (aResponse == ServiceAActivity.DSResponse.FAIL) {
       log.debug("execute: Service A Failed");
-      return WorkflowResponse.builder()
+      return WorkflowResponse.customBuilder(request)
           .message("Service A Failed")
           .workflowStatus(WorkflowStatus.STOPPED)
           .build();
@@ -89,13 +89,13 @@ public class Sample2WorkflowImpl implements Sample2Workflow {
 
     if (dsResponse == ServiceBActivity.DSResponse.DECLINE) {
       log.debug("executeInOrder: Service B Failed");
-      return WorkflowResponse.builder()
+      return WorkflowResponse.customBuilder(request)
           .message("executeInOrder: Service B Declined")
           .workflowStatus(WorkflowStatus.STOPPED)
           .build();
     }
 
-    return WorkflowResponse.builder()
+    return WorkflowResponse.customBuilder(request)
         .message("executeInOrder: Success")
         .workflowStatus(WorkflowStatus.SUCCESS)
         .build();
@@ -106,7 +106,7 @@ public class Sample2WorkflowImpl implements Sample2Workflow {
     if (!Workflow.await(Duration.ofMinutes(3), () -> (quarantine != null || dsResponse != null))) {
       /* Timeout, no response from service b */
       log.debug("executeInAnyOrder: Service B timed out");
-      return WorkflowResponse.builder()
+      return WorkflowResponse.customBuilder(request)
           .message("Service B Timedout")
           .workflowStatus(WorkflowStatus.STOPPED)
           .build();
@@ -130,13 +130,13 @@ public class Sample2WorkflowImpl implements Sample2Workflow {
 
     if (dsResponse == ServiceBActivity.DSResponse.DECLINE) {
       log.debug("executeInAnyOrder: Service B Failed");
-      return WorkflowResponse.builder()
+      return WorkflowResponse.customBuilder(request)
           .message("executeInAnyOrder: Service B Declined")
           .workflowStatus(WorkflowStatus.STOPPED)
           .build();
     }
 
-    return WorkflowResponse.builder()
+    return WorkflowResponse.customBuilder(request)
         .message("executeInAnyOrder: Success")
         .workflowStatus(WorkflowStatus.SUCCESS)
         .build();

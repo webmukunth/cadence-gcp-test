@@ -76,9 +76,13 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
 
     /* Validate payment request */
     var validationErrors = validateActivity.validate(request);
-    if (validationErrors != null && validationErrors.size() > 0) {
+
+    if (validationErrors.isPresent()) {
       /* Send validation errors to client */
-      return new WorkflowResponse(WorkflowStatus.ERROR, "Validation failed", validationErrors);
+      return WorkflowResponse.customBuilder(r, WorkflowStatus.ERROR)
+          .message("Validation failed")
+          .validationErrors(validationErrors)
+          .build();
     }
     log.debug("validateActivity completed");
 
@@ -92,7 +96,9 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     /* Debit customer */
     var accountingStatus = debitCustomer(request);
     if (accountingStatus != AccountingStatus.SUCCESS) {
-      return new WorkflowResponse(WorkflowStatus.ERROR, "debitCustomer failed " + accountingStatus);
+      return WorkflowResponse.customBuilder(request, WorkflowStatus.ERROR)
+          .message("debitCustomer failed " + accountingStatus)
+          .build();
     }
     if (stopProcessPayment) {
       throw new StopWorkflowException("Stopped after debitCustomer");
@@ -125,7 +131,9 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     }
     log.debug("clearPayment completed");
 
-    return new WorkflowResponse(WorkflowStatus.SUCCESS, "SUCCESS");
+    return WorkflowResponse.customBuilder(request, WorkflowStatus.SUCCESS)
+        .message("SUCCESS")
+        .build();
   }
 
   /**

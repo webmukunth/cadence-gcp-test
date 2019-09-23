@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/monachism-83bea0/cadence/sample-payment-activities-client
-  tag: master-e7d14c2
+  tag: master-3374ec4
 
 imagePullSecrets: []
 

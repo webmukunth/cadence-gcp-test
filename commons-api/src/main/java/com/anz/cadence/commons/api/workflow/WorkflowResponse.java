@@ -1,6 +1,7 @@
 package com.anz.cadence.commons.api.workflow;
 
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NonNull;
@@ -17,9 +18,26 @@ import lombok.experimental.Wither;
 public class WorkflowResponse {
 
   @NonNull
-  final private WorkflowStatus workflowStatus;
+  String id;
   @NonNull
-  final private String message;
+  String rqUID;
+  @NonNull
+  WorkflowStatus workflowStatus;
+  @NonNull
+  String message;
   @NonFinal
-  private List<ValidationError> validationErrors;
+  private Optional<List<ValidationError>> validationErrors;
+
+  public static WorkflowResponseBuilder customBuilder(WorkflowRequest request, WorkflowStatus status) {
+    return WorkflowResponse.builder()
+        .workflowStatus(status)
+        .id(request.getId())
+        .rqUID(request.getRqUID());
+  }
+
+  public static WorkflowResponseBuilder customBuilder(WorkflowRequest request) {
+    return WorkflowResponse.builder()
+        .id(request.getId())
+        .rqUID(request.getRqUID());
+  }
 }
