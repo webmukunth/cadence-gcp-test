@@ -42,6 +42,20 @@ releases:
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
+  - name: gatling
+    chart: ../charts/gatling
+    installed: true
+    namespace: default
+    wait: false
+    labels:
+      package-manager: helmfile
+      component: sample-payment-web
+      chart: grafana
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+    set:
+      - name: gatling.simulations.BasicSimulation\.scala
+        file: ../../../sample-payment-web/src/gatling/simulations/com/anz/cadence/samplepayment/BasicSimulation.scala
 environments:
   default: {}
   gke: {}

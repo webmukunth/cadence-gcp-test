@@ -81,7 +81,7 @@ class BasicSimulation extends Simulation {
   )
 
   private val httpProtocol = http
-    .baseUrl("http://wf-web.gke:8088")
+    .baseUrl("http://sample-payment-web:8080")
     .contentTypeHeader("application/vnd.gpa.v1+xml")
     .acceptHeader("application/vnd.wf-res.v1+json")
     .userAgentHeader("Gatling/" + this.getClass.getCanonicalName)

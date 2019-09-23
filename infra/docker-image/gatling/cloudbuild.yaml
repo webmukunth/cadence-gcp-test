@@ -1,5 +1,6 @@
 substitutions:
   _GATLING_VERSION: "3.2.1"
+  _GIT_VERSION: "1"
 steps:
   - name: gcr.io/cloud-builders/docker
     args:
@@ -7,9 +8,9 @@ steps:
     - '--build-arg'
     - 'GATLING_VERSION=${_GATLING_VERSION}'
     - '-t'
-    - 'gcr.io/$PROJECT_ID/gatling:${_GATLING_VERSION}'
+    - 'gcr.io/$PROJECT_ID/gatling:${_GATLING_VERSION}-${_GIT_VERSION}'
     - '.'
-images: ['gcr.io/$PROJECT_ID/gatling:${_GATLING_VERSION}']
+images: ['gcr.io/$PROJECT_ID/gatling:${_GATLING_VERSION}-${_GIT_VERSION}']
 timeout: 1800s
 tags:
   - gatling

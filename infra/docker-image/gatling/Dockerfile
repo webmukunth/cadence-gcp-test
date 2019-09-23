@@ -5,7 +5,7 @@ ENV GVERSION="$GATLING_VERSION"
 ENV GATLING_HOME /opt/gatling
 ENV PATH ${GATLING_HOME}/bin:$PATH
 
-COPY docker-cmd.sh /
+COPY docker-cmd.sh gatling.sh /
 
 # Install gcloud
 RUN set -exu && \
@@ -29,7 +29,8 @@ RUN set -exu && \
     rm -rf ~/.config/gcloud && \
     rm -vrf /tmp/* ${GATLING_HOME}/results  ${GATLING_HOME}/user-files ${GATLING_HOME}/target && \
     mkdir -v ${GATLING_HOME}/results  ${GATLING_HOME}/user-files ${GATLING_HOME}/target && \
-    chmod +x /docker-cmd.sh
+    chmod +x /docker-cmd.sh /gatling.sh && \
+    mv /gatling.sh ${GATLING_HOME}/bin/gatling.sh
 
 # Smoke test
 RUN set -ex && java -version && gatling.sh && ulimit -a

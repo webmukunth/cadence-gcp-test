@@ -19,5 +19,5 @@ diff: lint
 apply: lint
 	time helmfile --environment ${HELMFILE_ENV} apply --skip-deps
 
-destroy: 
+destroy:
 	helmfile --environment ${HELMFILE_ENV} destroy

@@ -1,0 +1,12 @@
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  hosts:
+    - host: gatling.gke
+      paths:
+        - /
+
+gatling:
+  repository: "gcr.io/monachism-83bea0/gatling"
+  tag: "3.2.1-fbad6f2"

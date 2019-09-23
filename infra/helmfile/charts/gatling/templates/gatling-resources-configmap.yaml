@@ -1,0 +1,14 @@
+{{- if .Values.gatling.resources }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ template "gatling.fullname" . }}-resources"
+  namespace: {{ .Release.Namespace }}
+  labels:
+{{ include "gatling.labels" . | indent 4 }}
+data:
+  {{- range $filename, $content := .Values.gatling.resources }}
+  "{{ $filename }}": |
+    {{- $content | nindent 4 }}
+  {{- end }}
+{{- end }}

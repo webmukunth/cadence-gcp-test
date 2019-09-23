@@ -1,0 +1,17 @@
+apiVersion: v1
+appVersion: 3.2.1
+description: Loadtest tool
+engine: gotpl
+home: https://psp.anz.com/
+keywords:
+- gatling
+- nginx
+- ltaas
+- loadtest
+maintainers:
+- email: nataram4@anz.com
+  name: mani
+name: gatling
+sources:
+- https://github.service.anz/nataram4/cadence-gcp/infra/helmfile/charts/gatling
+version: 0.0.1
