@@ -6,6 +6,7 @@ import static com.anz.cadence.commons.Constants.APPLICATION_VND_WF_RES_V1_JSON;
 import static com.anz.cadence.commons.Constants.APPLICATION_VND_WF_RES_V_1_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
+import com.anz.cadence.commons.api.workflow.WorkflowResponse;
 import com.anz.cadence.commons.model.payment.ComAnzPmtAddRqType;
 import com.anz.cadence.commons.utils.TraceUtil;
 import com.anz.cadence.web.sample2.service.SubmitPaymentWorkflowClient;
@@ -48,6 +49,30 @@ public class SubmitPayment {
     /* Capture workflow information into tracing tags */
     traceUtil.addWorkflowExecutionTag(response);
     log.info("submitPayment response={}", response);
+    return ok()
+        .contentType(APPLICATION_VND_WF_RES_V1_JSON)
+        .body(response);
+  }
+
+  @PostMapping(
+      path = "/executePayment",
+      consumes = {APPLICATION_VND_GPA_V1_JSON_VALUE, APPLICATION_VND_GPA_V1_XML_VALUE},
+      produces = APPLICATION_VND_WF_RES_V_1_JSON_VALUE
+  )
+  @Timed(
+      value = "http_execute_payment_requests",
+      description = "Execute Payment",
+      histogram = true,
+      percentiles = {0.8, 0.9, 0.95, 0.99},
+      extraTags = {"consumes", APPLICATION_VND_GPA_V1_JSON_VALUE}
+  )
+  public ResponseEntity<WorkflowResponse> executePayment(@RequestBody ComAnzPmtAddRqType request) {
+    final var workflowExecution = wfClient.submitPayment(request);
+    /* Capture workflow information into tracing tags */
+    traceUtil.addWorkflowExecutionTag(workflowExecution);
+    log.info("executePayment workflowExecution={}", workflowExecution);
+    final var response = wfClient.getResponse(workflowExecution);
+    log.info("executePayment response={}", response);
     return ok()
         .contentType(APPLICATION_VND_WF_RES_V1_JSON)
         .body(response);

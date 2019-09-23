@@ -5,6 +5,7 @@ import com.anz.cadence.commons.api.EventType;
 import com.anz.cadence.commons.api.PaymentEvent;
 import com.anz.cadence.commons.api.workflow.LimitType;
 import com.anz.cadence.commons.api.workflow.WorkflowRequest;
+import com.anz.cadence.commons.api.workflow.WorkflowResponse;
 import com.anz.cadence.commons.data.PaymentRequest;
 import com.anz.cadence.commons.data.PaymentRequestService;
 import com.anz.cadence.commons.kafka.KafkaProducer;
@@ -68,5 +69,13 @@ public class SubmitPaymentWorkflowClient {
     );
     /* Get it back from redis cache */
     return WorkflowClient.start(wfInstance::submitPayment, workflowRequest);
+  }
+
+  public WorkflowResponse getResponse(WorkflowExecution workflowExecution) {
+    /* Get the instance */
+    SamplePaymentWorkflow wfInstance = wfClient.newWorkflowStub(SamplePaymentWorkflow.class,
+        workflowExecution.getWorkflowId());
+    /* Request is null, since we are getting response from previously execute workflow instance */
+    return wfInstance.submitPayment(null);
   }
 }
