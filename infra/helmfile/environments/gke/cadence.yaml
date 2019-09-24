@@ -26,12 +26,12 @@ server:
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    limits:
-      cpu: 1
-      memory: 512Mi
-    requests:
-      cpu: 500m
-      memory: 256Mi
+#limits:
+#cpu: 1
+#memory: 512Mi
+#requests:
+#cpu: 500m
+#memory: 256Mi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -40,7 +40,7 @@ server:
     logLevel: "debug,info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 512
+    numHistoryShards: 1024
 
     persistence:
       default:
@@ -122,7 +122,7 @@ server:
     affinity: {}
 
   history:
-    # replicaCount: 1
+    replicaCount: 3
     service:
       # type: ClusterIP
       port: 7934
@@ -209,12 +209,12 @@ web:
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    limits:
-      cpu: 500m
-      memory: 512Mi
-    requests:
-      cpu: 250m
-      memory: 256Mi
+#limits:
+#cpu: 500m
+#memory: 512Mi
+#requests:
+#cpu: 250m
+#memory: 256Mi
 
   nodeSelector: {}
 

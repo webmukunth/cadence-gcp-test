@@ -15,7 +15,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 4,
   "links": [],
   "panels": [
     {
@@ -166,14 +165,26 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [],
+      "seriesOverrides": [
+        {
+          "alias": "Process activities-wf-client"
+        },
+        {
+          "alias": "Process sample-payment-wf-client"
+        }
+      ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by (application) (process_cpu_usage)*100 ",
-          "legendFormat": "{{ application }}",
+          "expr": "avg by (application) (system_cpu_usage)*100 ",
+          "legendFormat": "System {{ application }}",
+          "refId": "B"
+        },
+        {
+          "expr": "avg by (application) (process_cpu_usage)*100 ",
+          "legendFormat": "Process {{ application }}",
           "refId": "A"
         }
       ],
@@ -309,7 +320,7 @@
       }
     }
   ],
-  "refresh": "5s",
+  "refresh": false,
   "schemaVersion": 19,
   "style": "dark",
   "tags": [],
@@ -317,8 +328,8 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
-    "to": "now"
+    "from": "2019-09-24T07:28:46.796Z",
+    "to": "2019-09-24T07:56:00.090Z"
   },
   "timepicker": {
     "refresh_intervals": [
@@ -337,5 +348,5 @@
   "timezone": "",
   "title": "Workflow",
   "uid": "ra0_VatZz",
-  "version": 9
+  "version": 1
 }

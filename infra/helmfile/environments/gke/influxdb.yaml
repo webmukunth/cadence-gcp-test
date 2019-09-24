@@ -91,12 +91,12 @@ setDefaultUser:
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 resources:
-  requests:
-    memory: 256Mi
-    cpu: 250m
-  limits:
-    memory: 1Gi
-    cpu: 500m
+#requests:
+#memory: 256Mi
+#cpu: 250m
+#limits:
+#memory: 1Gi
+#cpu: 500m
 
 ingress:
   enabled: false

@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/monachism-83bea0/cadence/sample-payment-web
-  tag: master-ea46f25
+  tag: master-4107ab4
 
 imagePullSecrets: []
 
@@ -35,12 +35,12 @@ resources:
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  limits:
-    cpu: 500m
-    memory: 1Gi
-  requests:
-    cpu: 100m
-    memory: 512Mi
+#  limits:
+#    cpu: 500m
+#    memory: 1Gi
+#  requests:
+#    cpu: 100m
+#    memory: 512Mi
 
 nodeSelector: {}
 

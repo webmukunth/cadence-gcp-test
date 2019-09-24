@@ -26,7 +26,6 @@ resources:
                 - |
                   set -x
                   echo "Started Running at $(date)"
-                  RF=2
                   # cassandra env
                   export KEYSPACE="${KEYSPACE:-cadence}"
                   export VISIBILITY_KEYSPACE="${VISIBILITY_KEYSPACE:-cadence_visibility}"
@@ -34,8 +33,8 @@ resources:
                   export CASSANDRA_USER=cassandra
                   export CASSANDRA_PASSWORD=cassandra
                   echo 'cassandra started'
-                  cadence-cassandra-tool create -k $KEYSPACE --rf $RF
-                  cadence-cassandra-tool create -k $VISIBILITY_KEYSPACE --rf $RF
+                  cadence-cassandra-tool create -k $KEYSPACE --rf 3
+                  cadence-cassandra-tool create -k $VISIBILITY_KEYSPACE --rf 1
                   echo 'cassandra schema for cadence ready'
           terminationGracePeriodSeconds: 30
           restartPolicy: OnFailure
