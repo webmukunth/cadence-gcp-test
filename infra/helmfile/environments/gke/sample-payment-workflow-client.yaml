@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: gcr.io/monachism-83bea0/cadence/sample-payment-workflow-client
-  tag: master-3374ec4
+  tag: master-ea46f25
 
 imagePullSecrets: []
 

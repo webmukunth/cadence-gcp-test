@@ -173,7 +173,7 @@ alertmanager:
 
     ## alertmanager data Persistent Volume size
     ##
-    size: 2Gi
+    size: 25Gi
 
     ## alertmanager data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>
@@ -693,7 +693,7 @@ server:
 
     ## Prometheus server data Persistent Volume size
     ##
-    size: 16Gi
+    size: 25Gi
 
     ## Prometheus server data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>

@@ -5,6 +5,7 @@ import java.util.UUID.randomUUID
 
 import io.gatling.core.Predef._
 import io.gatling.http.Predef._
+
 import scala.concurrent.duration._
 
 class BasicSimulation extends Simulation {
@@ -105,13 +106,15 @@ class BasicSimulation extends Simulation {
         .set("rqUID", LocalDateTime.now(ZoneId.of("GMT")).toString)
     }
     .exec(samplePayment)
+    .pause(20 milliseconds, 100 milliseconds)
 
   /* Stop the test when response time is greather than 500 ms or any error occured */
   setUp(
     scn.inject(
+      nothingFor(30 seconds),
       incrementUsersPerSec(1)
         .times(20)
-        .eachLevelLasting(5 seconds)
+        .eachLevelLasting(30 seconds)
     )
   ).protocols(httpProtocol)
     .assertions(

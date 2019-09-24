@@ -60,7 +60,7 @@ persistence:
 
   ## The size of the PersistentVolume to allocate to each Kafka Pod in the StatefulSet. For
   ## production servers this number should likely be much larger.
-  size: 16Gi
+  size: 50Gi
 
   ## Kafka data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>

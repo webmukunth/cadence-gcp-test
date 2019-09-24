@@ -114,12 +114,12 @@ resource "google_container_node_pool" "gke-np" {
   initial_node_count = "5"
 
   autoscaling {
-    min_node_count = "3"
+    min_node_count = "5"
     max_node_count = "8"
   }
 
   node_config {
-    preemptible  = true
+    preemptible  = false
     machine_type = "n1-standard-4"
     disk_size_gb = 50
     disk_type    = "pd-standard"

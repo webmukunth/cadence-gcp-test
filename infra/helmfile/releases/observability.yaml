@@ -32,6 +32,8 @@ releases:
     set:
       - name: dashboards.default.cadence.json
         file: ../dashboards/cadence.json
+      - name: dashboards.default.workflow.json
+        file: ../dashboards/workflow.json
 
   - name: influxdb
     chart: ../charts/influxdb

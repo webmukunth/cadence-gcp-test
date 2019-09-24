@@ -16,116 +16,9 @@
   "editable": true,
   "gnetId": 10373,
   "graphTooltip": 0,
-  "iteration": 1569249025424,
+  "iteration": 1569290496823,
   "links": [],
   "panels": [
-    {
-      "aliasColors": {},
-      "bars": false,
-      "dashLength": 10,
-      "dashes": false,
-      "fill": 1,
-      "fillGradient": 0,
-      "gridPos": {
-        "h": 8,
-        "w": 24,
-        "x": 0,
-        "y": 0
-      },
-      "id": 51,
-      "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": false,
-        "rightSide": true,
-        "show": true,
-        "total": false,
-        "values": true
-      },
-      "lines": true,
-      "linewidth": 1,
-      "links": [],
-      "nullPointMode": "null",
-      "options": {
-        "dataLinks": []
-      },
-      "percentage": false,
-      "pointradius": 2,
-      "points": false,
-      "renderer": "flot",
-      "seriesOverrides": [
-        {
-          "alias": "Completed Count",
-          "yaxis": 2
-        },
-        {
-          "alias": "Start Count",
-          "yaxis": 2
-        }
-      ],
-      "spaceLength": 10,
-      "stack": false,
-      "steppedLine": false,
-      "targets": [
-        {
-          "expr": "max(rate(cadence_workflow_endtoend_latency_seconds_max[2m]))",
-          "format": "time_series",
-          "hide": false,
-          "intervalFactor": 1,
-          "legendFormat": "E2E Max",
-          "refId": "B"
-        },
-        {
-          "expr": "sum(rate(cadence_workflow_completed_total[2m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Completed Count",
-          "refId": "C"
-        }
-      ],
-      "thresholds": [],
-      "timeFrom": null,
-      "timeRegions": [],
-      "timeShift": null,
-      "title": "Workflow Stats",
-      "tooltip": {
-        "shared": true,
-        "sort": 2,
-        "value_type": "individual"
-      },
-      "type": "graph",
-      "xaxis": {
-        "buckets": null,
-        "mode": "time",
-        "name": null,
-        "show": true,
-        "values": []
-      },
-      "yaxes": [
-        {
-          "format": "s",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        },
-        {
-          "format": "short",
-          "label": null,
-          "logBase": 1,
-          "max": null,
-          "min": null,
-          "show": true
-        }
-      ],
-      "yaxis": {
-        "align": false,
-        "alignLevel": null
-      }
-    },
     {
       "aliasColors": {},
       "bars": false,
@@ -141,7 +34,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 0
       },
       "id": 30,
       "legend": {
@@ -241,7 +134,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 8
+        "y": 0
       },
       "id": 47,
       "isNew": true,
@@ -324,7 +217,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 7
       },
       "id": 36,
       "panels": [],
@@ -347,7 +240,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 16
+        "y": 8
       },
       "id": 33,
       "legend": {
@@ -521,7 +414,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 23
+        "y": 15
       },
       "id": 34,
       "legend": {
@@ -603,7 +496,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 30
+        "y": 22
       },
       "id": 40,
       "panels": [],
@@ -625,7 +518,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 31
+        "y": 23
       },
       "id": 43,
       "legend": {
@@ -725,7 +618,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 31
+        "y": 23
       },
       "id": 46,
       "legend": {
@@ -809,7 +702,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 30
       },
       "id": 37,
       "panels": [],
@@ -832,7 +725,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 39
+        "y": 31
       },
       "id": 1,
       "isNew": true,
@@ -947,7 +840,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 39
+        "y": 31
       },
       "id": 2,
       "isNew": true,
@@ -1051,7 +944,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 47
+        "y": 39
       },
       "id": 3,
       "isNew": true,
@@ -1154,7 +1047,7 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 55
+        "y": 47
       },
       "id": 38,
       "panels": [],
@@ -1177,7 +1070,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 56
+        "y": 48
       },
       "id": 27,
       "isNew": true,

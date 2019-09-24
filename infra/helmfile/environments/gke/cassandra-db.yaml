@@ -100,7 +100,7 @@ persistence:
   - ReadWriteOnce
   ## Persistent Volume size
   ##
-  size: 16Gi
+  size: 50Gi
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -110,10 +110,10 @@ persistence:
 ##
 resources:
   requests:
-    memory: 4.1Gi
+    memory: 4.5Gi
     cpu: 1
   limits:
-    memory: 8.1Gi
+    memory: 8.5Gi
     cpu: 2
 
 ## Secret with keystore, keystore password, truststore, truststore password
@@ -125,7 +125,7 @@ resources:
 ##
 cluster:
   name: cassandra
-  replicaCount: 3
+  replicaCount: 5
   seedCount: 2
   numTokens: 256
   datacenter: dc1
@@ -138,12 +138,12 @@ cluster:
   clientEncryption: false
   domain: cluster.local
 
-jvm:
+#jvm:
   ## Extra JVM Settings
   ##
-  extraOpts:
-  maxHeapSize: 4G
-  newHeapSize: 1G
+  #extraOpts:
+  #maxHeapSize: 8G
+  #newHeapSize: 4G
 
 ## Database credentials
 ##
