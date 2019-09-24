@@ -7,9 +7,9 @@ provider "google-beta" {
 }
 
 locals {
-  project  = "monachism-83bea0"
+  project  = "frontal-23980c"
   gke-name = "cadence-gke"
-  location = "us-west2-c"
+  location = "us-west2-b"
 }
 
 data "google_container_engine_versions" "gke-version" {
@@ -111,10 +111,10 @@ resource "google_container_node_pool" "gke-np" {
     auto_upgrade = "true"
   }
 
-  initial_node_count = "5"
+  initial_node_count = "3"
 
   autoscaling {
-    min_node_count = "5"
+    min_node_count = "3"
     max_node_count = "8"
   }
 

@@ -33,8 +33,8 @@ resources:
                   export CASSANDRA_USER=cassandra
                   export CASSANDRA_PASSWORD=cassandra
                   echo 'cassandra started'
-                  cadence-cassandra-tool create -k $KEYSPACE --rf 3
-                  cadence-cassandra-tool create -k $VISIBILITY_KEYSPACE --rf 1
+                  cadence-cassandra-tool create -k $KEYSPACE --rf 2
+                  cadence-cassandra-tool create -k $VISIBILITY_KEYSPACE --rf 2
                   echo 'cassandra schema for cadence ready'
           terminationGracePeriodSeconds: 30
           restartPolicy: OnFailure

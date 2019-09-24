@@ -8,5 +8,5 @@ ingress:
         - /
 
 gatling:
-  repository: "gcr.io/monachism-83bea0/gatling"
-  tag: "3.2.1-fbad6f2"
+  repository: "gcr.io/frontal-23980c/gatling"
+  tag: "3.2.1-0db44bc"

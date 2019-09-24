@@ -106,14 +106,14 @@ class BasicSimulation extends Simulation {
         .set("rqUID", LocalDateTime.now(ZoneId.of("GMT")).toString)
     }
     .exec(samplePayment)
-    .pause(20 milliseconds, 100 milliseconds)
+    .pause(50 milliseconds, 500 milliseconds)
 
   /* Stop the test when response time is greather than 500 ms or any error occured */
   setUp(
     scn.inject(
       incrementUsersPerSec(1)
-        .times(20)
-        .eachLevelLasting(30 seconds)
+        .times(10)
+        .eachLevelLasting(60 seconds)
     )
   ).protocols(httpProtocol)
     .assertions(

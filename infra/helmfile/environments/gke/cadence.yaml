@@ -7,7 +7,7 @@ server:
     tag: 0.8.6
     pullPolicy: IfNotPresent
   # Global default settings (can be overridden per service)
-  replicaCount: 2
+  replicaCount: 1
   metrics:
     # Annotate pods directly with Prometheus annotations.
     # Use this if you installed Prometheus from a Helm chart.
@@ -40,7 +40,7 @@ server:
     logLevel: "debug,info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 1024
+    numHistoryShards: 64
 
     persistence:
       default:
@@ -122,7 +122,7 @@ server:
     affinity: {}
 
   history:
-    replicaCount: 3
+    # replicaCount: 1
     service:
       # type: ClusterIP
       port: 7934

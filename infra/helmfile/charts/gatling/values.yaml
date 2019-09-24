@@ -90,7 +90,7 @@ nginx:
     }
 
 gatling:
-  repository: "gcr.io/monachism-83bea0/gatling"
+  repository: "gcr.io/frontal-23980c/gatling"
   tag: "3.2.1"
   pullPolicy: IfNotPresent
   conf: {}

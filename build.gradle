@@ -37,7 +37,7 @@ ext {
     reactorKafkaVersion = '1.1.1.RELEASE'
     gatlingVersion = '3.2.1'
     scalaLibVersion = '2.12.8'
-    imageRepo = 'gcr.io/monachism-83bea0'
+    imageRepo = 'gcr.io/frontal-23980c'
     imageTag = "${getGitBranch()}-${getGitHash()}"
 }
 

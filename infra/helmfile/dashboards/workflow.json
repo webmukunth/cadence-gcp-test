@@ -40,6 +40,8 @@
         "min": false,
         "rightSide": true,
         "show": true,
+        "sort": "current",
+        "sortDesc": true,
         "total": false,
         "values": true
       },
@@ -78,6 +80,11 @@
           "refId": "B"
         },
         {
+          "expr": "sum(rate(cadence_workflow_completed_total[1m]))",
+          "legendFormat": "Completed Count Per Second",
+          "refId": "E"
+        },
+        {
           "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_sum[1m]))/sum(rate(cadence_workflow_endtoend_latency_seconds_count[1m]))",
           "legendFormat": "Workflow Latency",
           "refId": "C"
@@ -95,7 +102,7 @@
       "title": "Workflow Stats",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -152,6 +159,8 @@
         "min": false,
         "rightSide": true,
         "show": true,
+        "sort": "current",
+        "sortDesc": true,
         "total": false,
         "values": true
       },
@@ -195,7 +204,7 @@
       "title": "app cpu usage",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -254,6 +263,8 @@
         "min": false,
         "rightSide": true,
         "show": true,
+        "sort": "current",
+        "sortDesc": true,
         "total": false,
         "values": true
       },
@@ -320,7 +331,7 @@
       }
     }
   ],
-  "refresh": false,
+  "refresh": "5s",
   "schemaVersion": 19,
   "style": "dark",
   "tags": [],
@@ -328,10 +339,11 @@
     "list": []
   },
   "time": {
-    "from": "2019-09-24T07:28:46.796Z",
-    "to": "2019-09-24T07:56:00.090Z"
+    "from": "now-15m",
+    "to": "now"
   },
   "timepicker": {
+    "now": true,
     "refresh_intervals": [
       "5s",
       "10s",
