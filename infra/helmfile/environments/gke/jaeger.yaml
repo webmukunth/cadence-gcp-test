@@ -97,10 +97,10 @@ agent:
     samplingPort: 5778
   resources:
     limits:
-      cpu: 200m
+      cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 100m
+      cpu: 250m
       memory: 128Mi
   nodeSelector: {}
   podAnnotations: {}
@@ -138,10 +138,10 @@ collector:
     zipkinPort: 9411
   resources:
     limits:
-      cpu: 200m
+      cpu: 500m
       memory: 1Gi
     requests:
-      cpu: 100m
+      cpu: 250m
       memory: 512Mi
   nodeSelector: {}
   podAnnotations: {}
@@ -186,10 +186,10 @@ query:
       - jaeger.gke
   resources:
     limits:
-      cpu: 200m
+      cpu: 500m
       memory: 512Mi
     requests:
-      cpu: 100m
+      cpu: 250m
       memory: 128Mi
   nodeSelector: {}
   podAnnotations: {}

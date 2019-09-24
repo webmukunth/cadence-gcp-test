@@ -32,7 +32,7 @@ public class CadenceClientAutoConfiguration {
     var fo = new FactoryOptions.Builder()
         .setMetricScope(ms)
         .setDisableStickyExecution(true)
-        .setMaxWorkflowThreadCount(4)
+        //.setMaxWorkflowThreadCount(4)
         .build();
 
     var f = new Factory(tc, Constants.DOMAIN, fo);
@@ -48,7 +48,7 @@ public class CadenceClientAutoConfiguration {
                     .setMaximumPollRateIntervalMilliseconds(500)
                     .setPollThreadNamePrefix("Cadence Activity Poller")
                     .build())
-            .setMaxConcurrentActivityExecutionSize(32)
+            //.setMaxConcurrentActivityExecutionSize(32)
             .setIdentity(applicationName + "@" + Constants.INSTANCE_NAME)
             .setMetricsScope(ms)
             .setDisableWorkflowWorker(true)

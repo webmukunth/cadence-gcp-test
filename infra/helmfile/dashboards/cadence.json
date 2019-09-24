@@ -16,7 +16,7 @@
   "editable": true,
   "gnetId": 10373,
   "graphTooltip": 0,
-  "iteration": 1565761627688,
+  "iteration": 1569249025424,
   "links": [],
   "panels": [
     {
@@ -38,10 +38,10 @@
         "avg": true,
         "current": true,
         "max": true,
-        "min": true,
+        "min": false,
         "rightSide": true,
         "show": true,
-        "total": true,
+        "total": false,
         "values": true
       },
       "lines": true,
@@ -70,15 +70,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_sum[3m]))",
-          "format": "time_series",
-          "interval": "",
-          "intervalFactor": 1,
-          "legendFormat": "E2E Sum",
-          "refId": "A"
-        },
-        {
-          "expr": "max(rate(cadence_workflow_endtoend_latency_seconds_max[3m]))",
+          "expr": "max(rate(cadence_workflow_endtoend_latency_seconds_max[2m]))",
           "format": "time_series",
           "hide": false,
           "intervalFactor": 1,
@@ -86,18 +78,11 @@
           "refId": "B"
         },
         {
-          "expr": "sum(rate(cadence_workflow_completed_total[3m]))",
+          "expr": "sum(rate(cadence_workflow_completed_total[2m]))",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Completed Count",
           "refId": "C"
-        },
-        {
-          "expr": "sum(rate(cadence_worker_start_total[3m]))",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "Start Count",
-          "refId": "D"
         }
       ],
       "thresholds": [],
@@ -120,7 +105,7 @@
       },
       "yaxes": [
         {
-          "format": "ms",
+          "format": "s",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -634,6 +619,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -655,7 +641,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -731,6 +719,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -752,7 +741,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -835,6 +826,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -857,7 +849,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -947,6 +941,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -970,7 +965,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -1048,6 +1045,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 8,
@@ -1070,7 +1068,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,
@@ -1171,6 +1171,7 @@
       "editable": true,
       "error": false,
       "fill": 1,
+      "fillGradient": 0,
       "grid": {},
       "gridPos": {
         "h": 7,
@@ -1193,7 +1194,9 @@
       "linewidth": 2,
       "links": [],
       "nullPointMode": "null",
-      "options": {},
+      "options": {
+        "dataLinks": []
+      },
       "percentage": false,
       "pointradius": 5,
       "points": false,

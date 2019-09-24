@@ -189,19 +189,19 @@ podLabels: {}
 ##
 resources:
   limits:
+    cpu: 1
+    memory: 1G
+  requests:
     cpu: 500m
     memory: 512Mi
-  requests:
-    cpu: 100m
-    memory: 256Mi
 # Define separate resources per arbiter, which are less then primary or secondary
 # used only when replica set is enabled
 resourcesArbiter:
   limits:
-    cpu: 500m
+    cpu: 1
     memory: 512Mi
   requests:
-    cpu: 100m
+    cpu: 500m
     memory: 256Mi
 
 ## Pod priority
