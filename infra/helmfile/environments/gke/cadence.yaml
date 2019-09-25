@@ -54,8 +54,8 @@ server:
           password: "cassandra"
           existingSecret: ""
           consistency: Quorum
+          maxQPS: 5000
           # datacenter: "us-east-1a"
-          # maxQPS: 1000
           # maxConns: 2
 
         sql:
@@ -84,8 +84,8 @@ server:
           password: "cassandra"
           existingSecret: ""
           consistency: Quorum
+          maxQPS: 5000
           # datacenter: "us-east-1a"
-          # maxQPS: 1000
           # maxConns: 2
 
         sql:

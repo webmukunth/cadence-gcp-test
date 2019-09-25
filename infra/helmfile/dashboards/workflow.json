@@ -15,7 +15,6 @@
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
-  "id": 7,
   "links": [],
   "panels": [
     {
@@ -66,12 +65,12 @@
           "yaxis": 2
         },
         {
-          "alias": "Failed Count Per Second",
+          "alias": "Workflow Failed",
           "color": "#C4162A",
           "linewidth": 2
         },
         {
-          "alias": "Completed Count Per Second",
+          "alias": "Workflow Completed",
           "color": "#56A64B",
           "linewidth": 2
         }
@@ -81,33 +80,33 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_count[1m]))",
-          "legendFormat": "Workflow Count",
-          "refId": "A"
+          "expr": "sum(rate(cadence_requests{operation=\"StartWorkflowExecution\"}[2m]))",
+          "legendFormat": "Workflow Started",
+          "refId": "G"
         },
         {
-          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_count[1m]))",
-          "legendFormat": "Activity Count",
-          "refId": "B"
-        },
-        {
-          "expr": "sum(rate(cadence_workflow_completed_total[1m]))",
-          "legendFormat": "Completed Count Per Second",
+          "expr": "sum(rate(cadence_workflow_completed_total[2m]))",
+          "legendFormat": "Workflow Completed",
           "refId": "E"
         },
         {
-          "expr": "sum(rate(cadence_workflow_failed_total[1m]))",
+          "expr": "sum(rate(cadence_workflow_failed_total[2m]))",
           "instant": false,
-          "legendFormat": "Failed Count Per Second",
+          "legendFormat": "Workflow Failed",
           "refId": "F"
         },
         {
-          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_sum[1m]))/sum(rate(cadence_workflow_endtoend_latency_seconds_count[1m]))",
+          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_count[2m]))",
+          "legendFormat": "Activities",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_sum[2m]))/sum(rate(cadence_workflow_endtoend_latency_seconds_count[2m]))",
           "legendFormat": "Workflow Latency",
           "refId": "C"
         },
         {
-          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_sum[1m]))/sum(rate(cadence_activity_endtoend_latency_seconds_count[1m]))",
+          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_sum[2m]))/sum(rate(cadence_activity_endtoend_latency_seconds_count[2m]))",
           "legendFormat": "Activity Latency",
           "refId": "D"
         }
@@ -122,6 +121,7 @@
         "sort": 0,
         "value_type": "individual"
       },
+      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -132,7 +132,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "ops",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -158,7 +158,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": "InfluxDB",
+      "datasource": "Prometheus",
       "editable": true,
       "error": false,
       "fill": 1,
@@ -170,25 +170,20 @@
         "x": 0,
         "y": 6
       },
-      "id": 10,
-      "interval": "10s",
+      "id": 12,
       "legend": {
-        "alignAsTable": true,
-        "avg": true,
-        "current": true,
-        "max": true,
-        "min": true,
-        "rightSide": false,
+        "avg": false,
+        "current": false,
+        "max": false,
+        "min": false,
         "show": true,
-        "sort": "total",
-        "sortDesc": true,
         "total": false,
-        "values": true
+        "values": false
       },
       "lines": true,
       "linewidth": 2,
       "links": [],
-      "nullPointMode": "connected",
+      "nullPointMode": "null",
       "options": {
         "dataLinks": []
       },
@@ -202,82 +197,33 @@
       "steppedLine": false,
       "targets": [
         {
-          "alias": "$tag_simulation ($col)",
-          "dsType": "influxdb",
-          "fields": [
-            {
-              "func": "mean",
-              "name": "value"
-            }
-          ],
-          "groupBy": [
-            {
-              "params": [
-                "5s"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "simulation"
-              ],
-              "type": "tag"
-            }
-          ],
-          "hide": false,
-          "measurement": "gatling",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT \"percentiles50\" FROM \"gatling\" WHERE \"request\" = 'allRequests' AND \"status\" = 'ok' AND $timeFilter",
+          "expr": "sum (rate(cadence_errors[2m])) by(operation)",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "key": 0.42651392099317587,
+          "legendFormat": "Errors - {{operation}}",
           "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "percentiles99"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [
-                  "99"
-                ],
-                "type": "percentile"
-              },
-              {
-                "params": [
-                  "percentile 99"
-                ],
-                "type": "alias"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "request",
-              "operator": "=",
-              "value": "allRequests"
-            },
-            {
-              "condition": "AND",
-              "key": "status",
-              "operator": "=",
-              "value": "ok"
-            }
-          ]
+          "target": "fetch service:cadence-frontend deployment:$deployment name:{cadence_errors,cadence_requests} | transformNull 0 | sum name | scaleToSeconds 1 | aliasByTags name"
+        },
+        {
+          "expr": "sum(rate(cadence_requests[2m])) by(operation)",
+          "format": "time_series",
+          "intervalFactor": 1,
+          "legendFormat": "Requests - {{operation}}:{{domain}}",
+          "refId": "B"
         }
       ],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Loadtest Client Latencies",
+      "title": "Request Vs Error",
       "tooltip": {
         "shared": true,
         "sort": 2,
         "value_type": "cumulative"
       },
+      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -288,10 +234,10 @@
       },
       "yaxes": [
         {
-          "format": "ms",
+          "format": "short",
           "logBase": 1,
           "max": null,
-          "min": 0,
+          "min": null,
           "show": true
         },
         {
@@ -490,6 +436,7 @@
         "sort": 2,
         "value_type": "cumulative"
       },
+      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -572,12 +519,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "avg by (application) (system_cpu_usage)*100 ",
-          "legendFormat": "System {{ application }}",
-          "refId": "B"
-        },
-        {
-          "expr": "avg by (application) (process_cpu_usage)*100 ",
+          "expr": "avg by (application) (process_cpu_usage)",
           "legendFormat": "Process {{ application }}",
           "refId": "A"
         }
@@ -592,6 +534,7 @@
         "sort": 2,
         "value_type": "individual"
       },
+      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -602,7 +545,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "percentunit",
           "label": null,
           "logBase": 1,
           "max": null,
@@ -669,7 +612,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by(pod_name)(rate(container_cpu_usage_seconds_total{namespace=\"default\"}[1m])*100)",
+          "expr": "sum by(pod_name)(rate(container_cpu_usage_seconds_total{namespace=\"default\"}[2m])*100)",
           "legendFormat": "{{ pod_name }}",
           "refId": "A"
         }
@@ -684,6 +627,7 @@
         "sort": 2,
         "value_type": "individual"
       },
+      "transparent": true,
       "type": "graph",
       "xaxis": {
         "buckets": null,
@@ -714,6 +658,161 @@
         "align": false,
         "alignLevel": null
       }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "datasource": "InfluxDB",
+      "editable": true,
+      "error": false,
+      "fill": 1,
+      "fillGradient": 0,
+      "grid": {},
+      "gridPos": {
+        "h": 7,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "id": 10,
+      "interval": "10s",
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "max": true,
+        "min": true,
+        "rightSide": false,
+        "show": true,
+        "sort": "total",
+        "sortDesc": true,
+        "total": false,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 2,
+      "links": [],
+      "nullPointMode": "connected",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 5,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "alias": "$tag_simulation ($col)",
+          "dsType": "influxdb",
+          "fields": [
+            {
+              "func": "mean",
+              "name": "value"
+            }
+          ],
+          "groupBy": [
+            {
+              "params": [
+                "5s"
+              ],
+              "type": "time"
+            },
+            {
+              "params": [
+                "simulation"
+              ],
+              "type": "tag"
+            }
+          ],
+          "hide": false,
+          "measurement": "gatling",
+          "orderByTime": "ASC",
+          "policy": "default",
+          "query": "SELECT \"percentiles50\" FROM \"gatling\" WHERE \"request\" = 'allRequests' AND \"status\" = 'ok' AND $timeFilter",
+          "refId": "A",
+          "resultFormat": "time_series",
+          "select": [
+            [
+              {
+                "params": [
+                  "percentiles99"
+                ],
+                "type": "field"
+              },
+              {
+                "params": [
+                  "99"
+                ],
+                "type": "percentile"
+              },
+              {
+                "params": [
+                  "percentile 99"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "tags": [
+            {
+              "key": "request",
+              "operator": "=",
+              "value": "allRequests"
+            },
+            {
+              "condition": "AND",
+              "key": "status",
+              "operator": "=",
+              "value": "ok"
+            }
+          ]
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Loadtest Client Latencies",
+      "tooltip": {
+        "shared": true,
+        "sort": 2,
+        "value_type": "cumulative"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "ms",
+          "logBase": 1,
+          "max": null,
+          "min": 0,
+          "show": true
+        },
+        {
+          "format": "short",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
     }
   ],
   "refresh": "5s",
@@ -724,7 +823,7 @@
     "list": []
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -745,5 +844,5 @@
   "timezone": "",
   "title": "Workflow Stats",
   "uid": "hqOj2EtZz",
-  "version": 5
+  "version": 1
 }
