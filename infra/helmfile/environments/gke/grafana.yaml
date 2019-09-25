@@ -256,6 +256,13 @@ datasources:
       url: http://prometheus-server
       access: proxy
       isDefault: true
+    - name: InfluxDB
+      type: influxdb
+      url: http://influxdb:8086
+      access: proxy
+      database: gatlingdb
+      user: gatling
+      password: gatling
 
 ## Configure notifiers
 ## ref: http://docs.grafana.org/administration/provisioning/#alert-notification-channels

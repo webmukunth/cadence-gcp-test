@@ -56,6 +56,10 @@ releases:
     set:
       - name: gatling.simulations.BasicSimulation\.scala
         file: ../../../sample-payment-web/src/gatling/simulations/com/anz/cadence/samplepayment/BasicSimulation.scala
+      - name: gatling.conf.gatling\.conf
+        file: ../../../sample-payment-web/src/gatling/resources/gatling.conf
+      - name: gatling.conf.logback\.xml
+        file: ../../../sample-payment-web/src/gatling/resources/logback.xml
 environments:
   default: {}
   gke: {}

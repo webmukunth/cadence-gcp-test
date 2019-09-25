@@ -97,7 +97,8 @@ public class TraceUtil {
       tracerAndTimer.logError(ex);
       throw Activity.wrap(ex);
     } finally {
-      tracerAndTimer.close(standardMetricName(act),
+      tracerAndTimer.close( "app_activity",
+          "activityType", act.getActivityType(),
           "taskList", act.getTaskList(),
           "domain", act.getWorkflowDomain(),
           "exception", exceptionClass);

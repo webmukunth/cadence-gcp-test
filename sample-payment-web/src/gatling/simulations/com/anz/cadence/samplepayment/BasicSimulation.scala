@@ -106,7 +106,7 @@ class BasicSimulation extends Simulation {
         .set("rqUID", LocalDateTime.now(ZoneId.of("GMT")).toString)
     }
     .exec(samplePayment)
-    .pause(50 milliseconds, 500 milliseconds)
+    .pause(50 milliseconds, 200 milliseconds)
 
   /* Stop the test when response time is greather than 500 ms or any error occured */
   setUp(
