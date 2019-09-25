@@ -59,7 +59,6 @@
       "seriesOverrides": [
         {
           "alias": "Workflow Latency",
-          "linewidth": 2,
           "yaxis": 2
         },
         {
@@ -70,6 +69,11 @@
           "alias": "Failed Count Per Second",
           "color": "#C4162A",
           "linewidth": 2
+        },
+        {
+          "alias": "Completed Count Per Second",
+          "color": "#56A64B",
+          "linewidth": 2
         }
       ],
       "spaceLength": 10,
@@ -77,33 +81,33 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_count[3m]))",
+          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_count[1m]))",
           "legendFormat": "Workflow Count",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_count[3m]))",
+          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_count[1m]))",
           "legendFormat": "Activity Count",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(cadence_workflow_completed_total[3m]))",
+          "expr": "sum(rate(cadence_workflow_completed_total[1m]))",
           "legendFormat": "Completed Count Per Second",
           "refId": "E"
         },
         {
-          "expr": "sum(rate(cadence_workflow_failed_total[3m]))",
+          "expr": "sum(rate(cadence_workflow_failed_total[1m]))",
           "instant": false,
           "legendFormat": "Failed Count Per Second",
           "refId": "F"
         },
         {
-          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_sum[3m]))/sum(rate(cadence_workflow_endtoend_latency_seconds_count[3m]))",
+          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_sum[1m]))/sum(rate(cadence_workflow_endtoend_latency_seconds_count[1m]))",
           "legendFormat": "Workflow Latency",
           "refId": "C"
         },
         {
-          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_sum[3m]))/sum(rate(cadence_activity_endtoend_latency_seconds_count[3m]))",
+          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_sum[1m]))/sum(rate(cadence_activity_endtoend_latency_seconds_count[1m]))",
           "legendFormat": "Activity Latency",
           "refId": "D"
         }
@@ -665,7 +669,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum by(pod_name)(rate(container_cpu_usage_seconds_total{namespace=\"default\"}[3m])*100)",
+          "expr": "sum by(pod_name)(rate(container_cpu_usage_seconds_total{namespace=\"default\"}[1m])*100)",
           "legendFormat": "{{ pod_name }}",
           "refId": "A"
         }
@@ -741,5 +745,5 @@
   "timezone": "",
   "title": "Workflow Stats",
   "uid": "hqOj2EtZz",
-  "version": 4
+  "version": 5
 }

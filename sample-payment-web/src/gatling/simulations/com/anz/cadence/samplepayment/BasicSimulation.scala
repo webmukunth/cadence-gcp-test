@@ -3,7 +3,7 @@ package com.anz.cadence.samplepayment
 import java.time.{LocalDateTime, ZoneId}
 import java.util.UUID.randomUUID
 
-import io.gatling.core.Predef._
+import io.gatling.core.Predef.{global, _}
 import io.gatling.http.Predef._
 
 import scala.concurrent.duration._
@@ -95,7 +95,8 @@ class BasicSimulation extends Simulation {
     .check(
       status.is(200),
       headerRegex(HttpHeaderNames.ContentType, "application/vnd.wf-res.v1\\+json"),
-      jsonPath("$[?(@.workflowId == '${id}')]").exists
+      jsonPath("$[?(@.workflowId == '${id}')]").exists,
+      responseTimeInMillis.lt(1000)
     )
 
   /* sample payment scenario */
@@ -116,8 +117,4 @@ class BasicSimulation extends Simulation {
         .eachLevelLasting(30 seconds)
     )
   ).protocols(httpProtocol)
-    .assertions(
-      global.responseTime.percentile(0.95).lt(1000),
-      global.successfulRequests.percent.is(100.0)
-    )
 }
