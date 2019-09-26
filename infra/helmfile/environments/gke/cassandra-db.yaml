@@ -110,10 +110,10 @@ persistence:
 ##
 resources:
   requests:
-    memory: 8.5Gi
+    memory: 12.5Gi
     cpu: 4
   limits:
-    memory: 12.5Gi
+    memory: 16.5Gi
     cpu: 6
 
 ## Secret with keystore, keystore password, truststore, truststore password
@@ -142,8 +142,8 @@ jvm:
   ## Extra JVM Settings
   ##
   extraOpts:
-  maxHeapSize: 12G
-  newHeapSize: 8G
+  maxHeapSize: 16G
+  newHeapSize: 12G
 
 ## Database credentials
 ##
@@ -162,7 +162,7 @@ dbUser:
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
 ##
 livenessProbe:
-  enabled: true
+  enabled: false
   initialDelaySeconds: 60
   periodSeconds: 30
   timeoutSeconds: 5
