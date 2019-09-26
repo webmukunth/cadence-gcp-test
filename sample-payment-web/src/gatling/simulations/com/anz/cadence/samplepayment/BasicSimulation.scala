@@ -3,7 +3,7 @@ package com.anz.cadence.samplepayment
 import java.time.{LocalDateTime, ZoneId}
 import java.util.UUID.randomUUID
 
-import io.gatling.core.Predef.{global, _}
+import io.gatling.core.Predef._
 import io.gatling.http.Predef._
 
 import scala.concurrent.duration._
@@ -113,8 +113,8 @@ class BasicSimulation extends Simulation {
   setUp(
     scn.inject(
       incrementUsersPerSec(1)
-        .times(30)
-        .eachLevelLasting(30 seconds)
+        .times(10)
+        .eachLevelLasting(2 minutes)
     )
   ).protocols(httpProtocol)
 }

@@ -47,7 +47,7 @@ public class CadenceClientAutoConfiguration {
                     .setMaximumPollRateIntervalMilliseconds(500)
                     .setPollThreadNamePrefix("Cadence Workflow Poller")
                     .build())
-            .setMaxConcurrentWorkflowExecutionSize(64)
+//            .setMaxConcurrentWorkflowExecutionSize(64)
             .setIdentity(applicationName + "@" + Constants.INSTANCE_NAME)
             .setMetricsScope(ms)
             .setDisableActivityWorker(true)  // Activities are not running in this VM

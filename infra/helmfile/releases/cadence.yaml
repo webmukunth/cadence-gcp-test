@@ -5,18 +5,6 @@ helmDefaults:
   force: true
 
 releases:
-  - name: cadence-create-keyspace
-    chart: ../charts/raw
-    wait: true
-    installed: true
-    namespace: default
-    labels:
-      component: workflow
-      package-manager: helmfile
-      chart: cadence-create-keyspace
-    values:
-      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
-
   - name: cadence
     chart: ../charts/cadence
     wait: true

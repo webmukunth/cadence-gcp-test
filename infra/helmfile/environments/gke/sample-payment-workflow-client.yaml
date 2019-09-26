@@ -6,7 +6,7 @@ replicaCount: 4
 
 image:
   repository: gcr.io/frontal-23980c/cadence/sample-payment-workflow-client
-  tag: master-0db44bc
+  tag: master-b8a1937
 
 imagePullSecrets: []
 

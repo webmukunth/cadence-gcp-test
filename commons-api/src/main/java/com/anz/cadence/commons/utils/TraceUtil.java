@@ -7,7 +7,6 @@ import static io.opentracing.tag.Tags.SPAN_KIND_CLIENT;
 
 import com.uber.cadence.WorkflowExecution;
 import com.uber.cadence.activity.Activity;
-import com.uber.cadence.activity.ActivityTask;
 import com.uber.cadence.internal.logging.LoggerTag;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Timer;
@@ -39,10 +38,6 @@ public class TraceUtil {
   public TraceUtil(Tracer tracer, MeterRegistry registry) {
     this.tracer = tracer;
     this.registry = registry;
-  }
-
-  private static String standardMetricName(ActivityTask act) {
-    return standardMetricName("cadence_" + act.getActivityType());
   }
 
   public static String standardMetricName(String s) {
@@ -97,7 +92,7 @@ public class TraceUtil {
       tracerAndTimer.logError(ex);
       throw Activity.wrap(ex);
     } finally {
-      tracerAndTimer.close( "app_activity",
+      tracerAndTimer.close("app_activity",
           "activityType", act.getActivityType(),
           "taskList", act.getTaskList(),
           "domain", act.getWorkflowDomain(),

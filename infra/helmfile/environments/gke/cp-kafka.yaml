@@ -60,7 +60,7 @@ persistence:
 
   ## The size of the PersistentVolume to allocate to each Kafka Pod in the StatefulSet. For
   ## production servers this number should likely be much larger.
-  size: 50Gi
+  size: 8Gi
 
   ## Kafka data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -69,7 +69,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "pd-ssd"
+  #storageClass: "pd-ssd"
 
   disksPerBroker: 1
 
@@ -132,9 +132,9 @@ cp-zookeeper:
   persistence:
     enabled: true
     dataDirSize: 1Gi
-    dataDirStorageClass: "pd-ssd"
+    #dataDirStorageClass: "pd-ssd"
     dataLogDirSize: 1Gi
-    dataLogDirStorageClass: "pd-ssd"
+    #dataLogDirStorageClass: "pd-ssd"
 
   ## If the Zookeeper Chart is disabled a URL and port are required to connect
   url: ""

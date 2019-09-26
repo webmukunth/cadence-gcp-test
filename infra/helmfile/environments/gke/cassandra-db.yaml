@@ -90,7 +90,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  storageClass: "pd-ssd"
+  #storageClass: "pd-ssd"
   ## Persistent Volume Claim annotations
   ##
   annotations:
@@ -100,7 +100,7 @@ persistence:
   - ReadWriteOnce
   ## Persistent Volume size
   ##
-  size: 50Gi
+  size: 8Gi
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -108,13 +108,13 @@ persistence:
 ## Minimum memory for production is 8GB and 4 CPU cores
 ## ref: http://docs.datastax.com/en/archived/cassandra/2.0/cassandra/architecture/architecturePlanningHardware_c.html
 ##
-resources:
-  requests:
-    memory: 12.5Gi
-    cpu: 4
-  limits:
-    memory: 16.5Gi
-    cpu: 6
+#resources:
+#  requests:
+#    memory: 2.5Gi
+#    cpu: 500m
+#  limits:
+#    memory: 5Gi
+#    cpu: 1
 
 ## Secret with keystore, keystore password, truststore, truststore password
 # tlsEncryptionSecretName:
@@ -125,25 +125,25 @@ resources:
 ##
 cluster:
   name: cassandra
-  replicaCount: 3
-  seedCount: 2
+  replicaCount: 1
+  seedCount: 1
   numTokens: 256
   datacenter: dc1
   rack: rack1
   enableRPC: true
   endpointSnitch: GossipingPropertyFileSnitch
-  minimumAvailable: 2
+  minimumAvailable: 1
   ## Encryption values. NOTE: They require tlsEncryptionSecretName
   internodeEncryption: none
   clientEncryption: false
   domain: cluster.local
 
-jvm:
+#jvm:
   ## Extra JVM Settings
   ##
-  extraOpts:
-  maxHeapSize: 16G
-  newHeapSize: 12G
+  #extraOpts:
+  #maxHeapSize: 16G
+  #newHeapSize: 12G
 
 ## Database credentials
 ##
@@ -162,7 +162,7 @@ dbUser:
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/
 ##
 livenessProbe:
-  enabled: false
+  enabled: true
   initialDelaySeconds: 60
   periodSeconds: 30
   timeoutSeconds: 5
@@ -252,7 +252,7 @@ networkPolicy:
 ## Ref: https://github.com/criteo/cassandra_exporter
 ##
 metrics:
-  enabled: true
+  enabled: false
   image:
     registry: docker.io
     pullPolicy: IfNotPresent

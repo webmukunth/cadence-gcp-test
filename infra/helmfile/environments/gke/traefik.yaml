@@ -321,7 +321,7 @@ acme:
   ## a kvprovider, you will re-request certs every time a pod (re-)starts
   ## and you WILL be rate limited!
   persistence:
-    enabled: true
+    enabled: false
     annotations: {}
     ## acme data Persistent Volume Storage Class
     ## If defined, storageClassName: <storageClass>

@@ -256,7 +256,7 @@ persistence:
   # storageClass: "-"
   accessModes:
     - ReadWriteOnce
-  size: 50Gi
+  size: 6Gi
   annotations: {}
 
 ## Configure the ingress resource that allows you to access the

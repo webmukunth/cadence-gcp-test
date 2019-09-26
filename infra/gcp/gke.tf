@@ -120,7 +120,7 @@ resource "google_container_node_pool" "gke-np" {
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-8"
+    machine_type = "n1-standard-4"
     disk_size_gb = 50
     disk_type    = "pd-standard"
 

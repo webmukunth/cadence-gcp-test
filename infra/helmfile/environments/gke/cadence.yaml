@@ -44,7 +44,7 @@ server:
 
     persistence:
       default:
-        driver: "cassandra"
+        driver: "sql"
 
         cassandra:
           hosts: cassandra-db
@@ -59,22 +59,22 @@ server:
           # maxConns: 2
 
         sql:
-          driver: "" # mysql
-          host: ""
-          # port: 3306
+          driver: "mysql" # mysql
+          host: "mysql-db"
+          port: 3306
           database: cadence
-          user: ""
-          password: ""
+          user: "cadence"
+          password: "cadence"
           existingSecret: ""
-          # maxConns: 20
-          # maxIdleConns: 20
-          # maxConnLifetime: "1h"
-          # maxQPS: 1000
+          maxConns: 20
+          maxIdleConns: 20
+          maxConnLifetime: "1h"
+          maxQPS: 50000
           # connectAttributes:
             # tx_isolation: "READ-COMMITTED"
 
       visibility:
-        driver: "cassandra" # cassandra or sql
+        driver: "sql" # cassandra or sql
 
         cassandra:
           hosts: cassandra-db
@@ -84,22 +84,22 @@ server:
           password: "cassandra"
           existingSecret: ""
           consistency: Quorum
-          maxQPS: 5000
+          maxQPS: 10000
           # datacenter: "us-east-1a"
           # maxConns: 2
 
         sql:
-          driver: "" # mysql
-          host: ""
-          # port: 3306
+          driver: "mysql" # mysql
+          host: "mysql-db"
+          port: 3306
           database: cadence_visibility
-          user: ""
-          password: ""
+          user: "cadence_visibility"
+          password: "cadence_visibility"
           existingSecret: ""
-          # maxConns: 20
-          # maxIdleConns: 20
-          # maxConnLifetime: "1h"
-          # maxQPS: 1000
+          maxConns: 20
+          maxIdleConns: 20
+          maxConnLifetime: "1h"
+          maxQPS: 1000
           # connectAttributes:
             # tx_isolation: "READ-COMMITTED"
 
