@@ -111,10 +111,10 @@ resource "google_container_node_pool" "gke-np" {
     auto_upgrade = "true"
   }
 
-  initial_node_count = "3"
+  initial_node_count = "4"
 
   autoscaling {
-    min_node_count = "3"
+    min_node_count = "4"
     max_node_count = "8"
   }
 

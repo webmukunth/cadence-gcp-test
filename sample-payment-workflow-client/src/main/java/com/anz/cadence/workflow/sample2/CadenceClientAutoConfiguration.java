@@ -9,6 +9,7 @@ import com.uber.cadence.worker.Worker.FactoryOptions;
 import com.uber.cadence.worker.WorkerOptions;
 import com.uber.cadence.worker.WorkflowImplementationOptions;
 import com.uber.m3.tally.Scope;
+import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -44,10 +45,11 @@ public class CadenceClientAutoConfiguration {
             .setWorkflowPollerOptions(
                 new PollerOptions.Builder()
                     .setPollThreadCount(1)
-                    .setMaximumPollRateIntervalMilliseconds(500)
+                    .setPollBackoffInitialInterval(Duration.ofMillis(100))
+                    .setPollBackoffMaximumInterval(Duration.ofSeconds(1))
                     .setPollThreadNamePrefix("Cadence Workflow Poller")
                     .build())
-//            .setMaxConcurrentWorkflowExecutionSize(64)
+            .setMaxConcurrentWorkflowExecutionSize(1024)
             .setIdentity(applicationName + "@" + Constants.INSTANCE_NAME)
             .setMetricsScope(ms)
             .setDisableActivityWorker(true)  // Activities are not running in this VM
