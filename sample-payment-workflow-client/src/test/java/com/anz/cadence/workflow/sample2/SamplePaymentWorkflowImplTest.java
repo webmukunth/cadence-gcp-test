@@ -36,7 +36,6 @@ import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowFailureException;
 import com.uber.cadence.testing.SimulatedTimeoutException;
 import com.uber.cadence.testing.TestWorkflowEnvironment;
-import com.uber.cadence.worker.Worker;
 import java.time.Duration;
 import java.util.Optional;
 import java.util.UUID;
@@ -82,11 +81,22 @@ public class SamplePaymentWorkflowImplTest {
     limitCheckActivity = mock(LimitCheckActivity.class);
     clearingActivity = mock(ClearingActivity.class);
 
-    Worker worker = testEnv.newWorker(Constants.TASK_LIST);
-    worker.registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
-    worker.registerActivitiesImplementations(
-        validateActivity, enrichActivity, accountingActivity, fraudCheckActivity,
-        clientResponseActivity, limitCheckActivity, clearingActivity);
+    testEnv.newWorker(Constants.TASK_LIST_SAMPLE_PAYMENT)
+        .registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
+    testEnv.newWorker(Constants.TASK_LIST_VALIDATE)
+        .registerActivitiesImplementations(validateActivity);
+    testEnv.newWorker(Constants.TASK_LIST_ENRICH)
+        .registerActivitiesImplementations(enrichActivity);
+    testEnv.newWorker(Constants.TASK_LIST_ACCOUNTING)
+        .registerActivitiesImplementations(accountingActivity);
+    testEnv.newWorker(Constants.TASK_LIST_FRAUD_CHECK)
+        .registerActivitiesImplementations(fraudCheckActivity);
+    testEnv.newWorker(Constants.TASK_LIST_CLIENT_RESPONSE)
+        .registerActivitiesImplementations(clientResponseActivity);
+    testEnv.newWorker(Constants.TASK_LIST_LIMIT_CHECK)
+        .registerActivitiesImplementations(limitCheckActivity);
+    testEnv.newWorker(Constants.TASK_LIST_CLEARING)
+        .registerActivitiesImplementations(clearingActivity);
 
     testEnv.start();
 

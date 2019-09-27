@@ -62,7 +62,6 @@ public class SubmitPaymentWorkflowClient {
 
     SamplePaymentWorkflow wfInstance = wfClient.newWorkflowStub(SamplePaymentWorkflow.class,
         new WorkflowOptions.Builder()
-            .setTaskList(Constants.TASK_LIST)
             .setWorkflowId(id)
             .setExecutionStartToCloseTimeout(Duration.ofDays(4))
             .build()

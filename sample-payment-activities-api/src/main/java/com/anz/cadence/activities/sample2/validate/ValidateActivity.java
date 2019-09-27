@@ -10,7 +10,7 @@ import lombok.NonNull;
 
 public interface ValidateActivity {
 
-  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST)
+  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST_VALIDATE)
   Optional<List<ValidationError>> validate(@NonNull WorkflowRequest workflowRequest);
 
 }

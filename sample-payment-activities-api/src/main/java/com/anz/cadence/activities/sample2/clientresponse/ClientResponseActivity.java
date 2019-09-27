@@ -8,6 +8,6 @@ import lombok.NonNull;
 
 public interface ClientResponseActivity {
 
-  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST)
+  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST_CLIENT_RESPONSE)
   void sendResponse(@NonNull WorkflowRequest request, @NonNull WorkflowResponse response);
 }

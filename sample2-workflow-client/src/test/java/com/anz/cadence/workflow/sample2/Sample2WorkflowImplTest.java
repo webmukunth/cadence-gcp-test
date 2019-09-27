@@ -10,7 +10,6 @@ import com.anz.cadence.activities.sample2.ServiceAActivity;
 import com.anz.cadence.activities.sample2.ServiceBActivity;
 import com.anz.cadence.commons.Constants;
 import com.anz.cadence.commons.api.workflow.WorkflowRequest;
-import com.uber.cadence.client.ActivityCompletionClient;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.testing.TestWorkflowEnvironment;
 import com.uber.cadence.worker.Worker;
@@ -28,7 +27,6 @@ public class Sample2WorkflowImplTest {
 
   private TestWorkflowEnvironment testEnv;
   private WorkflowClient workflowClient;
-  private ActivityCompletionClient completionClient;
 
   private Sample2Workflow sample2Workflow;
   private ServiceAActivity serviceAActivity;
@@ -40,7 +38,6 @@ public class Sample2WorkflowImplTest {
   public void setUp() {
     testEnv = TestWorkflowEnvironment.newInstance();
     workflowClient = testEnv.newWorkflowClient();
-    completionClient = workflowClient.newActivityCompletionClient();
     sample2Workflow = workflowClient.newWorkflowStub(Sample2Workflow.class);
 
     serviceAActivity = mock(ServiceAActivity.class);
@@ -81,8 +78,7 @@ public class Sample2WorkflowImplTest {
   }
 
   /**
-   * Service A : Pass
-   * Service B : Response 6 (false) -> Response 7 (Approve)
+   * Service A : Pass Service B : Response 6 (false) -> Response 7 (Approve)
    */
   @Test
   public void successExecuteInOrder()
@@ -94,8 +90,7 @@ public class Sample2WorkflowImplTest {
   }
 
   /**
-   * Service A : Pass
-   * Service B : Response 6 (false) -> Response 7 (Approve)
+   * Service A : Pass Service B : Response 6 (false) -> Response 7 (Approve)
    */
   @Test
   public void successExecuteInAnyOrder1()
@@ -107,8 +102,7 @@ public class Sample2WorkflowImplTest {
   }
 
   /**
-   * Service A : Pass
-   * Service B : Response 7 (Approve) -> Response 6 (false)
+   * Service A : Pass Service B : Response 7 (Approve) -> Response 6 (false)
    */
   @Test
   public void successExecuteInAnyOrder2()
@@ -131,8 +125,7 @@ public class Sample2WorkflowImplTest {
   }
 
   /**
-   * Service A : Pass
-   * Service B : Response 7 (Approve)
+   * Service A : Pass Service B : Response 7 (Approve)
    */
   @Test
   public void successExecuteInAnyOrder3()

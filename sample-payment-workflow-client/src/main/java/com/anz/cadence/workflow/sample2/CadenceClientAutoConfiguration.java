@@ -40,7 +40,7 @@ public class CadenceClientAutoConfiguration {
     log.info("Initialized workerFactory {}", f);
 
     /* Create Main Worker */
-    var worker = f.newWorker(Constants.TASK_LIST,
+    var worker = f.newWorker(Constants.TASK_LIST_SAMPLE_PAYMENT,
         new WorkerOptions.Builder()
             .setWorkflowPollerOptions(
                 new PollerOptions.Builder()

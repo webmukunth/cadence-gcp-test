@@ -50,29 +50,33 @@ public class CadenceClientAutoConfiguration {
     log.info("Initialized workerFactory {}", f);
 
     /* Create Main Worker */
+    final var wo = new WorkerOptions.Builder()
+        .setActivityPollerOptions(
+            new PollerOptions.Builder()
+                .setPollThreadCount(1)
+                .setPollBackoffInitialInterval(Duration.ofMillis(100))
+                .setPollBackoffMaximumInterval(Duration.ofSeconds(1))
+                .setPollThreadNamePrefix("Cadence Activity Poller")
+                .build())
+        .setMetricsScope(ms)
+        .setDisableWorkflowWorker(true)
+        .build();
 
-    var worker = f.newWorker(Constants.TASK_LIST,
-        new WorkerOptions.Builder()
-            .setActivityPollerOptions(
-                new PollerOptions.Builder()
-                    .setPollThreadCount(1)
-                    .setPollBackoffInitialInterval(Duration.ofMillis(100))
-                    .setPollBackoffMaximumInterval(Duration.ofSeconds(1))
-                    .setPollThreadNamePrefix("Cadence Activity Poller")
-                    .build())
-            .setIdentity(applicationName + "@" + Constants.INSTANCE_NAME)
-            .setMetricsScope(ms)
-            .setDisableWorkflowWorker(true)
-            .setMaxConcurrentActivityExecutionSize(1024)
-            .build()
-    );
+    f.newWorker(Constants.TASK_LIST_ACCOUNTING, wo)
+        .registerActivitiesImplementations(accountingActivity);
+    f.newWorker(Constants.TASK_LIST_CLEARING, wo)
+        .registerActivitiesImplementations(clearingActivity);
+    f.newWorker(Constants.TASK_LIST_CLIENT_RESPONSE, wo)
+        .registerActivitiesImplementations(clientResponseActivity);
+    f.newWorker(Constants.TASK_LIST_ENRICH, wo)
+        .registerActivitiesImplementations(enrichActivity);
+    f.newWorker(Constants.TASK_LIST_FRAUD_CHECK, wo)
+        .registerActivitiesImplementations(fraudCheckActivity);
+    f.newWorker(Constants.TASK_LIST_LIMIT_CHECK, wo)
+        .registerActivitiesImplementations(limitCheckActivity);
+    f.newWorker(Constants.TASK_LIST_VALIDATE, wo)
+        .registerActivitiesImplementations(validateActivity);
 
-    log.info("Initialized worker {}", worker);
-
-    /* Register Download Activity  with worker */
-    worker.registerActivitiesImplementations(
-        accountingActivity, clearingActivity, clientResponseActivity, enrichActivity,
-        fraudCheckActivity, limitCheckActivity, validateActivity);
     /* Start the worker */
     f.start();
     log.info("Worker factory started");

@@ -7,6 +7,6 @@ import lombok.NonNull;
 
 public interface ClearingActivity {
 
-  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST)
+  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST_CLEARING)
   @NonNull ClearingResponse clearPayment(@NonNull WorkflowRequest request);
 }
