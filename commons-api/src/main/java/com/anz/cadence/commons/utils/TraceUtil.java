@@ -84,6 +84,8 @@ public class TraceUtil {
     final var tracerAndTimer = this.getTracerAndTimer(act.getActivityType(),
         COMPONENT.getKey(), "activity", SPAN_KIND.getKey(), SPAN_KIND_CLIENT);
 
+    log.debug( "About to execute activity {}", act.getActivityType());
+
     try {
       return callable.call();
     } catch (Exception ex) {

@@ -29,7 +29,7 @@ public class EnrichActivityImpl implements EnrichActivity {
   @Override
   public @NonNull WorkflowRequest enrich(WorkflowRequest request) {
     return traceUtil.traceAndMeasureActivity(() -> {
-      log.info("Enriching {}", request);
+      log.info("enrich: request={}", request);
 
       /* Get the payment request from redis/mongo, publish event to kafka */
       PaymentRequest paymentRequest = paymentRequestService.findById(request.getId());

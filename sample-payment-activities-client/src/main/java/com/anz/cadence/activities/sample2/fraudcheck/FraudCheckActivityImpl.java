@@ -30,7 +30,7 @@ public class FraudCheckActivityImpl implements FraudCheckActivity {
   @Override
   public @NonNull FraudCheckOutcome fraudCheck(@NotNull WorkflowRequest request) {
     return traceUtil.traceAndMeasureActivity(() -> {
-      log.info("fraudCheck: {}", request);
+      log.info("fraudCheck: request={}", request);
 
       /* Get the payment request from redis/mongo, publish event to kafka */
       PaymentRequest paymentRequest = paymentRequestService.findById(request.getId());
