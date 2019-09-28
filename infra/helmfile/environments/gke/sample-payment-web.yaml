@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: gcr.io/frontal-23980c/cadence/sample-payment-web
-  tag: master-1267f17
+  tag: master-f150837
 
 imagePullSecrets: []
 

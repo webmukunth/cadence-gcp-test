@@ -40,7 +40,7 @@ server:
     logLevel: "debug,info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 4192
+    numHistoryShards: 128
 
     persistence:
       default:
@@ -223,8 +223,8 @@ web:
   affinity: {}
 
 schema:
-  setup: false
-  update: false
+  setup: true
+  update: true
 
 cassandra:
   seeds: cassandra-db
