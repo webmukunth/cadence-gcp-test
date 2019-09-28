@@ -141,3 +141,12 @@ data:
 
     publicClient:
       hostPort: "{{ include "cadence.componentname" (list . "frontend") }}:{{ .Values.server.frontend.service.port }}"
+
+    dynamicConfigClient:
+      filepath: "/etc/cadence/config/dynamicconfig/dynamic_config.yaml"
+      pollInterval: "60s"
+
+  dynamic_config.yaml: |-
+  {{- if $.Values.dynamicconfig }}
+    {{- $.Values.dynamicconfig | nindent 4 }}
+  {{- end }}

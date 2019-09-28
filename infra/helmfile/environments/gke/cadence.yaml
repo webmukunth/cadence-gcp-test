@@ -40,7 +40,7 @@ server:
     logLevel: "debug,info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 512
+    numHistoryShards: 4192
 
     persistence:
       default:
@@ -250,3 +250,19 @@ mysql:
   initializationFiles:
     user.sql: |-
       GRANT ALL PRIVILEGES ON *.* TO 'cadence'@'%';
+
+dynamicconfig: |-
+  frontend.rps:
+  - value: 20000000
+  frontend.domainrps:
+  - value: 20000000
+  frontend.persistenceMaxQPS:
+  - value: 20000000
+  history.rps:
+  - value: 20000000
+  history.persistenceMaxQPS:
+  - value: 20000000
+  matching.rps:
+  - value: 20000000
+  matching.persistenceMaxQPS:
+  - value: 20000000

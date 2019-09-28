@@ -316,10 +316,6 @@ dashboards:
       gnetId: 4701
       revision: 8
       datasource: Prometheus
-    mysql:
-      gnetId: 6239
-      revision: 1
-      datasource: Prometheus
     mysql2:
       gnetId: 7362
       revision: 5

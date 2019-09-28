@@ -112,9 +112,9 @@ class BasicSimulation extends Simulation {
   /* Stop the test when response time is greather than 500 ms or any error occured */
   setUp(
     scn.inject(
-      constantUsersPerSec(10) during (20 minutes)
+      constantUsersPerSec(20) during (20 minutes)
     ).throttle(
-      reachRps(50) in (1 minutes),
+      reachRps(100) in (1 minutes),
       holdFor(10 minutes)
     )
   ).protocols(httpProtocol)

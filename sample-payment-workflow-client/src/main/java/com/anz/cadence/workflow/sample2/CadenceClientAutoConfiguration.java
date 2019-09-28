@@ -39,23 +39,23 @@ public class CadenceClientAutoConfiguration {
     var f = new Factory(tc, Constants.DOMAIN, fo);
     log.info("Initialized workerFactory {}", f);
 
-    /* Create Main Worker */
-    var worker = f.newWorker(Constants.TASK_LIST_SAMPLE_PAYMENT,
-        new WorkerOptions.Builder()
-            .setWorkflowPollerOptions(
-                new PollerOptions.Builder()
-                    .setPollThreadCount(1)
-                    .setPollBackoffInitialInterval(Duration.ofMillis(100))
-                    .setPollBackoffMaximumInterval(Duration.ofSeconds(1))
-                    .setPollThreadNamePrefix("Cadence Workflow Poller")
-                    .build())
-            .setMaxConcurrentWorkflowExecutionSize(1024)
-            .setIdentity(applicationName + "@" + Constants.INSTANCE_NAME)
-            .setMetricsScope(ms)
-            .setDisableActivityWorker(true)  // Activities are not running in this VM
-            .build()
-    );
+    final var wo = new WorkerOptions.Builder()
+        .setWorkflowPollerOptions(
+            new PollerOptions.Builder()
+                .setPollThreadCount(2)
+                .setPollBackoffInitialInterval(Duration.ofMillis(100))
+                .setPollBackoffMaximumInterval(Duration.ofSeconds(1))
+                .setPollThreadNamePrefix("Cadence Workflow Poller")
+                .build())
+        .setMaxConcurrentWorkflowExecutionSize(1024)
+        .setIdentity(applicationName + "@" + Constants.INSTANCE_NAME)
+        .setMetricsScope(ms)
+        .setDisableActivityWorker(true)  // Activities are not running in this VM
+        .build();
 
+    /* Create Main Worker */
+    var worker = f.newWorker(Constants.TASK_LIST_SAMPLE_PAYMENT, wo);
+    log.info("WorkerOption: {}l", wo);
     log.info("Initialized worker {}", worker);
 
     /* Register Workflow with main worker */
