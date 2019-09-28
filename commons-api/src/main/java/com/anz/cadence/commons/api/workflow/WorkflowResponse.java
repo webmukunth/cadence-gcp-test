@@ -28,7 +28,8 @@ public class WorkflowResponse {
   @NonFinal
   private Optional<List<ValidationError>> validationErrors;
 
-  public static WorkflowResponseBuilder customBuilder(WorkflowRequest request, WorkflowStatus status) {
+  public static WorkflowResponseBuilder customBuilder(WorkflowRequest request,
+      WorkflowStatus status) {
     return WorkflowResponse.builder()
         .workflowStatus(status)
         .id(request.getId())

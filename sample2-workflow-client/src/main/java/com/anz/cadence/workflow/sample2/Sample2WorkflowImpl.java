@@ -1,7 +1,7 @@
-package com.anz.cadence.workflow.sample2;
+package com.anz.cadence.workflow.samplepayment;
 
-import com.anz.cadence.activities.sample2.ServiceAActivity;
-import com.anz.cadence.activities.sample2.ServiceBActivity;
+import com.anz.cadence.activities.samplepayment.ServiceAActivity;
+import com.anz.cadence.activities.samplepayment.ServiceBActivity;
 import com.anz.cadence.commons.api.workflow.WorkflowRequest;
 import com.anz.cadence.commons.api.workflow.WorkflowResponse;
 import com.anz.cadence.commons.api.workflow.WorkflowStatus;

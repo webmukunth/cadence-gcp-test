@@ -1,4 +1,4 @@
-package com.anz.cadence.web.sample2.controller;
+package com.anz.cadence.web.samplepayment.controller;
 
 import static com.anz.cadence.commons.Constants.APPLICATION_VND_GPA_V1_JSON_VALUE;
 import static com.anz.cadence.commons.Constants.APPLICATION_VND_GPA_V1_XML_VALUE;
@@ -8,7 +8,7 @@ import static org.springframework.http.ResponseEntity.ok;
 
 import com.anz.cadence.commons.model.payment.ComAnzPmtAddRqType;
 import com.anz.cadence.commons.utils.TraceUtil;
-import com.anz.cadence.web.sample2.service.Sample2WorkflowClient;
+import com.anz.cadence.web.samplepayment.service.Sample2WorkflowClient;
 import com.uber.cadence.WorkflowExecution;
 import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;

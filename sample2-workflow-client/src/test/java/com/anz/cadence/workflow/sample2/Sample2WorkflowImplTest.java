@@ -1,4 +1,4 @@
-package com.anz.cadence.workflow.sample2;
+package com.anz.cadence.workflow.samplepayment;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
@@ -6,8 +6,8 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.anz.cadence.activities.sample2.ServiceAActivity;
-import com.anz.cadence.activities.sample2.ServiceBActivity;
+import com.anz.cadence.activities.samplepayment.ServiceAActivity;
+import com.anz.cadence.activities.samplepayment.ServiceBActivity;
 import com.anz.cadence.commons.Constants;
 import com.anz.cadence.commons.api.workflow.WorkflowRequest;
 import com.uber.cadence.client.WorkflowClient;

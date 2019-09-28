@@ -114,7 +114,7 @@ class BasicSimulation extends Simulation {
     scn.inject(
       constantUsersPerSec(20) during (20 minutes)
     ).throttle(
-      reachRps(100) in (1 minutes),
+      reachRps(100) in (2 minutes),
       holdFor(10 minutes)
     )
   ).protocols(httpProtocol)

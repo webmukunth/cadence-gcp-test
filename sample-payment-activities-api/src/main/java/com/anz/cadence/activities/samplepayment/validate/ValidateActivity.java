@@ -1,0 +1,16 @@
+package com.anz.cadence.activities.samplepayment.validate;
+
+import com.anz.cadence.commons.Constants;
+import com.anz.cadence.commons.api.workflow.ValidationError;
+import com.anz.cadence.commons.api.workflow.WorkflowRequest;
+import com.uber.cadence.activity.ActivityMethod;
+import java.util.List;
+import java.util.Optional;
+import lombok.NonNull;
+
+public interface ValidateActivity {
+
+  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST_VALIDATE)
+  Optional<List<ValidationError>> validate(@NonNull WorkflowRequest workflowRequest);
+
+}

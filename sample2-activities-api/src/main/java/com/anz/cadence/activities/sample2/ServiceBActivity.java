@@ -1,4 +1,4 @@
-package com.anz.cadence.activities.sample2;
+package com.anz.cadence.activities.samplepayment;
 
 import com.anz.cadence.commons.Constants;
 import com.uber.cadence.activity.ActivityMethod;
