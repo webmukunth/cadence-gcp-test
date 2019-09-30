@@ -118,11 +118,11 @@ replication:
   forcePassword: true
 
 master:
-  antiAffinity: soft
+  antiAffinity: hard
   ## updateStrategy for MySQL Master StatefulSet
   ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
   updateStrategy:
-    type: RollingUpdate
+    type: OnDelete
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
   ##
@@ -172,7 +172,7 @@ master:
     log-error=/opt/bitnami/mysql/logs/mysqld.log
     character-set-server=UTF8
     collation-server=utf8_general_ci
-    innodb-buffer-pool-size=8G
+    innodb-buffer-pool-size=20G
 
     [client]
     port=3306
@@ -189,11 +189,11 @@ master:
   ##
   resources:
     requests:
-      memory: 11.5Gi
-      cpu: 2.92
+      memory: 25Gi
+      cpu: 6.92
     limits:
-      memory: 11.5Gi
-      cpu: 2.92
+      memory: 25Gi
+      cpu: 6.92
   livenessProbe:
     enabled: true
     ##

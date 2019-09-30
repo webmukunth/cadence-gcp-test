@@ -1,4 +1,4 @@
-.PHONY: init get validate plan apply destroy clean  all
+.PHONY: init get validate plan apply install destroy clean  all
 
 SHELL:=bash
 .ONESHELL:
@@ -21,6 +21,8 @@ plan: validate
 apply: 
 	terraform apply -no-color -lock=true -lock-timeout=5s terraform.plan
 	gcloud container clusters get-credentials cadence-gke --zone us-west2-b
+
+install: plan apply
 
 destroy: init
 	terraform destroy -no-color -lock=true -lock-timeout=5s -auto-approve

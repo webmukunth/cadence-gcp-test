@@ -46,6 +46,14 @@ spec:
       {{- end }}
       {{- if eq .Values.master.antiAffinity "hard" }}
       affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - db
         podAntiAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             - topologyKey: "kubernetes.io/hostname"
@@ -53,8 +61,21 @@ spec:
                 matchLabels:
                   app: "{{ template "mysql.name" . }}"
                   release: "{{ .Release.Name }}"
+      tolerations:
+        - key: "tier"
+          operator: "Equal"
+          value: "db"
+          effect: "NoSchedule"
       {{- else if eq .Values.master.antiAffinity "soft" }}
       affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                      - db
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
@@ -64,6 +85,11 @@ spec:
                 matchLabels:
                   app: "{{ template "mysql.name" . }}"
                   release: "{{ .Release.Name }}"
+      tolerations:
+        - key: "tier"
+          operator: "Equal"
+          value: "db"
+          effect: "NoSchedule"
       {{- end }}
 {{- include "mysql.imagePullSecrets" . | indent 6 }}
       {{- if and .Values.volumePermissions.enabled .Values.master.persistence.enabled }}

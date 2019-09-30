@@ -101,21 +101,22 @@ resource "google_container_cluster" "gke" {
 }
 
 resource "google_container_node_pool" "gke-np" {
+  provider = "google-beta"
   name     = "${google_container_cluster.gke.name}-np"
   project  = "${local.project}"
   location = "${local.location}"
   cluster  = "${google_container_cluster.gke.name}"
 
   management {
-    auto_repair  = "true"
-    auto_upgrade = "true"
+    auto_repair  = "false"
+    auto_upgrade = "false"
   }
 
-  initial_node_count = "4"
+  initial_node_count = "3"
 
   autoscaling {
-    min_node_count = "4"
-    max_node_count = "8"
+    min_node_count = "3"
+    max_node_count = "4"
   }
 
   node_config {
@@ -133,6 +134,67 @@ resource "google_container_node_pool" "gke-np" {
       "monitoring",
       "storage-ro"
     ]
+
+    labels = {
+      tier = "app"
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      # Ensure cluster is not recreated when pool configuration changes
+      "initial_node_count",
+      "instance_group_urls",
+      "node_config"
+    ]
+  }
+
+  timeouts {
+    create = "15m"
+    update = "15m"
+    delete = "15m"
+  }
+}
+
+resource "google_container_node_pool" "gke-db-np" {
+  provider = "google-beta"
+  name     = "${google_container_cluster.gke.name}-db-np"
+  project  = "${local.project}"
+  location = "${local.location}"
+  cluster  = "${google_container_cluster.gke.name}"
+
+  management {
+    auto_repair  = "false"
+    auto_upgrade = "false"
+  }
+
+  initial_node_count = "1"
+
+  node_config {
+    preemptible  = true
+    machine_type = "n1-standard-8"
+    disk_size_gb = 50
+    disk_type    = "pd-standard"
+
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+
+    oauth_scopes = [
+      "logging-write",
+      "monitoring",
+      "storage-ro"
+    ]
+
+    labels = {
+      tier = "db"
+    }
+
+    taint {
+      effect = "NO_SCHEDULE"
+      key    = "tier"
+      value  = "db"
+    }
   }
 
   lifecycle {

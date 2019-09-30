@@ -18,6 +18,7 @@ data:
     persistence:
       defaultStore: default
       visibilityStore: visibility
+      historyMaxConns: 20
       numHistoryShards: {{ .Values.server.config.numHistoryShards }}
       datastores:
         default:
@@ -38,6 +39,10 @@ data:
             connectProtocol: "tcp"
             user: {{ include "cadence.persistence.sql.user" (list . "default") }}
             password: {{ `{{ .Env.CADENCE_STORE_PASSWORD }}` }}
+            maxConns: 30
+            maxIdleConns: 10
+            maxConnLifetime: "1h"
+            maxQPS: 1000000
             {{- with (omit .Values.server.config.persistence.default.sql "driver" "driverName" "host" "port" "connectAddr" "connectProtocol" "database" "databaseName" "user" "password" "existingSecret") }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
@@ -60,6 +65,10 @@ data:
             connectProtocol: "tcp"
             user: {{ include "cadence.persistence.sql.user" (list . "visibility") }}
             password: {{ `{{ .Env.CADENCE_VISIBILITY_STORE_PASSWORD }}` }}
+            maxConns: 30
+            maxIdleConns: 10
+            maxConnLifetime: "1h"
+            maxQPS: 1000000
             {{- with (omit .Values.server.config.persistence.visibility.sql "driver" "driverName" "host" "port" "connectAddr" "connectProtocol" "database" "databaseName" "user" "password" "existingSecret") }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
