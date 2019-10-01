@@ -44,7 +44,7 @@ releases:
 
   - name: gatling
     chart: ../charts/gatling
-    installed: true
+    installed: false
     namespace: default
     wait: false
     labels:
