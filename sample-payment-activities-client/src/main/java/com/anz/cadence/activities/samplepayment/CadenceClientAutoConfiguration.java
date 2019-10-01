@@ -54,8 +54,8 @@ public class CadenceClientAutoConfiguration {
         .setActivityPollerOptions(
             new PollerOptions.Builder()
                 .setPollThreadCount(1)
-                .setPollBackoffInitialInterval(Duration.ofMillis(10))
-                .setPollBackoffMaximumInterval(Duration.ofSeconds(100))
+                .setPollBackoffInitialInterval(Duration.ofMillis(100))
+                .setPollBackoffMaximumInterval(Duration.ofMillis(500))
                 .setPollThreadNamePrefix("Cadence Activity Poller")
                 .build())
         .setMetricsScope(ms)

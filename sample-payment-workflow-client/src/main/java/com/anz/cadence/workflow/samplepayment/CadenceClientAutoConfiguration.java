@@ -42,9 +42,9 @@ public class CadenceClientAutoConfiguration {
     final var wo = new WorkerOptions.Builder()
         .setWorkflowPollerOptions(
             new PollerOptions.Builder()
-                .setPollThreadCount(2)
+                .setPollThreadCount(1)
                 .setPollBackoffInitialInterval(Duration.ofMillis(100))
-                .setPollBackoffMaximumInterval(Duration.ofSeconds(1))
+                .setPollBackoffMaximumInterval(Duration.ofMillis(500))
                 .setPollThreadNamePrefix("Cadence Workflow Poller")
                 .build())
         .setMaxConcurrentWorkflowExecutionSize(1024)

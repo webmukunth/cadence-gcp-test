@@ -82,13 +82,13 @@ data:
         - {{ include "cadence.componentname" (list . "history-headless") }}:{{ .Values.server.history.service.port }}
         - {{ include "cadence.componentname" (list . "matching-headless") }}:{{ .Values.server.matching.service.port }}
         - {{ include "cadence.componentname" (list . "worker-headless") }}:{{ .Values.server.worker.service.port }}
-      maxJoinDuration: 30s
+      maxJoinDuration: 120s
 
     services:
       frontend:
         rpc:
           port: {{ include "cadence.frontend.internalPort" . }}
-          bindOnIP: "0.0.0.0"
+          bindOnIP: "{{ `{{ .Env.BIND_ON_IP }}` }}"
         metrics:
           tags:
             type: frontend
@@ -99,7 +99,7 @@ data:
       history:
         rpc:
           port: {{ include "cadence.history.internalPort" . }}
-          bindOnIP: "0.0.0.0"
+          bindOnIP: "{{ `{{ .Env.BIND_ON_IP }}` }}"
         metrics:
           tags:
             type: history
@@ -110,7 +110,7 @@ data:
       matching:
         rpc:
           port: {{ include "cadence.matching.internalPort" . }}
-          bindOnIP: "0.0.0.0"
+          bindOnIP: "{{ `{{ .Env.BIND_ON_IP }}` }}"
         metrics:
           tags:
             type: matching
@@ -121,7 +121,7 @@ data:
       worker:
         rpc:
           port: {{ include "cadence.worker.internalPort" . }}
-          bindOnIP: "0.0.0.0"
+          bindOnIP: "{{ `{{ .Env.BIND_ON_IP }}` }}"
         metrics:
           tags:
             type: worker
@@ -139,7 +139,7 @@ data:
           enabled: true
           initialFailoverVersion: 0
           rpcName: "cadence-frontend"
-          rpcAddress: "127.0.0.1:7933"
+          rpcAddress: "cadence-frontend:7933"
 
     dcRedirectionPolicy:
       policy: "noop"

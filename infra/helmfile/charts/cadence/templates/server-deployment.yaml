@@ -83,6 +83,10 @@ spec:
                 secretKeyRef:
                   name: {{ include "cadence.persistence.secretName" (list $ "visibility") }}
                   key: {{ include "cadence.persistence.secretKey" (list $ "visibility") }}
+            - name: BIND_ON_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
           ports:
             - name: rpc
               containerPort: {{ include (printf "cadence.%s.internalPort" $service) $ }}
