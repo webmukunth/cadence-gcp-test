@@ -53,7 +53,7 @@ public class CadenceClientAutoConfiguration {
     final var wo = new WorkerOptions.Builder()
         .setActivityPollerOptions(
             new PollerOptions.Builder()
-                .setPollThreadCount(1)
+                .setPollThreadCount(10)
                 .setPollBackoffInitialInterval(Duration.ofMillis(100))
                 .setPollBackoffMaximumInterval(Duration.ofMillis(500))
                 .setPollThreadNamePrefix("Cadence Activity Poller")
