@@ -2,12 +2,14 @@ package com.anz.cadence.workflow.samplepayment;
 
 import com.anz.cadence.commons.Constants;
 import com.anz.cadence.commons.autoconfigure.CadenceAutoConfiguration;
+import com.uber.cadence.internal.worker.PollerOptions;
 import com.uber.cadence.serviceclient.WorkflowServiceTChannel;
 import com.uber.cadence.worker.Worker.Factory;
 import com.uber.cadence.worker.Worker.FactoryOptions;
 import com.uber.cadence.worker.WorkerOptions;
 import com.uber.cadence.worker.WorkflowImplementationOptions;
 import com.uber.m3.tally.Scope;
+import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -37,6 +39,13 @@ public class CadenceClientAutoConfiguration {
     log.info("Initialized workerFactory {}", f);
 
     final var wo = new WorkerOptions.Builder()
+        .setWorkflowPollerOptions(
+            new PollerOptions.Builder()
+                .setPollThreadCount(1)
+                .setPollBackoffInitialInterval(Duration.ofMillis(100))
+                .setPollBackoffMaximumInterval(Duration.ofSeconds(2))
+                .setPollThreadNamePrefix("Cadence Workflow Poller")
+                .build())
         .setMetricsScope(ms)
         .setDisableActivityWorker(true)  // Activities are not running in this VM
         .build();
