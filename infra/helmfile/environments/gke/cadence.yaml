@@ -40,11 +40,11 @@ server:
     logLevel: "info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 64
+    numHistoryShards: 128
 
     persistence:
       default:
-        driver: "sql"
+        driver: "cassandra"
 
         cassandra:
           hosts: cassandra-db
@@ -54,8 +54,8 @@ server:
           password: "cassandra"
           existingSecret: ""
           consistency: Quorum
-          # datacenter: "us-east-1a"
-          # maxConns: 2
+          maxConnLifetime: "1h"
+          maxQPS: 1000000
 
         sql:
           driver: "mysql" # mysql
@@ -65,11 +65,13 @@ server:
           user: "cadence"
           password: "cadence"
           existingSecret: ""
+          maxConnLifetime: "1h"
+          maxQPS: 1000000
           # connectAttributes:
             # tx_isolation: "READ-COMMITTED"
 
       visibility:
-        driver: "sql" # cassandra or sql
+        driver: "cassandra" # cassandra or sql
 
         cassandra:
           hosts: cassandra-db
@@ -79,9 +81,8 @@ server:
           password: "cassandra"
           existingSecret: ""
           consistency: Quorum
-          maxQPS: 100000
-          # datacenter: "us-east-1a"
-          # maxConns: 2
+          maxConnLifetime: "1h"
+          maxQPS: 1000000
 
         sql:
           driver: "mysql" # mysql
@@ -91,6 +92,8 @@ server:
           user: "cadence_visibility"
           password: "cadence_visibility"
           existingSecret: ""
+          maxConnLifetime: "1h"
+          maxQPS: 1000000
           # connectAttributes:
             # tx_isolation: "READ-COMMITTED"
 
@@ -266,8 +269,6 @@ dynamicconfig: |-
     - value: 1000000
   history.cacheMaxSize:
     - value: 16384
-  history.cacheTTL:
-    - value: 5m
   history.eventsCacheMaxSize:
     - value: 16384
   history.timerTaskBatchSize:

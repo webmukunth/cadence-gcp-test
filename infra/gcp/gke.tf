@@ -168,11 +168,11 @@ resource "google_container_node_pool" "gke-db-np" {
     auto_upgrade = "false"
   }
 
-  initial_node_count = "1"
+  initial_node_count = "3"
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-8"
+    machine_type = "n1-highmem-4"
     disk_size_gb = 50
     disk_type    = "pd-standard"
 

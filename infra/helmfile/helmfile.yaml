@@ -13,13 +13,12 @@ repositories:
     url: https://charts.bitnami.com/bitnami
 
 helmfiles:
-  - releases/mysql-db.yaml
-  - releases/local-path-storage.yaml
+#  - releases/mysql-db.yaml
+  - releases/cassandra-db.yaml
   - releases/traefik.yaml
   - releases/cp-kafka.yaml
   - releases/mongodb.yaml
   - releases/redis.yaml
-  - releases/cassandra-db.yaml
   - releases/observability.yaml
   - releases/cadence.yaml
   - releases/sample-payment.yaml

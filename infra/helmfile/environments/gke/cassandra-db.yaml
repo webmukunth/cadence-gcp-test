@@ -90,7 +90,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  #storageClass: "pd-ssd"
+  storageClass: "pd-ssd"
   ## Persistent Volume Claim annotations
   ##
   annotations:
@@ -100,7 +100,7 @@ persistence:
   - ReadWriteOnce
   ## Persistent Volume size
   ##
-  size: 8Gi
+  size: 20Gi
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -108,13 +108,13 @@ persistence:
 ## Minimum memory for production is 8GB and 4 CPU cores
 ## ref: http://docs.datastax.com/en/archived/cassandra/2.0/cassandra/architecture/architecturePlanningHardware_c.html
 ##
-#resources:
-#  requests:
-#    memory: 2.5Gi
-#    cpu: 500m
-#  limits:
-#    memory: 5Gi
-#    cpu: 1
+resources:
+  requests:
+    memory: 22Gi
+    cpu: 2.92
+  limits:
+    memory: 22Gi
+    cpu: 2.92
 
 ## Secret with keystore, keystore password, truststore, truststore password
 # tlsEncryptionSecretName:
@@ -125,25 +125,25 @@ persistence:
 ##
 cluster:
   name: cassandra
-  replicaCount: 1
-  seedCount: 1
+  replicaCount: 3
+  seedCount: 2
   numTokens: 256
   datacenter: dc1
   rack: rack1
   enableRPC: true
   endpointSnitch: GossipingPropertyFileSnitch
-  minimumAvailable: 1
+  minimumAvailable: 2
   ## Encryption values. NOTE: They require tlsEncryptionSecretName
   internodeEncryption: none
   clientEncryption: false
   domain: cluster.local
 
-#jvm:
+jvm:
   ## Extra JVM Settings
   ##
-  #extraOpts:
-  #maxHeapSize: 16G
-  #newHeapSize: 12G
+  extraOpts:
+  maxHeapSize: 20G
+  newHeapSize: 5G
 
 ## Database credentials
 ##
@@ -163,8 +163,8 @@ dbUser:
 ##
 livenessProbe:
   enabled: true
-  initialDelaySeconds: 60
-  periodSeconds: 30
+  initialDelaySeconds: 180
+  periodSeconds: 60
   timeoutSeconds: 5
   successThreshold: 1
   failureThreshold: 5
@@ -204,6 +204,14 @@ securityContext:
 ## Ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ##
 affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: tier
+              operator: In
+              values:
+                - db
   podAntiAffinity:
     # Use pod anti-affinity to force the scheduler to not deploy two
     # Cassandra pod on the same node.
@@ -225,7 +233,11 @@ affinity:
 ## Tolerations for pod assignment
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
 ##
-tolerations: []
+tolerations:
+  - key: "tier"
+    operator: "Equal"
+    value: "db"
+    effect: "NoSchedule"
 
 ##
 ## Container entrypoint and cmd (useful for using different images)
@@ -252,7 +264,7 @@ networkPolicy:
 ## Ref: https://github.com/criteo/cassandra_exporter
 ##
 metrics:
-  enabled: false
+  enabled: true
   image:
     registry: docker.io
     pullPolicy: IfNotPresent
