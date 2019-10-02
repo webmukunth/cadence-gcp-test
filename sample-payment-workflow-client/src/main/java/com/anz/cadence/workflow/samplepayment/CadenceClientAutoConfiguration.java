@@ -41,9 +41,9 @@ public class CadenceClientAutoConfiguration {
     final var wo = new WorkerOptions.Builder()
         .setWorkflowPollerOptions(
             new PollerOptions.Builder()
-                .setPollThreadCount(1)
-                .setPollBackoffInitialInterval(Duration.ofMillis(100))
-                .setPollBackoffMaximumInterval(Duration.ofSeconds(2))
+                .setPollThreadCount(8)
+                .setPollBackoffInitialInterval(Duration.ofMillis(50))
+                .setPollBackoffMaximumInterval(Duration.ofMillis(500))
                 .setPollThreadNamePrefix("Cadence Workflow Poller")
                 .build())
         .setMetricsScope(ms)
@@ -51,7 +51,7 @@ public class CadenceClientAutoConfiguration {
         .build();
 
     /* Create Main Worker */
-    IntStream.range(0, 10).forEach(i ->
+    IntStream.range(0, 2).forEach(i ->
         f.newWorker(Constants.TASK_LIST, wo)
             .registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class)
     );

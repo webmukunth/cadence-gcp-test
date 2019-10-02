@@ -53,9 +53,9 @@ public class CadenceClientAutoConfiguration {
     final var wo = new WorkerOptions.Builder()
         .setActivityPollerOptions(
             new PollerOptions.Builder()
-                .setPollThreadCount(1)
-                .setPollBackoffInitialInterval(Duration.ofMillis(100))
-                .setPollBackoffMaximumInterval(Duration.ofSeconds(2))
+                .setPollThreadCount(8)
+                .setPollBackoffInitialInterval(Duration.ofMillis(50))
+                .setPollBackoffMaximumInterval(Duration.ofMillis(500))
                 .setPollThreadNamePrefix("Cadence Activity Poller")
                 .build())
         .setMetricsScope(ms)
@@ -66,7 +66,7 @@ public class CadenceClientAutoConfiguration {
 
     log.info("WorkerOption: {}l", wo);
 
-    IntStream.range(0, 10).forEach(i ->
+    IntStream.range(0, 2).forEach(i ->
         f.newWorker(Constants.TASK_LIST, wo)
             .registerActivitiesImplementations(
                 accountingActivity,
