@@ -270,8 +270,6 @@ dynamicconfig: |-
     - value: 5m
   history.eventsCacheMaxSize:
     - value: 16384
-  history.eventsCacheTTL:
-    - value: 5m
   history.timerTaskBatchSize:
     - value: 100
   history.timerWorkerCount:
@@ -317,12 +315,56 @@ dynamicconfig: |-
         taskListName: "cadence"
         taskType: 1
   matching.maxTaskBatchSize:
-    - value: 100
+    - value: 1000
       constraints:
         domainName: "cadence"
         taskListName: "cadence"
         taskType: 0
-    - value: 100
+    - value: 1000
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 1
+  matching.outstandingTaskAppendsThreshold:
+    - value: 1000
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 0
+    - value: 1000
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 1
+  matching.minTaskThrottlingBurstSize:
+    - value: 1000
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 0
+    - value: 1000
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 1
+  matching.updateAckInterval:
+    - value: 2s
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 0
+    - value: 2s
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 1
+  matching.idleTasklistCheckInterval:
+    - value: 2s
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 0
+    - value: 2s
       constraints:
         domainName: "cadence"
         taskListName: "cadence"

@@ -36,13 +36,15 @@
         "alignAsTable": true,
         "avg": true,
         "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": true,
         "min": false,
         "rightSide": true,
         "show": true,
         "sort": null,
         "sortDesc": null,
-        "total": false,
+        "total": true,
         "values": true
       },
       "lines": true,
@@ -101,12 +103,12 @@
           "refId": "B"
         },
         {
-          "expr": "sum(rate(cadence_workflow_endtoend_latency_seconds_sum[2m]))/sum(rate(cadence_workflow_endtoend_latency_seconds_count[2m]))",
+          "expr": "avg(cadence_workflow_endtoend_latency_seconds_max)",
           "legendFormat": "Workflow Latency",
           "refId": "C"
         },
         {
-          "expr": "sum(rate(cadence_activity_endtoend_latency_seconds_sum[2m]))/sum(rate(cadence_activity_endtoend_latency_seconds_count[2m]))",
+          "expr": "avg(cadence_activity_endtoend_latency_seconds_max)",
           "legendFormat": "Activity Latency",
           "refId": "D"
         }
@@ -178,7 +180,7 @@
         "min": false,
         "rightSide": true,
         "show": true,
-        "sort": "total",
+        "sort": "current",
         "sortDesc": true,
         "total": true,
         "values": true
@@ -269,7 +271,7 @@
         "min": false,
         "rightSide": true,
         "show": true,
-        "sort": "total",
+        "sort": "current",
         "sortDesc": true,
         "total": true,
         "values": true
@@ -361,7 +363,7 @@
         "min": false,
         "rightSide": true,
         "show": true,
-        "sort": "total",
+        "sort": "current",
         "sortDesc": true,
         "total": true,
         "values": true
@@ -1238,5 +1240,5 @@
   "timezone": "",
   "title": "Workflow Stats",
   "uid": "hqOj2EtZz",
-  "version": 1
+  "version": 2
 }

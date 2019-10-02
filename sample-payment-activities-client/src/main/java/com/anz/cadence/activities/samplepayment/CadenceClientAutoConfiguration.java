@@ -16,6 +16,7 @@ import com.uber.cadence.worker.Worker.FactoryOptions;
 import com.uber.cadence.worker.WorkerOptions;
 import com.uber.m3.tally.Scope;
 import java.time.Duration;
+import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -65,17 +66,18 @@ public class CadenceClientAutoConfiguration {
 
     log.info("WorkerOption: {}l", wo);
 
-    f.newWorker(Constants.TASK_LIST, wo)
-        .registerActivitiesImplementations(
-            accountingActivity,
-            clearingActivity,
-            clientResponseActivity,
-            enrichActivity,
-            fraudCheckActivity,
-            limitCheckActivity,
-            validateActivity
-        );
-
+    IntStream.range(0, 10).forEach(i ->
+        f.newWorker(Constants.TASK_LIST, wo)
+            .registerActivitiesImplementations(
+                accountingActivity,
+                clearingActivity,
+                clientResponseActivity,
+                enrichActivity,
+                fraudCheckActivity,
+                limitCheckActivity,
+                validateActivity
+            )
+    );
     /* Start the worker */
     f.start();
     log.info("Worker factory started");
