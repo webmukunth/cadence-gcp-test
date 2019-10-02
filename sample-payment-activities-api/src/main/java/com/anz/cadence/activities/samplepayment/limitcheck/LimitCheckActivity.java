@@ -7,6 +7,6 @@ import lombok.NonNull;
 
 public interface LimitCheckActivity {
 
-  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST_LIMIT_CHECK)
+  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST)
   @NonNull LimitCheckOutcome limitCheck(@NonNull WorkflowRequest workflowRequest);
 }

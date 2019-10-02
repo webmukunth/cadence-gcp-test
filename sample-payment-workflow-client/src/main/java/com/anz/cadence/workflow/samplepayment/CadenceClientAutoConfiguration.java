@@ -42,7 +42,7 @@ public class CadenceClientAutoConfiguration {
         .build();
 
     /* Create Main Worker */
-    var worker = f.newWorker(Constants.TASK_LIST_SAMPLE_PAYMENT, wo);
+    var worker = f.newWorker(Constants.TASK_LIST, wo);
     log.info("WorkerOption: {}l", wo);
     log.info("Initialized worker {}", worker);
 

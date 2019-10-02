@@ -7,7 +7,7 @@ import lombok.NonNull;
 
 public interface FraudCheckActivity {
 
-  @ActivityMethod(scheduleToCloseTimeoutSeconds = 240, taskList = Constants.TASK_LIST_FRAUD_CHECK)
+  @ActivityMethod(scheduleToCloseTimeoutSeconds = 240, taskList = Constants.TASK_LIST)
   @NonNull FraudCheckOutcome fraudCheck(@NonNull WorkflowRequest workflowRequest);
 
 }

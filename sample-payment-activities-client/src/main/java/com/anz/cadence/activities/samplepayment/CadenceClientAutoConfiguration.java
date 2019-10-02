@@ -54,20 +54,16 @@ public class CadenceClientAutoConfiguration {
 
     log.info("WorkerOption: {}l", wo);
 
-    f.newWorker(Constants.TASK_LIST_ACCOUNTING, wo)
-        .registerActivitiesImplementations(accountingActivity);
-    f.newWorker(Constants.TASK_LIST_CLEARING, wo)
-        .registerActivitiesImplementations(clearingActivity);
-    f.newWorker(Constants.TASK_LIST_CLIENT_RESPONSE, wo)
-        .registerActivitiesImplementations(clientResponseActivity);
-    f.newWorker(Constants.TASK_LIST_ENRICH, wo)
-        .registerActivitiesImplementations(enrichActivity);
-    f.newWorker(Constants.TASK_LIST_FRAUD_CHECK, wo)
-        .registerActivitiesImplementations(fraudCheckActivity);
-    f.newWorker(Constants.TASK_LIST_LIMIT_CHECK, wo)
-        .registerActivitiesImplementations(limitCheckActivity);
-    f.newWorker(Constants.TASK_LIST_VALIDATE, wo)
-        .registerActivitiesImplementations(validateActivity);
+    f.newWorker(Constants.TASK_LIST, wo)
+        .registerActivitiesImplementations(
+            accountingActivity,
+            clearingActivity,
+            clientResponseActivity,
+            enrichActivity,
+            fraudCheckActivity,
+            limitCheckActivity,
+            validateActivity
+        );
 
     /* Start the worker */
     f.start();

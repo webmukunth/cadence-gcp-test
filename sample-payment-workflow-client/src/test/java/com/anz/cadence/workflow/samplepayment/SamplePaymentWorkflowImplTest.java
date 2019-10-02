@@ -81,22 +81,17 @@ public class SamplePaymentWorkflowImplTest {
     limitCheckActivity = mock(LimitCheckActivity.class);
     clearingActivity = mock(ClearingActivity.class);
 
-    testEnv.newWorker(Constants.TASK_LIST_SAMPLE_PAYMENT)
-        .registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
-    testEnv.newWorker(Constants.TASK_LIST_VALIDATE)
-        .registerActivitiesImplementations(validateActivity);
-    testEnv.newWorker(Constants.TASK_LIST_ENRICH)
-        .registerActivitiesImplementations(enrichActivity);
-    testEnv.newWorker(Constants.TASK_LIST_ACCOUNTING)
-        .registerActivitiesImplementations(accountingActivity);
-    testEnv.newWorker(Constants.TASK_LIST_FRAUD_CHECK)
-        .registerActivitiesImplementations(fraudCheckActivity);
-    testEnv.newWorker(Constants.TASK_LIST_CLIENT_RESPONSE)
-        .registerActivitiesImplementations(clientResponseActivity);
-    testEnv.newWorker(Constants.TASK_LIST_LIMIT_CHECK)
-        .registerActivitiesImplementations(limitCheckActivity);
-    testEnv.newWorker(Constants.TASK_LIST_CLEARING)
-        .registerActivitiesImplementations(clearingActivity);
+    final var w = testEnv.newWorker(Constants.TASK_LIST);
+    w.registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
+    w.registerActivitiesImplementations(
+        validateActivity,
+        enrichActivity,
+        accountingActivity,
+        fraudCheckActivity,
+        clientResponseActivity,
+        limitCheckActivity,
+        clearingActivity
+    );
 
     testEnv.start();
 

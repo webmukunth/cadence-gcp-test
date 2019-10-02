@@ -268,8 +268,6 @@ dynamicconfig: |-
     - value: 16384
   history.cacheTTL:
     - value: 5m
-  history.acquireShardInterval:
-    - value: 10m
   history.eventsCacheMaxSize:
     - value: 16384
   history.eventsCacheTTL:
@@ -280,12 +278,8 @@ dynamicconfig: |-
     - value: 100
   history.timerProcessorMaxPollRPS:
     - value: 100
-  history.transferTaskBatchSize:
-    - value: 100
-  history.transferProcessorMaxPollRPS:
-    - value: 100
   history.transferTaskWorkerCount:
-    - value: 100
+    - value: 10
   history.throttledLogRPS:
     - value: 10000
   history.timerProcessorMaxPollInterval:
@@ -304,171 +298,32 @@ dynamicconfig: |-
     - value: 2s
       constraints:
         domainName: "cadence"
-        taskListName: "cadence.samplepayment"
+        taskListName: "cadence"
         taskType: 0
     - value: 2s
       constraints:
         domainName: "cadence"
-        taskListName: "cadence.accounting"
+        taskListName: "cadence"
         taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clearing"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clientresponse"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.enrich"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.fraud"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.limitcheck"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.validate"
-        taskType: 1
-
   matching.updateAckInterval:
     - value: 2s
       constraints:
         domainName: "cadence"
-        taskListName: "cadence.samplepayment"
+        taskListName: "cadence"
         taskType: 0
     - value: 2s
       constraints:
         domainName: "cadence"
-        taskListName: "cadence.accounting"
+        taskListName: "cadence"
         taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clearing"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clientresponse"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.enrich"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.fraud"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.limitcheck"
-        taskType: 1
-    - value: 2s
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.validate"
-        taskType: 1
-
-dynamicconfig.disabled: |-
-  matching.throttledLogRPS:
-    - value: 10000
   matching.maxTaskBatchSize:
     - value: 100
       constraints:
         domainName: "cadence"
-        taskListName: "cadence.samplepayment"
+        taskListName: "cadence"
         taskType: 0
     - value: 100
       constraints:
         domainName: "cadence"
-        taskListName: "cadence.accounting"
+        taskListName: "cadence"
         taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clearing"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clientresponse"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.enrich"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.fraud"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.limitcheck"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.validate"
-        taskType: 1
-  matching.maxTaskDeleteBatchSize:
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.samplepayment"
-        taskType: 0
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.accounting"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clearing"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clientresponse"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.enrich"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.fraud"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.limitcheck"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.validate"
-        taskType: 1
-  frontend.throttledLogRPS:
-    - value: 10000
-

@@ -7,6 +7,6 @@ import lombok.NonNull;
 
 public interface EnrichActivity {
 
-  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST_ENRICH)
+  @ActivityMethod(scheduleToCloseTimeoutSeconds = 60, taskList = Constants.TASK_LIST)
   @NonNull WorkflowRequest enrich(@NonNull WorkflowRequest workflowRequest);
 }
