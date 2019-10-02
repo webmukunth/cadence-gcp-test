@@ -95,7 +95,7 @@ server:
             # tx_isolation: "READ-COMMITTED"
 
   frontend:
-    replicaCount: 1
+    replicaCount: 2
     service:
       type: ClusterIP
       port: 7933
@@ -113,7 +113,7 @@ server:
     affinity: {}
 
   history:
-    replicaCount: 1
+    replicaCount: 2
     service:
       # type: ClusterIP
       port: 7934
@@ -131,7 +131,7 @@ server:
     affinity: {}
 
   matching:
-    replicaCount: 1
+    replicaCount: 2
     service:
       # type: ClusterIP
       port: 7935
@@ -292,6 +292,21 @@ dynamicconfig: |-
     - value: 2s
   history.timerProcessorCompleteTimerInterval:
     - value: 2s
+  history.longPollExpirationInterval:
+    - value: 2s
+      constraints:
+        domainName: "cadence"
+  matching.longPollExpirationInterval:
+    - value: 2s
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 0
+    - value: 2s
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence"
+        taskType: 1
   matching.maxTasklistIdleTime:
     - value: 2s
       constraints:

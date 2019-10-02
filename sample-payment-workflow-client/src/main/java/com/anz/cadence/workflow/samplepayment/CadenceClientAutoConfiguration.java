@@ -32,7 +32,6 @@ public class CadenceClientAutoConfiguration {
     /* Create Factory */
     var fo = new FactoryOptions.Builder()
         .setMetricScope(ms)
-        .setDisableStickyExecution(true)
         .build();
 
     var f = new Factory(tc, Constants.DOMAIN, fo);
