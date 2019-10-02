@@ -17,7 +17,7 @@ public class PaymentRequest {
 
   @Id
   @NonNull
-  final private String id;
+  private String id;
   @NonNull
-  final private ComAnzPmtAddRqType pmtAddRqType;
+  private ComAnzPmtAddRqType pmtAddRqType;
 }

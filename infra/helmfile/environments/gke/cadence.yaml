@@ -95,7 +95,7 @@ server:
             # tx_isolation: "READ-COMMITTED"
 
   frontend:
-    replicaCount: 2
+    replicaCount: 1
     service:
       type: ClusterIP
       port: 7933
@@ -113,7 +113,7 @@ server:
     affinity: {}
 
   history:
-    replicaCount: 4
+    replicaCount: 1
     service:
       # type: ClusterIP
       port: 7934
@@ -131,7 +131,7 @@ server:
     affinity: {}
 
   matching:
-    replicaCount: 4
+    replicaCount: 1
     service:
       # type: ClusterIP
       port: 7935
