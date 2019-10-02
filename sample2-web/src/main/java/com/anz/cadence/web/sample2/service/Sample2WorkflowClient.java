@@ -1,11 +1,11 @@
-package com.anz.cadence.web.samplepayment.service;
+package com.anz.cadence.web.sample2.service;
 
 import com.anz.cadence.commons.Constants;
 import com.anz.cadence.commons.api.workflow.LimitType;
 import com.anz.cadence.commons.api.workflow.WorkflowRequest;
 import com.anz.cadence.commons.model.payment.ComAnzPmtAddRqType;
 import com.anz.cadence.commons.utils.TraceUtil;
-import com.anz.cadence.workflow.samplepayment.Sample2Workflow;
+import com.anz.cadence.workflow.sample2.Sample2Workflow;
 import com.uber.cadence.WorkflowExecution;
 import com.uber.cadence.client.WorkflowClient;
 import com.uber.cadence.client.WorkflowOptions;

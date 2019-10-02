@@ -1,4 +1,4 @@
-package com.anz.cadence.activities.samplepayment;
+package com.anz.cadence.activities.sample2;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

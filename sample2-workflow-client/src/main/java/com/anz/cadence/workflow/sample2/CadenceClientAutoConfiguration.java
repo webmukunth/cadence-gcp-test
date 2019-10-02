@@ -1,4 +1,4 @@
-package com.anz.cadence.workflow.samplepayment;
+package com.anz.cadence.workflow.sample2;
 
 import com.anz.cadence.commons.Constants;
 import com.anz.cadence.commons.autoconfigure.CadenceAutoConfiguration;

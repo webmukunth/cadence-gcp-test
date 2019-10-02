@@ -1,7 +1,5 @@
 package com.anz.cadence.activities.sample2;
 
-import com.anz.cadence.activities.samplepayment.ServiceAActivity;
-import com.anz.cadence.activities.samplepayment.ServiceBActivity;
 import com.anz.cadence.commons.Constants;
 import com.anz.cadence.commons.autoconfigure.CadenceAutoConfiguration;
 import com.uber.cadence.internal.worker.PollerOptions;

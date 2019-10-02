@@ -1,4 +1,4 @@
-package com.anz.cadence.activities.samplepayment;
+package com.anz.cadence.activities.sample2;
 
 import com.anz.cadence.commons.data.PaymentRequestRepository;
 import java.net.InetAddress;
