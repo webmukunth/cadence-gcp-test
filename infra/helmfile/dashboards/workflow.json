@@ -25,7 +25,7 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 5,
+        "h": 6,
         "w": 24,
         "x": 0,
         "y": 0
@@ -161,10 +161,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 5,
+        "h": 6,
         "w": 24,
         "x": 0,
-        "y": 5
+        "y": 6
       },
       "id": 19,
       "interval": "",
@@ -253,10 +253,10 @@
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
-        "h": 5,
+        "h": 7,
         "w": 24,
         "x": 0,
-        "y": 10
+        "y": 12
       },
       "id": 17,
       "legend": {
@@ -348,7 +348,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 15
+        "y": 19
       },
       "id": 14,
       "legend": {
@@ -359,8 +359,10 @@
         "hideZero": true,
         "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
+        "sort": "total",
+        "sortDesc": true,
         "total": true,
         "values": true
       },
@@ -376,7 +378,7 @@
       "renderer": "flot",
       "seriesOverrides": [
         {
-          "alias": "/ Count:/",
+          "alias": "/Count:/",
           "yaxis": 2
         }
       ],
@@ -385,23 +387,13 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(cadence_client_latency_sum[3m])) by (type, operation)",
-          "legendFormat": "Client Latency: {{type}}-{{operation}}",
-          "refId": "A"
-        },
-        {
           "expr": "sum(rate(cadence_latency_sum[3m])) by (type, operation)",
-          "legendFormat": "Cadence Latency: {{type}}-{{operation}}",
+          "legendFormat": "Latency: {{type}}-{{operation}}",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(cadence_client_latency_count[3m])) by (type, operation)",
-          "legendFormat": "Client Count: {{type}}-{{operation}}",
-          "refId": "C"
-        },
-        {
           "expr": "sum(rate(cadence_latency_count[3m])) by (type, operation)",
-          "legendFormat": "Cadence Count: {{type}}-{{operation}}",
+          "legendFormat": "Count: {{type}}-{{operation}}",
           "refId": "D"
         }
       ],
@@ -457,7 +449,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 22
+        "y": 26
       },
       "id": 15,
       "legend": {
@@ -468,7 +460,7 @@
         "hideZero": true,
         "max": true,
         "min": false,
-        "rightSide": false,
+        "rightSide": true,
         "show": true,
         "total": true,
         "values": true
@@ -570,7 +562,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 29
+        "y": 33
       },
       "id": 12,
       "legend": {
@@ -668,7 +660,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 29
+        "y": 33
       },
       "id": 6,
       "interval": "",
@@ -759,7 +751,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 36
+        "y": 40
       },
       "id": 4,
       "interval": "",
@@ -858,7 +850,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 37
+        "y": 41
       },
       "id": 8,
       "interval": "",
@@ -1076,7 +1068,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 44
+        "y": 48
       },
       "id": 10,
       "interval": "10s",

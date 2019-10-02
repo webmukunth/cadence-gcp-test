@@ -39,7 +39,7 @@ data:
             connectProtocol: "tcp"
             user: {{ include "cadence.persistence.sql.user" (list . "default") }}
             password: {{ `{{ .Env.CADENCE_STORE_PASSWORD }}` }}
-            maxConns: 100
+            maxConns: 60
             maxIdleConns: 10
             maxConnLifetime: "1h"
             maxQPS: 1000000
@@ -65,7 +65,7 @@ data:
             connectProtocol: "tcp"
             user: {{ include "cadence.persistence.sql.user" (list . "visibility") }}
             password: {{ `{{ .Env.CADENCE_VISIBILITY_STORE_PASSWORD }}` }}
-            maxConns: 100
+            maxConns: 20
             maxIdleConns: 10
             maxConnLifetime: "1h"
             maxQPS: 1000000
@@ -82,7 +82,7 @@ data:
         - {{ include "cadence.componentname" (list . "history-headless") }}:{{ .Values.server.history.service.port }}
         - {{ include "cadence.componentname" (list . "matching-headless") }}:{{ .Values.server.matching.service.port }}
         - {{ include "cadence.componentname" (list . "worker-headless") }}:{{ .Values.server.worker.service.port }}
-      maxJoinDuration: 120s
+      maxJoinDuration: 300s
 
     services:
       frontend:

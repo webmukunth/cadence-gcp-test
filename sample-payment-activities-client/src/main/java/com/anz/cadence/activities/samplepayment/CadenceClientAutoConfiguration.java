@@ -9,13 +9,11 @@ import com.anz.cadence.activities.samplepayment.limitcheck.LimitCheckActivity;
 import com.anz.cadence.activities.samplepayment.validate.ValidateActivity;
 import com.anz.cadence.commons.Constants;
 import com.anz.cadence.commons.autoconfigure.CadenceAutoConfiguration;
-import com.uber.cadence.internal.worker.PollerOptions;
 import com.uber.cadence.serviceclient.WorkflowServiceTChannel;
 import com.uber.cadence.worker.Worker.Factory;
 import com.uber.cadence.worker.Worker.FactoryOptions;
 import com.uber.cadence.worker.WorkerOptions;
 import com.uber.m3.tally.Scope;
-import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -43,7 +41,6 @@ public class CadenceClientAutoConfiguration {
     var fo = new FactoryOptions.Builder()
         .setMetricScope(ms)
         .setDisableStickyExecution(true)
-        .setMaxWorkflowThreadCount(32)
         .build();
 
     var f = new Factory(tc, Constants.DOMAIN, fo);
@@ -51,16 +48,7 @@ public class CadenceClientAutoConfiguration {
 
     /* Create Main Worker */
     final var wo = new WorkerOptions.Builder()
-        .setActivityPollerOptions(
-            new PollerOptions.Builder()
-                .setPollThreadCount(10)
-                .setPollBackoffInitialInterval(Duration.ofMillis(100))
-                .setPollBackoffMaximumInterval(Duration.ofMillis(500))
-                .setPollThreadNamePrefix("Cadence Activity Poller")
-                .build())
         .setMetricsScope(ms)
-        .setTaskListActivitiesPerSecond(1000000)
-        .setWorkerActivitiesPerSecond(100000)
         .setDisableWorkflowWorker(true)
         .build();
 

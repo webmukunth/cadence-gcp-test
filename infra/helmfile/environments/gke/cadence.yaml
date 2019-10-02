@@ -40,7 +40,7 @@ server:
     logLevel: "info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 512
+    numHistoryShards: 64
 
     persistence:
       default:
@@ -54,7 +54,6 @@ server:
           password: "cassandra"
           existingSecret: ""
           consistency: Quorum
-          maxQPS: 5000
           # datacenter: "us-east-1a"
           # maxConns: 2
 
@@ -66,10 +65,6 @@ server:
           user: "cadence"
           password: "cadence"
           existingSecret: ""
-          maxConns: 100
-          maxIdleConns: 10
-          maxConnLifetime: "1h"
-          maxQPS: 100000
           # connectAttributes:
             # tx_isolation: "READ-COMMITTED"
 
@@ -96,10 +91,6 @@ server:
           user: "cadence_visibility"
           password: "cadence_visibility"
           existingSecret: ""
-          maxConns: 20
-          maxIdleConns: 20
-          maxConnLifetime: "1h"
-          maxQPS: 100000
           # connectAttributes:
             # tx_isolation: "READ-COMMITTED"
 
@@ -256,6 +247,8 @@ dynamicconfig: |-
     - value: 1000000
   frontend.persistenceMaxQPS:
     - value: 1000000
+  frontend.historyMaxConns:
+    - value: 30
   frontend.domainrps:
     - value: 1000000
       constraints:
@@ -271,92 +264,30 @@ dynamicconfig: |-
     - value: 1000000
   history.persistenceMaxQPS:
     - value: 1000000
-
-dynamicconfig.disabled: |-
-  matching.throttledLogRPS:
+  history.cacheMaxSize:
+    - value: 16384
+  history.cacheTTL:
+    - value: 5m
+  history.acquireShardInterval:
+    - value: 10m
+  history.eventsCacheMaxSize:
+    - value: 16384
+  history.eventsCacheTTL:
+    - value: 5m
+  history.timerTaskBatchSize:
+    - value: 100
+  history.timerWorkerCount:
+    - value: 100
+  history.timerProcessorMaxPollRPS:
+    - value: 100
+  history.transferTaskBatchSize:
+    - value: 100
+  history.transferProcessorMaxPollRPS:
+    - value: 100
+  history.transferTaskWorkerCount:
+    - value: 100
+  history.throttledLogRPS:
     - value: 10000
-  matching.maxTaskBatchSize:
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.samplepayment"
-        taskType: 0
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.accounting"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clearing"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clientresponse"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.enrich"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.fraud"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.limitcheck"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.validate"
-        taskType: 1
-  matching.maxTaskDeleteBatchSize:
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.samplepayment"
-        taskType: 0
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.accounting"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clearing"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.clientresponse"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.enrich"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.fraud"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.limitcheck"
-        taskType: 1
-    - value: 100
-      constraints:
-        domainName: "cadence"
-        taskListName: "cadence.validate"
-        taskType: 1
   history.timerProcessorMaxPollInterval:
     - value: 2s
   history.transferProcessorMaxPollInterval:
@@ -452,29 +383,92 @@ dynamicconfig.disabled: |-
         domainName: "cadence"
         taskListName: "cadence.validate"
         taskType: 1
+
+dynamicconfig.disabled: |-
+  matching.throttledLogRPS:
+    - value: 10000
+  matching.maxTaskBatchSize:
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.samplepayment"
+        taskType: 0
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.accounting"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.clearing"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.clientresponse"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.enrich"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.fraud"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.limitcheck"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.validate"
+        taskType: 1
+  matching.maxTaskDeleteBatchSize:
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.samplepayment"
+        taskType: 0
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.accounting"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.clearing"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.clientresponse"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.enrich"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.fraud"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.limitcheck"
+        taskType: 1
+    - value: 100
+      constraints:
+        domainName: "cadence"
+        taskListName: "cadence.validate"
+        taskType: 1
   frontend.throttledLogRPS:
     - value: 10000
-  history.cacheMaxSize:
-    - value: 16384
-  history.cacheTTL:
-    - value: 5m
-  history.eventsCacheMaxSize:
-    - value: 16384
-  history.eventsCacheTTL:
-    - value: 5m
-  history.timerTaskBatchSize:
-    - value: 100
-  history.timerWorkerCount:
-    - value: 100
-  history.timerProcessorMaxPollRPS:
-    - value: 100
-  history.transferTaskBatchSize:
-    - value: 100
-  history.transferProcessorMaxPollRPS:
-    - value: 100
-  history.transferTaskWorkerCount:
-    - value: 100
-  history.throttledLogRPS:
-    - value: 10000
-  frontend.historyMaxConns:
-    - value: 20
+
