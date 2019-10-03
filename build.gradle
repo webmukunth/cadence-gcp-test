@@ -123,9 +123,6 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
         errorprone 'com.google.errorprone:error_prone_core'
 
-        //testImplementation 'junit:junit'
-        //testImplementation 'org.mockito:mockito-all'
-        //testImplementation 'org.powermock:powermock-api-mockito'
         testImplementation 'org.projectlombok:lombok'
         testAnnotationProcessor 'org.projectlombok:lombok'
     }
@@ -170,6 +167,7 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
 
         /* Data */
         implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+        testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 
         /* Cache */
         implementation 'org.springframework.boot:spring-boot-starter-cache'
