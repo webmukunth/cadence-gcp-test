@@ -30,7 +30,7 @@ include "sample2-activities-client"
 include "sample2-web"
 
 /* configure modules build file */
-rootProject.children.each {project ->
+rootProject.children.each { project ->
     project.buildFileName = "${project.name}.gradle"
 }
 

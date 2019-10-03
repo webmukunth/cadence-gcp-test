@@ -5,6 +5,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 import com.anz.cadence.activities.sample2.ServiceAActivity;
 import com.anz.cadence.activities.sample2.ServiceBActivity;
@@ -40,8 +41,8 @@ public class Sample2WorkflowImplTest {
     workflowClient = testEnv.newWorkflowClient();
     sample2Workflow = workflowClient.newWorkflowStub(Sample2Workflow.class);
 
-    serviceAActivity = mock(ServiceAActivity.class);
-    serviceBActivity = mock(ServiceBActivity.class);
+    serviceAActivity = mock(ServiceAActivity.class, withSettings().withoutAnnotations());
+    serviceBActivity = mock(ServiceBActivity.class, withSettings().withoutAnnotations());
 
     Worker worker = testEnv.newWorker(Constants.TASK_LIST);
     worker.registerWorkflowImplementationTypes(Sample2WorkflowImpl.class);
@@ -56,13 +57,13 @@ public class Sample2WorkflowImplTest {
     testEnv.start();
 
     when(serviceAActivity.invokeDSService(any())).then(i -> {
-      ServiceAActivity.DSRequest request = i.getArgumentAt(0, ServiceAActivity.DSRequest.class);
+      ServiceAActivity.DSRequest request = i.getArgument(0, ServiceAActivity.DSRequest.class);
       log.debug("mock(ServiceA) request={}", request);
       return ServiceAActivity.DSResponse.PASS;
     });
 
     doAnswer(i -> {
-      ServiceBActivity.DSRequest request = i.getArgumentAt(0, ServiceBActivity.DSRequest.class);
+      ServiceBActivity.DSRequest request = i.getArgument(0, ServiceBActivity.DSRequest.class);
       log.debug("mock(ServiceB) request={}", request);
       /* Signal method to send response 6 */
       sample2Workflow.response6(false);
@@ -109,7 +110,7 @@ public class Sample2WorkflowImplTest {
       throws InterruptedException, ExecutionException, TimeoutException {
 
     doAnswer(i -> {
-      ServiceBActivity.DSRequest request = i.getArgumentAt(0, ServiceBActivity.DSRequest.class);
+      ServiceBActivity.DSRequest request = i.getArgument(0, ServiceBActivity.DSRequest.class);
       log.debug("mock(ServiceB) request={}", request);
       /* Signal method to send response 7 */
       sample2Workflow.response7(ServiceBActivity.DSResponse.APPROVE);
@@ -132,7 +133,7 @@ public class Sample2WorkflowImplTest {
       throws InterruptedException, ExecutionException, TimeoutException {
 
     doAnswer(i -> {
-      ServiceBActivity.DSRequest request = i.getArgumentAt(0, ServiceBActivity.DSRequest.class);
+      ServiceBActivity.DSRequest request = i.getArgument(0, ServiceBActivity.DSRequest.class);
       log.debug("mock(ServiceB) request={}", request);
       /* Signal method to send response 7 */
       sample2Workflow.response7(ServiceBActivity.DSResponse.APPROVE);

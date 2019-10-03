@@ -40,7 +40,7 @@ server:
     logLevel: "info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 128
+    numHistoryShards: 256
 
     persistence:
       default:
@@ -279,8 +279,6 @@ dynamicconfig: |-
     - value: 100
   history.transferTaskWorkerCount:
     - value: 10
-  history.throttledLogRPS:
-    - value: 10000
   history.timerProcessorMaxPollInterval:
     - value: 2s
   history.transferProcessorMaxPollInterval:
@@ -385,3 +383,10 @@ dynamicconfig: |-
         domainName: "cadence"
         taskListName: "cadence"
         taskType: 1
+  history.throttledLogRPS:
+    - value: 1000
+  matching.throttledLogRPS:
+    - value: 1000
+  frontend.throttledLogRPS:
+    - value: 1000
+

@@ -1,4 +1,3 @@
-
 plugins {
     id 'base'
     id 'idea'
@@ -124,9 +123,9 @@ subprojects {
         annotationProcessor 'org.projectlombok:lombok'
         errorprone 'com.google.errorprone:error_prone_core'
 
-        testImplementation 'junit:junit'
-        testImplementation 'org.mockito:mockito-all'
-        testImplementation 'org.powermock:powermock-api-mockito'
+        //testImplementation 'junit:junit'
+        //testImplementation 'org.mockito:mockito-all'
+        //testImplementation 'org.powermock:powermock-api-mockito'
         testImplementation 'org.projectlombok:lombok'
         testAnnotationProcessor 'org.projectlombok:lombok'
     }

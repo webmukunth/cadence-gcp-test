@@ -9,6 +9,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.withSettings;
 
 import com.anz.cadence.activities.samplepayment.accounting.AccountingActivity;
 import com.anz.cadence.activities.samplepayment.accounting.AccountingResponse;
@@ -73,13 +74,14 @@ public class SamplePaymentWorkflowImplTest {
     completionClient = workflowClient.newActivityCompletionClient();
     samplePaymentWorkflow = workflowClient.newWorkflowStub(SamplePaymentWorkflow.class);
 
-    validateActivity = mock(ValidateActivity.class);
-    enrichActivity = mock(EnrichActivity.class);
-    accountingActivity = mock(AccountingActivity.class);
-    fraudCheckActivity = mock(FraudCheckActivity.class);
-    clientResponseActivity = mock(ClientResponseActivity.class);
-    limitCheckActivity = mock(LimitCheckActivity.class);
-    clearingActivity = mock(ClearingActivity.class);
+    validateActivity = mock(ValidateActivity.class, withSettings().withoutAnnotations());
+    enrichActivity = mock(EnrichActivity.class, withSettings().withoutAnnotations());
+    accountingActivity = mock(AccountingActivity.class, withSettings().withoutAnnotations());
+    fraudCheckActivity = mock(FraudCheckActivity.class, withSettings().withoutAnnotations());
+    limitCheckActivity = mock(LimitCheckActivity.class, withSettings().withoutAnnotations());
+    clearingActivity = mock(ClearingActivity.class, withSettings().withoutAnnotations());
+    clientResponseActivity = mock(ClientResponseActivity.class,
+        withSettings().withoutAnnotations());
 
     final var w = testEnv.newWorker(Constants.TASK_LIST);
     w.registerWorkflowImplementationTypes(SamplePaymentWorkflowImpl.class);
@@ -109,57 +111,57 @@ public class SamplePaymentWorkflowImplTest {
         .build();
 
     when(validateActivity.validate(any(WorkflowRequest.class))).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      WorkflowRequest request = i.getArgument(0, WorkflowRequest.class);
       log.debug("mock(validate): {}", request);
       return Optional.empty();
     });
 
     when(enrichActivity.enrich(any(WorkflowRequest.class))).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      WorkflowRequest request = i.getArgument(0, WorkflowRequest.class);
       log.debug("mock(enrich): {}", request);
       return request;
     });
 
     when(limitCheckActivity.limitCheck(any(WorkflowRequest.class))).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      WorkflowRequest request = i.getArgument(0, WorkflowRequest.class);
       log.debug("mock(limitCheck): {}", request);
       return LimitCheckOutcome.PASS;
     });
 
     when(fraudCheckActivity.fraudCheck(any(WorkflowRequest.class))).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      WorkflowRequest request = i.getArgument(0, WorkflowRequest.class);
       log.debug("mock(fraudCheck): {}", request);
       return FraudCheckOutcome.PASS;
     });
 
     when(accountingActivity.debitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      WorkflowRequest request = i.getArgument(0, WorkflowRequest.class);
       log.debug("mock(debitCustomerCreditFloat): {}", request);
       return successAccountingResponse;
     });
 
     when(accountingActivity.forceDebitCustomerCreditFloat(any(WorkflowRequest.class))).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      WorkflowRequest request = i.getArgument(0, WorkflowRequest.class);
       log.debug("mock(forceDebitCustomerCreditFloat): {}", request);
       return successAccountingResponse;
     });
 
     when(accountingActivity.reverseDebitCustomerCreditFloat(any(), any())).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
-      AccountingResponse origResponse = i.getArgumentAt(1, AccountingResponse.class);
+      WorkflowRequest request = i.getArgument(0, WorkflowRequest.class);
+      AccountingResponse origResponse = i.getArgument(1, AccountingResponse.class);
       log.debug("mock(reverseDebitCustomerCreditFloat): {} {}", request, origResponse);
       return successAccountingResponse;
     });
 
     when(clearingActivity.clearPayment(any(WorkflowRequest.class))).then(i -> {
-      WorkflowRequest request = i.getArgumentAt(0, WorkflowRequest.class);
+      WorkflowRequest request = i.getArgument(0, WorkflowRequest.class);
       log.debug("mock(clearingActivity): {}", request);
       return new ClearingResponse(ClearingStatus.CLEARED, "c1", "1", "1");
     });
 
     doAnswer(invocation -> {
-      WorkflowRequest request = invocation.getArgumentAt(0, WorkflowRequest.class);
-      WorkflowResponse response = invocation.getArgumentAt(1, WorkflowResponse.class);
+      WorkflowRequest request = invocation.getArgument(0, WorkflowRequest.class);
+      WorkflowResponse response = invocation.getArgument(1, WorkflowResponse.class);
       log.debug("mock(clientResponse) response={} request={}", response, request);
       return null;
     }).when(clientResponseActivity)
@@ -375,7 +377,7 @@ public class SamplePaymentWorkflowImplTest {
 
     when(enrichActivity.enrich(any(WorkflowRequest.class))).then(invocation -> {
       samplePaymentWorkflow.stopProcessPayment();
-      return invocation.getArgumentAt(0, WorkflowRequest.class);
+      return invocation.getArgument(0, WorkflowRequest.class);
     });
 
     var ex = assertThrows(StopWorkflowException.class, () -> {
