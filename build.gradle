@@ -92,6 +92,19 @@ subprojects {
         targetCompatibility = JavaVersion.VERSION_11
         options.encoding = 'UTF-8'
         options.compilerArgs += '-parameters'
+        options.errorprone {
+            enabled = true
+            disableWarningsInGeneratedCode = true
+            /* Bug in error prone
+             * https://github.com/google/error-prone/issues/1321
+             * https://github.com/google/error-prone/issues/780
+             */
+            disable("UnusedVariable")
+            disable("ReferenceEquality")
+            disable("FallThrough")
+            disable("ThreadJoinLoop")
+            disable("OptionalEquality")
+        }
     }
 
     configurations {
@@ -107,8 +120,7 @@ subprojects {
             implementation "com.uber.cadence:cadence-client:${uberCadenceClientVersion}"
             implementation "io.projectreactor.kafka:reactor-kafka:${reactorKafkaVersion}"
             errorprone "com.google.errorprone:error_prone_core:${errorProneVersion}"
-            testImplementation "org.mockito:mockito-all:1.10.19"
-            testImplementation "org.powermock:powermock-api-mockito:1.7.4"
+            testImplementation 'it.ozimov:embedded-redis:0.7.2'
         }
     }
 

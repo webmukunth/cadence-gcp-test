@@ -38,11 +38,14 @@ public class SubmitPayment {
       produces = APPLICATION_VND_WF_RES_V_1_JSON_VALUE
   )
   @Timed(
-      value = "http_submit_payment_requests",
-      description = "Submit Payment",
+      value = "workflow_request_submit",
+      description = "Submit Workflow Request",
       histogram = true,
       percentiles = {0.8, 0.9, 0.95, 0.99},
-      extraTags = {"consumes", APPLICATION_VND_GPA_V1_JSON_VALUE}
+      extraTags = {
+          "consumes", APPLICATION_VND_GPA_V1_JSON_VALUE,
+          "workflow", "SamplePaymentWorkflow"
+      }
   )
   public ResponseEntity<WorkflowExecution> submitPayment(@RequestBody ComAnzPmtAddRqType request) {
     final var response = wfClient.submitPayment(request);
@@ -60,11 +63,14 @@ public class SubmitPayment {
       produces = APPLICATION_VND_WF_RES_V_1_JSON_VALUE
   )
   @Timed(
-      value = "http_execute_payment_requests",
-      description = "Execute Payment",
+      value = "workflow_request_execute",
+      description = "Execute Workflow Request",
       histogram = true,
       percentiles = {0.8, 0.9, 0.95, 0.99},
-      extraTags = {"consumes", APPLICATION_VND_GPA_V1_JSON_VALUE}
+      extraTags = {
+          "consumes", APPLICATION_VND_GPA_V1_JSON_VALUE,
+          "workflow", "SamplePaymentWorkflow"
+      }
   )
   public ResponseEntity<WorkflowResponse> executePayment(@RequestBody ComAnzPmtAddRqType request) {
     final var workflowExecution = wfClient.submitPayment(request);

@@ -51,7 +51,8 @@ public class SubmitPaymentWorkflowClient {
         .build();
 
     /* Save to mongodb & redis cache */
-    var pr = paymentRequestService.save(new PaymentRequest(id, request));
+    var pr = paymentRequestService.save(
+        PaymentRequest.builder().id(id).pmtAddRqType(request).build());
     log.info("Saved paymentRequest {}", pr);
 
     /* publish event to kafka */

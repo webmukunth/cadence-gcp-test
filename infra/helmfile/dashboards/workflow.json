@@ -22,6 +22,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
+      "datasource": "Prometheus",
       "fill": 1,
       "fillGradient": 0,
       "gridPos": {
@@ -29,6 +30,116 @@
         "w": 24,
         "x": 0,
         "y": 0
+      },
+      "id": 21,
+      "legend": {
+        "alignAsTable": true,
+        "avg": true,
+        "current": true,
+        "hideEmpty": true,
+        "hideZero": true,
+        "max": true,
+        "min": false,
+        "rightSide": true,
+        "show": true,
+        "total": true,
+        "values": true
+      },
+      "lines": true,
+      "linewidth": 1,
+      "nullPointMode": "null",
+      "options": {
+        "dataLinks": []
+      },
+      "percentage": false,
+      "pointradius": 2,
+      "points": false,
+      "renderer": "flot",
+      "seriesOverrides": [
+        {
+          "alias": "/Count/",
+          "yaxis": 2
+        }
+      ],
+      "spaceLength": 10,
+      "stack": false,
+      "steppedLine": false,
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(workflow_request_submit_seconds_bucket[5m])) by (le))",
+          "legendFormat": "Submit Latency",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(rate(workflow_request_submit_seconds_count[5m])) by (status,uri)",
+          "legendFormat": "Submit Count",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(workflow_request_seconds_count[5m])) by (workflow)",
+          "legendFormat": "Completed Count",
+          "refId": "C"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(workflow_request_seconds_bucket[5m])) by (le))",
+          "legendFormat": "E2E Latency",
+          "refId": "D"
+        }
+      ],
+      "thresholds": [],
+      "timeFrom": null,
+      "timeRegions": [],
+      "timeShift": null,
+      "title": "Workflow Submit vs Executed",
+      "tooltip": {
+        "shared": true,
+        "sort": 0,
+        "value_type": "individual"
+      },
+      "transparent": true,
+      "type": "graph",
+      "xaxis": {
+        "buckets": null,
+        "mode": "time",
+        "name": null,
+        "show": true,
+        "values": []
+      },
+      "yaxes": [
+        {
+          "format": "s",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        },
+        {
+          "format": "ops",
+          "label": null,
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true
+        }
+      ],
+      "yaxis": {
+        "align": false,
+        "alignLevel": null
+      }
+    },
+    {
+      "aliasColors": {},
+      "bars": false,
+      "dashLength": 10,
+      "dashes": false,
+      "fill": 1,
+      "fillGradient": 0,
+      "gridPos": {
+        "h": 6,
+        "w": 24,
+        "x": 0,
+        "y": 6
       },
       "id": 2,
       "interval": "",
@@ -166,7 +277,7 @@
         "h": 6,
         "w": 24,
         "x": 0,
-        "y": 6
+        "y": 12
       },
       "id": 19,
       "interval": "",
@@ -258,7 +369,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 12
+        "y": 18
       },
       "id": 17,
       "legend": {
@@ -350,7 +461,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 19
+        "y": 25
       },
       "id": 14,
       "legend": {
@@ -451,7 +562,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 26
+        "y": 32
       },
       "id": 15,
       "legend": {
@@ -564,7 +675,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 33
+        "y": 39
       },
       "id": 12,
       "legend": {
@@ -662,7 +773,7 @@
         "h": 8,
         "w": 12,
         "x": 12,
-        "y": 33
+        "y": 39
       },
       "id": 6,
       "interval": "",
@@ -753,7 +864,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 40
+        "y": 46
       },
       "id": 4,
       "interval": "",
@@ -852,7 +963,7 @@
         "h": 7,
         "w": 12,
         "x": 12,
-        "y": 41
+        "y": 47
       },
       "id": 8,
       "interval": "",
@@ -1070,7 +1181,7 @@
         "h": 7,
         "w": 12,
         "x": 0,
-        "y": 48
+        "y": 54
       },
       "id": 10,
       "interval": "10s",
@@ -1240,5 +1351,5 @@
   "timezone": "",
   "title": "Workflow Stats",
   "uid": "hqOj2EtZz",
-  "version": 2
+  "version": 1
 }

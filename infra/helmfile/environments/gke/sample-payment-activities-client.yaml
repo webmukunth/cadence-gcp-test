@@ -6,7 +6,7 @@ replicaCount: 2
 
 image:
   repository: gcr.io/frontal-23980c/cadence/sample-payment-activities-client
-  tag: master-ea80da1
+  tag: master-bac3bb2
 
 imagePullSecrets: []
 

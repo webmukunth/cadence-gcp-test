@@ -1,6 +1,7 @@
 package com.anz.cadence.commons;
 
 import java.lang.management.ManagementFactory;
+import java.time.ZoneId;
 import org.springframework.http.MediaType;
 
 
@@ -11,7 +12,7 @@ public class Constants {
   public static final String INSTANCE_NAME = ManagementFactory.getRuntimeMXBean().getName();
   public final static String CACHE_NAME = "paymentRequest";
   public final static String PAYMENT_TOPIC = "cadence.payments";
-
+  public final static ZoneId UTC = ZoneId.of("UTC");
 
   public final static MediaType APPLICATION_VND_WF_RES_V1_JSON =
       new MediaType("application", "vnd.wf-res.v1+json");

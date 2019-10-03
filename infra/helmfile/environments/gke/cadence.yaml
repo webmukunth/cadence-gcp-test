@@ -116,7 +116,7 @@ server:
     affinity: {}
 
   history:
-    replicaCount: 2
+    replicaCount: 3
     service:
       # type: ClusterIP
       port: 7934
@@ -134,7 +134,7 @@ server:
     affinity: {}
 
   matching:
-    replicaCount: 2
+    replicaCount: 3
     service:
       # type: ClusterIP
       port: 7935

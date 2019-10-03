@@ -14,6 +14,8 @@ import io.micrometer.core.instrument.Timer.Sample;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -71,6 +73,21 @@ public class TraceUtil {
     }
     addTag(LoggerTag.RUN_ID, exe.getRunId());
     addTag(LoggerTag.WORKFLOW_ID, exe.getWorkflowId());
+  }
+
+  public void recordDuration(String metricName, LocalDateTime start, LocalDateTime end,
+      String... tags) {
+    if (registry == null) {
+      log.warn("TraceUtil not yet initialized");
+      return;
+    }
+
+    Timer.builder(metricName)
+        .publishPercentiles(0.8, 0.9, 0.95, 0.99)
+        .publishPercentileHistogram()
+        .tags(tags)
+        .register(registry)
+        .record(Duration.between(start, end));
   }
 
   public TracerAndTimer getTracerAndTimer(String spanName, String... tags) {

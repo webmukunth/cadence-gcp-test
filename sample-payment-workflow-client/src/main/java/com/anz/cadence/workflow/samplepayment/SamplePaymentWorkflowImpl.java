@@ -18,6 +18,7 @@ import com.anz.cadence.commons.api.workflow.StopWorkflowException;
 import com.anz.cadence.commons.api.workflow.WorkflowRequest;
 import com.anz.cadence.commons.api.workflow.WorkflowResponse;
 import com.anz.cadence.commons.api.workflow.WorkflowStatus;
+import com.anz.cadence.commons.utils.TraceUtil;
 import com.uber.cadence.activity.ActivityOptions;
 import com.uber.cadence.workflow.ActivityTimeoutException;
 import com.uber.cadence.workflow.Saga;
@@ -36,6 +37,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
   final private ClearingActivity clearingActivity;
   final private ClientResponseActivity clientResponseActivity;
   final private Saga saga;
+  final private TraceUtil traceUtil;
 
   private boolean stopProcessPayment = false;
   private boolean releaseFraudCheckHold = false;
@@ -59,6 +61,7 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
         .setParallelCompensation(false)
         .build();
     saga = new Saga(sagaOpt);
+    traceUtil = TraceUtil.getGlobalTraceUtil();
   }
 
   @Override
@@ -67,6 +70,11 @@ public class SamplePaymentWorkflowImpl implements SamplePaymentWorkflow {
     var response = doProcessPayment(request);
     clientResponseActivity.sendResponse(request, response);
     log.debug("response: {}", response);
+    traceUtil.recordDuration("workflow_request",
+        request.getRequestDateTime(), response.getResponseDateTime(),
+        "workflow", "SamplePaymentWorkflow",
+        "client", request.getClientName()
+    );
     return response;
   }
 
