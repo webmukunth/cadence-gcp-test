@@ -9,7 +9,7 @@ provider "google-beta" {
 locals {
   project  = "frontal-23980c"
   gke-name = "cadence-gke"
-  location = "us-west2-b"
+  location = "us-west1-a"
 }
 
 data "google_container_engine_versions" "gke-version" {

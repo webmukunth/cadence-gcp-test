@@ -40,7 +40,7 @@ server:
     logLevel: "info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 256
+    numHistoryShards: 512
 
     persistence:
       default:
@@ -116,7 +116,7 @@ server:
     affinity: {}
 
   history:
-    replicaCount: 3
+    replicaCount: 6
     service:
       # type: ClusterIP
       port: 7934
@@ -271,22 +271,22 @@ dynamicconfig: |-
     - value: 16384
   history.eventsCacheMaxSize:
     - value: 16384
+  history.transferTaskWorkerCount:
+    - value: 10
+  history.timerProcessorMaxPollInterval:
+    - value: 2s
+  history.transferProcessorMaxPollInterval:
+    - value: 5s
+  history.transferProcessorUpdateAckInterval:
+    - value: 5s
+  history.transferProcessorCompleteTransferInterval:
+    - value: 5s
   history.timerTaskBatchSize:
     - value: 100
   history.timerWorkerCount:
     - value: 100
   history.timerProcessorMaxPollRPS:
     - value: 100
-  history.transferTaskWorkerCount:
-    - value: 10
-  history.timerProcessorMaxPollInterval:
-    - value: 2s
-  history.transferProcessorMaxPollInterval:
-    - value: 2s
-  history.transferProcessorUpdateAckInterval:
-    - value: 2s
-  history.transferProcessorCompleteTransferInterval:
-    - value: 2s
   history.timerProcessorUpdateAckInterval:
     - value: 2s
   history.timerProcessorCompleteTimerInterval:

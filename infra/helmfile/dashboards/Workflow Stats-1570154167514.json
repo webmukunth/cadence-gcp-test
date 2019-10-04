@@ -66,22 +66,22 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "histogram_quantile(0.95, sum(rate(workflow_request_submit_seconds_bucket[1m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(workflow_request_submit_seconds_bucket[2m])) by (le))",
           "legendFormat": "Submit Latency",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(workflow_request_submit_seconds_count{status=\"200\"}[1m]))",
+          "expr": "sum(rate(workflow_request_submit_seconds_count{status=\"200\"}[2m]))",
           "legendFormat": "Submit Count",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(workflow_request_seconds_count[1m]))",
+          "expr": "sum(rate(workflow_request_seconds_count[2m]))",
           "legendFormat": "Completed Count",
           "refId": "C"
         },
         {
-          "expr": "histogram_quantile(0.95, sum(rate(workflow_request_seconds_bucket[1m])) by (le))",
+          "expr": "histogram_quantile(0.95, sum(rate(workflow_request_seconds_bucket[2m])) by (le))",
           "legendFormat": "E2E Latency",
           "refId": "D"
         }

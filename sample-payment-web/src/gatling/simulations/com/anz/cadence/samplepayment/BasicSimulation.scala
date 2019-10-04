@@ -95,8 +95,7 @@ class BasicSimulation extends Simulation {
     .check(
       status.is(200),
       headerRegex(HttpHeaderNames.ContentType, "application/vnd.wf-res.v1\\+json"),
-      jsonPath("$[?(@.workflowId == '${id}')]").exists,
-      responseTimeInMillis.lt(1000)
+      jsonPath("$[?(@.workflowId == '${id}')]").exists
     )
 
   /* sample payment scenario */
@@ -107,15 +106,16 @@ class BasicSimulation extends Simulation {
         .set("rqUID", LocalDateTime.now(ZoneId.of("GMT")).toString)
     }
     .exec(samplePayment)
-    .pause(50 milliseconds, 100 milliseconds)
+    .pause(100 milliseconds, 200 milliseconds)
 
   /* Stop the test when response time is greather than 500 ms or any error occured */
   setUp(
     scn.inject(
-      constantUsersPerSec(20) during (20 minutes)
-    ).throttle(
-      reachRps(100) in (2 minutes),
-      holdFor(10 minutes)
+      incrementConcurrentUsers(2) // Int
+        .times(10)
+        .eachLevelLasting(5 minutes)
+        .separatedByRampsLasting(5 seconds)
+        .startingFrom(2) // Int
     )
   ).protocols(httpProtocol)
 }
