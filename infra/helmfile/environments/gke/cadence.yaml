@@ -26,12 +26,12 @@ server:
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-#limits:
-#cpu: 1
-#memory: 512Mi
-#requests:
-#cpu: 500m
-#memory: 256Mi
+    limits:
+      cpu: 0.8
+      memory: 1Gi
+    requests:
+      cpu: 0.8
+      memory: 1Gi
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -98,7 +98,7 @@ server:
             # tx_isolation: "READ-COMMITTED"
 
   frontend:
-    replicaCount: 2
+    replicaCount: 3
     service:
       type: ClusterIP
       port: 7933
@@ -273,14 +273,14 @@ dynamicconfig: |-
     - value: 16384
   history.transferTaskWorkerCount:
     - value: 10
-  history.timerProcessorMaxPollInterval:
-    - value: 2s
   history.transferProcessorMaxPollInterval:
-    - value: 5s
+    - value: 30s
   history.transferProcessorUpdateAckInterval:
-    - value: 5s
+    - value: 30s
   history.transferProcessorCompleteTransferInterval:
-    - value: 5s
+    - value: 30s
+  history.timerProcessorMaxPollInterval:
+    - value: 30s
   history.timerTaskBatchSize:
     - value: 100
   history.timerWorkerCount:
@@ -288,9 +288,9 @@ dynamicconfig: |-
   history.timerProcessorMaxPollRPS:
     - value: 100
   history.timerProcessorUpdateAckInterval:
-    - value: 2s
+    - value: 30s
   history.timerProcessorCompleteTimerInterval:
-    - value: 2s
+    - value: 30s
   history.longPollExpirationInterval:
     - value: 2s
       constraints:

@@ -89,6 +89,12 @@ resource "google_container_cluster" "gke" {
     }
   }
 
+  maintenance_policy {
+    daily_maintenance_window {
+      start_time = "19:00"
+    }
+  }
+
   lifecycle {
     ignore_changes = all
   }
@@ -112,12 +118,7 @@ resource "google_container_node_pool" "gke-np" {
     auto_upgrade = "false"
   }
 
-  initial_node_count = "3"
-
-  autoscaling {
-    min_node_count = "3"
-    max_node_count = "4"
-  }
+  initial_node_count = "5"
 
   node_config {
     preemptible  = true
@@ -172,7 +173,7 @@ resource "google_container_node_pool" "gke-db-np" {
 
   node_config {
     preemptible  = true
-    machine_type = "n1-highmem-4"
+    machine_type = "n1-highmem-8"
     disk_size_gb = 50
     disk_type    = "pd-standard"
 

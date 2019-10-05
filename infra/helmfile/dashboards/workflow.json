@@ -84,6 +84,11 @@
           "expr": "histogram_quantile(0.95, sum(rate(workflow_request_seconds_bucket[1m])) by (le))",
           "legendFormat": "E2E Latency",
           "refId": "D"
+        },
+        {
+          "expr": "sum(rate(cadence_workflow_failed_total[1m]))",
+          "legendFormat": "Failed Count",
+          "refId": "E"
         }
       ],
       "thresholds": [],
@@ -171,68 +176,17 @@
       "seriesOverrides": [
         {
           "alias": "Request: ok",
-          "color": "#37872D",
-          "yaxis": 2
+          "color": "#37872D"
         },
         {
           "alias": "Request: ko",
-          "color": "#C4162A",
-          "yaxis": 2
-        },
-        {
-          "alias": "Users",
-          "color": "#FA6400"
+          "color": "#C4162A"
         }
       ],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
       "targets": [
-        {
-          "alias": "Users",
-          "groupBy": [
-            {
-              "params": [
-                "1s"
-              ],
-              "type": "time"
-            },
-            {
-              "params": [
-                "simulation"
-              ],
-              "type": "tag"
-            }
-          ],
-          "measurement": "gatling.users",
-          "orderByTime": "ASC",
-          "policy": "default",
-          "query": "SELECT last(\"count\")  / $rpsHack FROM \"gatling\" WHERE (\"request\" =~ /^$request$/) AND $timeFilter GROUP BY time(10s), \"simulation\", \"group1\", \"group2\", \"status\", \"request\", \"simulation\"",
-          "rawQuery": false,
-          "refId": "A",
-          "resultFormat": "time_series",
-          "select": [
-            [
-              {
-                "params": [
-                  "active"
-                ],
-                "type": "field"
-              },
-              {
-                "params": [],
-                "type": "last"
-              }
-            ]
-          ],
-          "tags": [
-            {
-              "key": "request",
-              "operator": "=",
-              "value": "allUsers"
-            }
-          ]
-        },
         {
           "alias": "Request: $tag_status",
           "groupBy": [
@@ -305,7 +259,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "RPS",
+      "title": "Gatling RPS",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -322,7 +276,7 @@
       },
       "yaxes": [
         {
-          "format": "short",
+          "format": "reqps",
           "label": null,
           "logBase": 1,
           "max": null,

@@ -110,11 +110,11 @@ persistence:
 ##
 resources:
   requests:
-    memory: 22Gi
-    cpu: 2.92
+    memory: 46Gi
+    cpu: 6.99
   limits:
-    memory: 22Gi
-    cpu: 2.92
+    memory: 46Gi
+    cpu: 6.99
 
 ## Secret with keystore, keystore password, truststore, truststore password
 # tlsEncryptionSecretName:
@@ -142,8 +142,8 @@ jvm:
   ## Extra JVM Settings
   ##
   extraOpts:
-  maxHeapSize: 20G
-  newHeapSize: 5G
+  maxHeapSize: 44G
+  newHeapSize: 12G
 
 ## Database credentials
 ##
@@ -264,7 +264,7 @@ networkPolicy:
 ## Ref: https://github.com/criteo/cassandra_exporter
 ##
 metrics:
-  enabled: true
+  enabled: false
   image:
     registry: docker.io
     pullPolicy: IfNotPresent

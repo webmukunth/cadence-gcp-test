@@ -380,7 +380,7 @@ kubeStateMetrics:
 nodeExporter:
   ## If false, node-exporter will not be installed
   ##
-  enabled: true
+  enabled: false
 
   ## If true, node-exporter pods share the host network namespace
   ##
@@ -559,13 +559,13 @@ server:
   global:
     ## How frequently to scrape targets by default
     ##
-    scrape_interval: 15s
+    scrape_interval: 30s
     ## How long until a scrape request times out
     ##
     scrape_timeout: 2s
     ## How frequently to evaluate rules
     ##
-    evaluation_interval: 1m
+    evaluation_interval: 2m
 
   ## Additional Prometheus server container arguments
   ##

@@ -1,7 +1,7 @@
 helmDefaults:
   tillerNamespace: default
   tillerless: true
-  timeout: 300
+  timeout: 600
   force: true
   recreatePods: true
 
