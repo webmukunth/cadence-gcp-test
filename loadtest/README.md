@@ -74,4 +74,41 @@ statefulset.apps/redis-slave             3/3     109m
 ![Workflow Statistics](./test1/grafana-workflow-stat.png)
 
 #### Gatling Report ####
-[Gatling Report](./basicsimulation-20191005031646902/index.html)
+[Gatling Report](./test1/basicsimulation-20191005031646902/index.html)
+
+## Test 2 ##
+
+#### GKE Workload Configuration ####
+
+```text
+NAME                                                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.extensions/cadence-frontend                   3/3     3            3           4h23m
+deployment.extensions/cadence-history                    6/6     6            6           4h23m
+deployment.extensions/cadence-matching                   3/3     3            3           4h23m
+deployment.extensions/cadence-web                        1/1     1            1           4h23m
+deployment.extensions/cadence-worker                     1/1     1            1           4h23m
+deployment.extensions/gatling                            1/1     1            1           174m
+deployment.extensions/grafana                            1/1     1            1           4h27m
+deployment.extensions/influxdb                           1/1     1            1           4h27m
+deployment.extensions/jaeger-collector                   1/1     1            1           4h26m
+deployment.extensions/jaeger-query                       1/1     1            1           4h26m
+deployment.extensions/prometheus-server                  1/1     1            1           4h28m
+deployment.extensions/sample-payment-activities-client   4/4     4            4           4h22m
+deployment.extensions/sample-payment-web                 1/1     1            1           4h21m
+deployment.extensions/sample-payment-workflow-client     6/6     6            6           4h22m
+NAME                                     READY   AGE
+statefulset.apps/cassandra-db            3/3     4h37m
+statefulset.apps/cp-kafka                3/3     4h32m
+statefulset.apps/cp-kafka-cp-zookeeper   3/3     4h32m
+statefulset.apps/mongodb-arbiter         1/1     4h30m
+statefulset.apps/mongodb-primary         1/1     4h30m
+statefulset.apps/mongodb-secondary       1/1     4h30m
+statefulset.apps/redis-master            1/1     4h29m
+statefulset.apps/redis-slave             3/3     4h29m
+```
+
+#### Workflow Statistics ####
+![Workflow Statistics](./test2/workflow-stat.png)
+
+#### Gatling Report ####
+[Gatling Report](./test1/basicsimulation-20191005081940420/index.html)
