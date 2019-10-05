@@ -143,7 +143,7 @@ jvm:
   ##
   extraOpts:
   maxHeapSize: 44G
-  newHeapSize: 12G
+  newHeapSize: 16G
 
 ## Database credentials
 ##
