@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 6
+replicaCount: 8
 
 image:
   repository: gcr.io/frontal-23980c/cadence/sample-payment-workflow-client

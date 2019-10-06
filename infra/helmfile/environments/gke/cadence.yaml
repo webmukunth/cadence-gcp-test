@@ -27,10 +27,10 @@ server:
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     limits:
-      cpu: 0.8
+      cpu: 1
       memory: 1Gi
     requests:
-      cpu: 0.8
+      cpu: 1
       memory: 1Gi
   nodeSelector: {}
   tolerations: []
@@ -40,7 +40,7 @@ server:
     logLevel: "info"
 
     # IMPORTANT: This value cannot be changed, once it's set.
-    numHistoryShards: 512
+    numHistoryShards: 1024
 
     persistence:
       default:

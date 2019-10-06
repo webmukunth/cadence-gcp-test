@@ -1,0 +1,10 @@
+{
+  "simulation": "com.anz.cadence.samplepayment.BasicSimulation",
+  "simulationId": "basicsimulation",
+  "start": 1570336120581,
+  "description": "Run at Sun Oct  6 04:28:31 UTC 2019",
+  "scenarios": ["Basic Simulation"],
+  "assertions": [
+
+  ]
+}

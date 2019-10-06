@@ -1,0 +1,24 @@
+NAME                                                     READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.extensions/cadence-frontend                   3/3     3            3           87m
+deployment.extensions/cadence-history                    6/6     6            6           87m
+deployment.extensions/cadence-matching                   3/3     3            3           87m
+deployment.extensions/cadence-web                        1/1     1            1           87m
+deployment.extensions/cadence-worker                     1/1     1            1           87m
+deployment.extensions/gatling                            1/1     1            1           75m
+deployment.extensions/grafana                            1/1     1            1           80m
+deployment.extensions/influxdb                           1/1     1            1           79m
+deployment.extensions/jaeger-collector                   1/1     1            1           78m
+deployment.extensions/jaeger-query                       1/1     1            1           78m
+deployment.extensions/prometheus-server                  1/1     1            1           80m
+deployment.extensions/sample-payment-activities-client   6/6     6            6           77m
+deployment.extensions/sample-payment-web                 2/2     2            2           76m
+deployment.extensions/sample-payment-workflow-client     8/8     8            8           77m
+NAME                                     READY   AGE
+statefulset.apps/cassandra-db            3/3     95m
+statefulset.apps/cp-kafka                3/3     85m
+statefulset.apps/cp-kafka-cp-zookeeper   3/3     85m
+statefulset.apps/mongodb-arbiter         1/1     83m
+statefulset.apps/mongodb-primary         1/1     83m
+statefulset.apps/mongodb-secondary       1/1     83m
+statefulset.apps/redis-master            1/1     82m
+statefulset.apps/redis-slave             3/3     82m

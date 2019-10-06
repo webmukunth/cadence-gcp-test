@@ -9,7 +9,7 @@ provider "google-beta" {
 locals {
   project  = "frontal-23980c"
   gke-name = "cadence-gke"
-  location = "us-west1-a"
+  location = "us-west1-c"
 }
 
 data "google_container_engine_versions" "gke-version" {
@@ -118,11 +118,62 @@ resource "google_container_node_pool" "gke-np" {
     auto_upgrade = "false"
   }
 
-  initial_node_count = "5"
+  initial_node_count = "4"
 
   node_config {
     preemptible  = true
     machine_type = "n1-standard-4"
+    disk_size_gb = 50
+    disk_type    = "pd-standard"
+
+    metadata = {
+      disable-legacy-endpoints = "true"
+    }
+
+    oauth_scopes = [
+      "logging-write",
+      "monitoring",
+      "storage-ro"
+    ]
+
+    labels = {
+      tier = "app"
+    }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      # Ensure cluster is not recreated when pool configuration changes
+      "initial_node_count",
+      "instance_group_urls",
+      "node_config"
+    ]
+  }
+
+  timeouts {
+    create = "15m"
+    update = "15m"
+    delete = "15m"
+  }
+}
+
+resource "google_container_node_pool" "gke-np2" {
+  provider = "google-beta"
+  name     = "${google_container_cluster.gke.name}-np2"
+  project  = "${local.project}"
+  location = "${local.location}"
+  cluster  = "${google_container_cluster.gke.name}"
+
+  management {
+    auto_repair  = "false"
+    auto_upgrade = "false"
+  }
+
+  initial_node_count = "1"
+
+  node_config {
+    preemptible  = true
+    machine_type = "n1-standard-8"
     disk_size_gb = 50
     disk_type    = "pd-standard"
 

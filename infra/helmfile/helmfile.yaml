@@ -15,12 +15,12 @@ repositories:
 helmfiles:
 #  - releases/mysql-db.yaml
   - releases/cassandra-db.yaml
+  - releases/cadence.yaml
   - releases/traefik.yaml
   - releases/cp-kafka.yaml
   - releases/mongodb.yaml
   - releases/redis.yaml
   - releases/observability.yaml
-  - releases/cadence.yaml
   - releases/sample-payment.yaml
 
 environments:

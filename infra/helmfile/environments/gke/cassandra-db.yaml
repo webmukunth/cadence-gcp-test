@@ -111,10 +111,10 @@ persistence:
 resources:
   requests:
     memory: 46Gi
-    cpu: 6.99
+    cpu: 6.92
   limits:
     memory: 46Gi
-    cpu: 6.99
+    cpu: 6.92
 
 ## Secret with keystore, keystore password, truststore, truststore password
 # tlsEncryptionSecretName:
