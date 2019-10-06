@@ -2,7 +2,7 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-replicaCount: 8
+replicaCount: 4
 
 image:
   repository: gcr.io/frontal-23980c/cadence/sample-payment-workflow-client
@@ -31,24 +31,14 @@ ingress:
   #      - chart-example.local
 
 resources:
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-#  limits:
-#    cpu: 1
-#    memory: 1.5Gi
-#  requests:
-#    cpu: 500m
-#    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 3Gi
+  requests:
+    cpu: 500m
+    memory: 3Gi
 
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
-jvmOpts: "-Xms512m -Xmx1g"
+jvmOpts: "-Xms2g -Xmx2g"
 
 configmap:
   gke: |-
