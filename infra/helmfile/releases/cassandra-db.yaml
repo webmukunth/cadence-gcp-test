@@ -5,7 +5,7 @@ helmDefaults:
   force: true
 
 releases:
-  - name: cassandra-db
+  - name: cassandra
     chart: ../charts/cassandra
     wait: true
     installed: true
@@ -13,7 +13,7 @@ releases:
     labels:
       package-manager: helmfile
       component: database
-      app: cassandra-db
+      app: cassandra
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 

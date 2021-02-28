@@ -125,7 +125,7 @@ resources:
 ##
 cluster:
   name: cassandra
-  replicaCount: 3
+  replicaCount: 1
   seedCount: 2
   numTokens: 256
   datacenter: dc1

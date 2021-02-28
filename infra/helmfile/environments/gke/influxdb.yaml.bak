@@ -2,20 +2,25 @@
 ## ref: https://hub.docker.com/r/library/influxdb/tags/
 image:
   repository: "influxdb"
-  tag: "1.7.6-alpine"
+  tag: "1.7.9-alpine"
   pullPolicy: IfNotPresent
   ## If specified, use these secrets to access the images
   # pullSecrets:
   #   - registry-secret
 
+serviceAccount:
+  create: true
+  name:
+  annotations: {}
+
 ## Customize livenessProbe and readinessProbe
 ## ref: https://docs.influxdata.com/influxdb/v1.7/tools/api/#ping-http-endpoint
 ##
-livenessProbe:
-  probePath: "/ping"
+livenessProbe: {}
+  #probePath: "/ping"
 
-readinessProbe:
-  probePath: "/ping"
+readinessProbe: {}
+  #probePath: "/ping"
 
 ## Specify a service type
 ## NodePort is default
@@ -90,7 +95,7 @@ setDefaultUser:
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
-resources:
+resources: {}
 #requests:
 #memory: 256Mi
 #cpu: 250m
