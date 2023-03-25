@@ -14,12 +14,12 @@ PROJECT_ID=${PROJECT_NAME}-${RANDOM_SUFFIX}
 set -x
 gcloud projects create ${PROJECT_ID} --name $PROJECT_NAME
 
-#PREV_PROJECT_NAME=$(gcloud config get-value project  2>/dev/null)
-#gcloud config set project $PROJECT_ID
+PREV_PROJECT_NAME=$(gcloud config get-value project  2>/dev/null)
+gcloud config set project $PROJECT_ID
 
 # Billing
 gcloud beta billing projects link $PROJECT_ID \
-  --billing-account=$(gcloud beta billing  accounts list   --format="value(name)" --filter open=true)
+  --billing-account=$(gcloud beta billing  accounts list --format="value(name)" --filter open=true)
 
 # Enable the required services
 gcloud --project $PROJECT_ID services enable iam.googleapis.com
@@ -38,4 +38,4 @@ gcloud --project $PROJECT_ID services enable servicenetworking.googleapis.com
 #echo Y | gcloud --project $PROJECT_ID compute networks delete default
 
 # Delete the previous project (only one active project in personal GCP account !)
-#echo Y | gcloud projects delete $PREV_PROJECT_NAME
+echo Y | gcloud projects delete $PREV_PROJECT_NAME

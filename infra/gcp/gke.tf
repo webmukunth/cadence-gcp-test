@@ -7,30 +7,31 @@ provider "google-beta" {
 }
 
 locals {
-  project  = "frontal-23980c"
-  gke-name = "cadence-gke"
-  location = "us-west1-c"
+  project  = "regolith-0a6bb2"
+  gke-name = "temporal-gke"
+  location = "us-west1-a"
 }
 
 data "google_container_engine_versions" "gke-version" {
-  project  = "${local.project}"
-  location = "${local.location}"
+  project  = local.project
+  location = local.location
 }
 
 resource "google_container_cluster" "gke" {
   provider = "google-beta"
 
-  project                  = "${local.project}"
-  name                     = "${local.gke-name}"
-  location                 = "${local.location}"
+  project                  = local.project
+  name                     = local.gke-name
+  location                 = local.location
   initial_node_count       = 1
-  min_master_version       = "${data.google_container_engine_versions.gke-version.latest_master_version}"
+  min_master_version       = data.google_container_engine_versions.gke-version.latest_master_version
   monitoring_service       = "monitoring.googleapis.com/kubernetes"
   logging_service          = "logging.googleapis.com/kubernetes"
   enable_kubernetes_alpha  = false
   enable_tpu               = false
   remove_default_node_pool = true
   enable_legacy_abac       = false
+
 
   master_auth {
     username = ""
@@ -72,7 +73,7 @@ resource "google_container_cluster" "gke" {
 
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "39.109.192.0/18"
+      cidr_block   = "0.0.0.0/0"
       display_name = "starhub"
     }
     cidr_blocks {
@@ -109,20 +110,20 @@ resource "google_container_cluster" "gke" {
 resource "google_container_node_pool" "gke-np" {
   provider = "google-beta"
   name     = "${google_container_cluster.gke.name}-np"
-  project  = "${local.project}"
-  location = "${local.location}"
-  cluster  = "${google_container_cluster.gke.name}"
+  project  = local.project
+  location = local.location
+  cluster  = google_container_cluster.gke.name
 
   management {
     auto_repair  = "false"
     auto_upgrade = "false"
   }
 
-  initial_node_count = "4"
+  initial_node_count = "3"
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-4"
+    machine_type = "e2-standard-4"
     disk_size_gb = 50
     disk_type    = "pd-standard"
 
@@ -160,20 +161,20 @@ resource "google_container_node_pool" "gke-np" {
 resource "google_container_node_pool" "gke-np2" {
   provider = "google-beta"
   name     = "${google_container_cluster.gke.name}-np2"
-  project  = "${local.project}"
-  location = "${local.location}"
-  cluster  = "${google_container_cluster.gke.name}"
+  project  = local.project
+  location = local.location
+  cluster  = google_container_cluster.gke.name
 
   management {
     auto_repair  = "false"
     auto_upgrade = "false"
   }
 
-  initial_node_count = "1"
+  initial_node_count = "2"
 
   node_config {
     preemptible  = true
-    machine_type = "n1-standard-8"
+    machine_type = "e2-standard-2"
     disk_size_gb = 50
     disk_type    = "pd-standard"
 
@@ -211,20 +212,20 @@ resource "google_container_node_pool" "gke-np2" {
 resource "google_container_node_pool" "gke-db-np" {
   provider = "google-beta"
   name     = "${google_container_cluster.gke.name}-db-np"
-  project  = "${local.project}"
-  location = "${local.location}"
-  cluster  = "${google_container_cluster.gke.name}"
+  project  = local.project
+  location = local.location
+  cluster  = google_container_cluster.gke.name
 
   management {
     auto_repair  = "false"
     auto_upgrade = "false"
   }
 
-  initial_node_count = "3"
+  initial_node_count = "1"
 
   node_config {
     preemptible  = true
-    machine_type = "n1-highmem-8"
+    machine_type = "e2-highmem-8"
     disk_size_gb = 50
     disk_type    = "pd-standard"
 
@@ -268,10 +269,10 @@ resource "google_container_node_pool" "gke-db-np" {
 data "google_client_config" "current" {}
 
 provider "kubernetes" {
-  load_config_file       = false
+  # load_config_file       = false
   host                   = "https://${google_container_cluster.gke.endpoint}"
-  cluster_ca_certificate = "${base64decode(google_container_cluster.gke.master_auth[0].cluster_ca_certificate)}"
-  token                  = "${data.google_client_config.current.access_token}"
+  cluster_ca_certificate = base64decode(google_container_cluster.gke.master_auth[0].cluster_ca_certificate)
+  token                  = data.google_client_config.current.access_token
 }
 
 resource "kubernetes_cluster_role_binding" "make-me-admin" {
@@ -286,7 +287,7 @@ resource "kubernetes_cluster_role_binding" "make-me-admin" {
   subject {
     api_group = "rbac.authorization.k8s.io"
     kind      = "User"
-    name      = "nataram767579@gmail.com"
+    name      = "webmukunth@gmail.com"
   }
 }
 

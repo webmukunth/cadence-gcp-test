@@ -1,0 +1,30 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 600
+  force: true
+  recreatePods: true
+
+releases:
+  - name: gatling
+    chart: ../charts/gatling
+    installed: true
+    namespace: default
+    wait: false
+    labels:
+      package-manager: helmfile
+      component: sample-payment-web
+      chart: grafana
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+    set:
+      - name: gatling.simulations.BasicSimulation\.scala
+        file: ../../../sample-payment-web/src/gatling/simulations/com/anz/temporal/samplepayment/BasicSimulation.scala
+      - name: gatling.conf.gatling\.conf
+        file: ../../../sample-payment-web/src/gatling/resources/gatling.conf
+      - name: gatling.conf.logback\.xml
+        file: ../../../sample-payment-web/src/gatling/resources/logback.xml
+
+environments:
+  default: { }
+  gke: { }

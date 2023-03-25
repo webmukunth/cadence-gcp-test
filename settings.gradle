@@ -13,7 +13,7 @@ pluginManagement {
     }
 }
 
-rootProject.name = "cadence"
+rootProject.name = "temporal"
 
 include "commons-api"
 

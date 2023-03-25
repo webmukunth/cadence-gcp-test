@@ -36,8 +36,8 @@ alertmanager:
   ## alertmanager container image
   ##
   image:
-    repository: prom/alertmanager
-    tag: v0.18.0
+    repository: quay.io/prometheus/alertmanager
+    tag: v0.24.0
     pullPolicy: IfNotPresent
 
   ## alertmanager priorityClassName
@@ -268,7 +268,7 @@ configmapReload:
   ##
   image:
     repository: jimmidyson/configmap-reload
-    tag: v0.2.2
+    tag: v0.5.0
     pullPolicy: IfNotPresent
 
   ## Additional configmap-reload container arguments
@@ -397,8 +397,8 @@ nodeExporter:
   ## node-exporter container image
   ##
   image:
-    repository: prom/node-exporter
-    tag: v0.18.0
+    repository: quay.io/prometheus/node-exporter
+    tag: v1.3.1
     pullPolicy: IfNotPresent
 
   ## Specify if a Pod Security Policy for node-exporter must be created
@@ -512,8 +512,8 @@ server:
   ## Prometheus server container image
   ##
   image:
-    repository: prom/prometheus
-    tag: v2.12.0
+    repository: quay.io/prometheus/prometheus
+    tag: v2.36.2
     pullPolicy: IfNotPresent
 
   ## prometheus server priorityClassName
@@ -802,7 +802,7 @@ pushgateway:
   ##
   image:
     repository: prom/pushgateway
-    tag: v0.8.0
+    tag: v1.4.3
     pullPolicy: IfNotPresent
 
   ## pushgateway priorityClassName
@@ -1132,7 +1132,7 @@ serverFiles:
           - role: endpoints
 
         relabel_configs:
-          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape]
+          - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scrape_slow]
             action: keep
             regex: true
           - source_labels: [__meta_kubernetes_service_annotation_prometheus_io_scheme]
@@ -1146,19 +1146,19 @@ serverFiles:
           - source_labels: [__address__, __meta_kubernetes_service_annotation_prometheus_io_port]
             action: replace
             target_label: __address__
-            regex: ([^:]+)(?::\d+)?;(\d+)
+            regex: (.+?)(?::\d+)?;(\d+)
             replacement: $1:$2
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
-            target_label: kubernetes_namespace
+            target_label: namespace
           - source_labels: [__meta_kubernetes_service_name]
             action: replace
-            target_label: kubernetes_name
+            target_label: service
           - source_labels: [__meta_kubernetes_pod_node_name]
             action: replace
-            target_label: kubernetes_node
+            target_label: node
 
       - job_name: 'prometheus-pushgateway'
         honor_labels: true
@@ -1199,9 +1199,9 @@ serverFiles:
           - action: labelmap
             regex: __meta_kubernetes_service_label_(.+)
           - source_labels: [__meta_kubernetes_namespace]
-            target_label: kubernetes_namespace
+            target_label: namespace
           - source_labels: [__meta_kubernetes_service_name]
-            target_label: kubernetes_name
+            target_label: service
 
       # Example scrape config for pods
       #
@@ -1226,14 +1226,17 @@ serverFiles:
             regex: (.+)
           - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
             action: replace
-            regex: ([^:]+)(?::\d+)?;(\d+)
+            regex: (.+?)(?::\d+)?;(\d+)
             replacement: $1:$2
             target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_annotation_prometheus_io_param_(.+)
+            replacement: __param_$1
           - action: labelmap
             regex: __meta_kubernetes_pod_label_(.+)
           - source_labels: [__meta_kubernetes_namespace]
             action: replace
-            target_label: kubernetes_namespace
+            target_label: namespace
           - source_labels: [__meta_kubernetes_pod_name]
             action: replace
             target_label: kubernetes_pod_name

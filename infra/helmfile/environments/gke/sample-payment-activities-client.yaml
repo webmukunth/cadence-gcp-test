@@ -1,12 +1,12 @@
-# Default values for cadence-sb-app.
+# Default values for temporal-sb-app.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
 replicaCount: 3
 
 image:
-  repository: gcr.io/frontal-23980c/cadence/sample-payment-activities-client
-  tag: master-c85c9e9
+  repository: gcr.io/regolith-0a6bb2/temporal/sample-payment-activities-client
+  tag: master-276720c
 
 imagePullSecrets: []
 
@@ -24,7 +24,8 @@ ingress:
   hosts:
     - host: wf-activities.gke
       paths:
-        - /
+        - path: "/"
+          pathType: Prefix
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -55,12 +56,12 @@ configmap:
         bootstrap-servers: cp-kafka:9092
       data:
         mongodb:
-          uri: mongodb://cadence:cadence@mongodb:27017/cadence
+          uri: mongodb://temporal:temporal@mongodb:27017/temporal
       redis:
         password: redis
-        host: redis-slave
+        host: redis-replicas
         port: 6379
-    cadence:
-      host: cadence-frontend
+    temporal:
+      host: temporal-frontend
     server:
       port: 8080

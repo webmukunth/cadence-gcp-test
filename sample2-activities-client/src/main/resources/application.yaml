@@ -35,7 +35,7 @@ management:
     export:
       prometheus:
         enabled: true
-cadence:
+temporal:
   host: localhost
   port: 7933
   emit-metric: true

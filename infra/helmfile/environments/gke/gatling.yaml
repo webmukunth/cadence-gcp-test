@@ -5,8 +5,10 @@ ingress:
   hosts:
     - host: gatling.gke
       paths:
-        - /
+        - path: /
+          pathType: Prefix
+tls: []
 
 gatling:
-  repository: "gcr.io/frontal-23980c/gatling"
-  tag: "3.2.1-0db44bc"
+  repository: "gcr.io/holograph-fda438/gatling"
+  tag: "3.2.1-1"

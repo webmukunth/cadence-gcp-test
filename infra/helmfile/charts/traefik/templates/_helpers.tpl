@@ -7,6 +7,12 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{/*
+Create chart name and version as used by the chart label.
+*/}}
+{{- define "traefik.chart" -}}
+{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
 
 {{/*
 Create a default fully qualified app name.
@@ -27,149 +33,30 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
-Create chart name and version as used by the chart label.
+The name of the service account to use
 */}}
-{{- define "traefik.chart" -}}
-{{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" -}}
+{{- define "traefik.serviceAccountName" -}}
+{{- default (include "traefik.fullname" .) .Values.serviceAccount.name -}}
 {{- end -}}
 
 {{/*
-Create the block for the ProxyProtocol's Trusted IPs.
+Construct the path for the providers.kubernetesingress.ingressendpoint.publishedservice.
+By convention this will simply use the <namespace>/<service-name> to match the name of the
+service generated.
+Users can provide an override for an explicit service they want bound via `.Values.providers.kubernetesIngress.publishedService.pathOverride`
 */}}
-{{- define "traefik.trustedips" -}}
-         trustedIPs = [
-	   {{- range $idx, $ips := .Values.proxyProtocol.trustedIPs }}
-	     {{- if $idx }}, {{ end }}
-	     {{- $ips | quote }}
-	   {{- end -}}
-         ]
+{{- define "providers.kubernetesIngress.publishedServicePath" -}}
+{{- $defServiceName := printf "%s/%s" .Release.Namespace (include "traefik.fullname" .) -}}
+{{- $servicePath := default $defServiceName .Values.providers.kubernetesIngress.publishedService.pathOverride }}
+{{- print $servicePath | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
-Create the block for the forwardedHeaders's Trusted IPs.
+Construct a comma-separated list of whitelisted namespaces
 */}}
-{{- define "traefik.forwardedHeadersTrustedIPs" -}}
-         trustedIPs = [
-	   {{- range $idx, $ips := .Values.forwardedHeaders.trustedIPs }}
-	     {{- if $idx }}, {{ end }}
-	     {{- $ips | quote }}
-	   {{- end -}}
-         ]
+{{- define "providers.kubernetesIngress.namespaces" -}}
+{{- default .Release.Namespace (join "," .Values.providers.kubernetesIngress.namespaces) }}
 {{- end -}}
-
-{{/*
-Create the block for whiteListSourceRange.
-*/}}
-{{- define "traefik.whiteListSourceRange" -}}
-       whiteListSourceRange = [
-	   {{- range $idx, $ips := .Values.whiteListSourceRange }}
-	     {{- if $idx }}, {{ end }}
-	     {{- $ips | quote }}
-	   {{- end -}}
-         ]
-{{- end -}}
-
-{{/*
-Create the block for acme.domains.
-*/}}
-{{- define "traefik.acme.domains" -}}
-{{- range $idx, $value := .Values.acme.domains.domainsList }}
-    {{- if $value.main }}
-    [[acme.domains]]
-       main = {{- range $mainIdx, $mainValue := $value }} {{ $mainValue | quote }}{{- end -}}
-    {{- end -}}
-{{- if $value.sans }}
-       sans = [
-  {{- range $sansIdx, $domains := $value.sans }}
-			 {{- if $sansIdx }}, {{ end }}
-	     {{- $domains | quote }}
-  {{- end -}}
-	     ]
-	{{- end -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Create the block for acme.resolvers.
-*/}}
-{{- define "traefik.acme.dnsResolvers" -}}
-         resolvers = [
-	   {{- range $idx, $ips := .Values.acme.resolvers }}
-	     {{- if $idx }},{{ end }}
-	     {{- $ips | quote }}
-	   {{- end -}}
-         ]
-{{- end -}}
-
-{{/*
-Create custom cipherSuites block
-*/}}
-{{- define "traefik.ssl.cipherSuites" -}}
-          cipherSuites = [
-          {{- range $idx, $cipher := .Values.ssl.cipherSuites }}
-            {{- if $idx }},{{ end }}
-            {{ $cipher | quote }}
-          {{- end }}
-          ]
-{{- end -}}
-
-{{/*
-Create the block for RootCAs.
-*/}}
-{{- define "traefik.rootCAs" -}}
-         rootCAs = [
-	   {{- range $idx, $ca := .Values.rootCAs }}
-	     {{- if $idx }}, {{ end }}
-	     {{- $ca | quote }}
-	   {{- end -}}
-         ]
-{{- end -}}
-
-{{/*
-Create the block for mTLS ClientCAs.
-*/}}
-{{- define "traefik.ssl.mtls.clientCAs" -}}
-         files = [
-	   {{- range $idx, $_ := .Values.ssl.mtls.clientCaCerts }}
-	     {{- if $idx }}, {{ end }}
-	     {{- printf "/mtls/clientCaCert-%d.crt" $idx | quote }}
-	   {{- end -}}
-         ]
-{{- end -}}
-
-{{/*
-Helper for containerPort (http)
-*/}}
-{{- define "traefik.containerPort.http" -}}
-	{{- if .Values.useNonPriviledgedPorts -}}
-	6080
-	{{- else -}}
-	80
-	{{- end -}}
-{{- end -}}
-
-{{/*
-Helper for RBAC Scope
-If Kubernetes namespace selection is defined and the (one) selected
-namespace is the release namespace Cluster scope is unnecessary.
-*/}}
-{{- define "traefik.rbac.scope" -}}
-	{{- if .Values.kubernetes -}}
-		{{- if not (eq (.Values.kubernetes.namespaces | default (list) | toString) (list .Release.Namespace | toString)) -}}
-		Cluster
-		{{- end -}}
-	{{- else -}}
-	Cluster
-	{{- end -}}
-{{- end -}}
-
-{{/*
-Helper for containerPort (https)
-*/}}
-{{- define "traefik.containerPort.https" -}}
-	{{- if .Values.useNonPriviledgedPorts -}}
-	6443
-	{{- else -}}
-	443
-	{{- end -}}
+{{- define "providers.kubernetesCRD.namespaces" -}}
+{{- default .Release.Namespace (join "," .Values.providers.kubernetesCRD.namespaces) }}
 {{- end -}}

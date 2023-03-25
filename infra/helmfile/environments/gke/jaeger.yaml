@@ -6,7 +6,7 @@ provisionDataStore:
   cassandra: false
   elasticsearch: false
 
-tag: 1.13.1
+tag: ""
 
 nameOverride: "jaeger"
 fullnameOverride: "jaeger"
@@ -239,7 +239,7 @@ hotrod:
     pullPolicy: Always
   service:
     annotations: {}
-    name: hotrod
+    name: hotrod7
     type: ClusterIP
     # List of IP ranges that are allowed to access the load balancer (if supported)
     loadBalancerSourceRanges: []

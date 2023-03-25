@@ -1,0 +1,44 @@
+helmDefaults:
+  tillerNamespace: default
+  tillerless: true
+  timeout: 900
+  force: true
+
+releases:
+  - name: temporal-create-keyspace
+    chart: ../charts/raw
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      component: workflow
+      package-manager: helmfile
+      chart: temporal-create-keyspace
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+  - name: temporal
+    chart: ../charts/temporal
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: workflow
+      chart: temporal
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+  - name: temporal-setup-job
+    chart: ../charts/raw
+    wait: true
+    installed: true
+    namespace: default
+    labels:
+      package-manager: helmfile
+      component: workflow
+      chart: temporal-setup-job
+    values:
+      - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
+
+environments:
+  default: {}
+  gke: {}

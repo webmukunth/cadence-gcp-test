@@ -20,7 +20,7 @@ plan: validate
 
 apply: 
 	terraform apply -no-color -lock=true -lock-timeout=5s terraform.plan
-	gcloud container clusters get-credentials cadence-gke --zone us-west1-c
+	gcloud container clusters get-credentials temporal-gke --zone us-west1-a
 
 install: plan apply
 

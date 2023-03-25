@@ -1,0 +1,47 @@
+resources:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: temporal-create-keyspace
+    spec:
+      activeDeadlineSeconds: 600
+      backoffLimit: 6
+      completions: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - name: temporal-create-keyspace
+              image: temporalio/admin-tools:1.17.1
+              env:
+                - name: CASSANDRA_HOST
+                  value: cassandra-db-0.cassandra-db-headless.default.svc.cluster.local
+                - name: CASSANDRA_USER
+                  value: cassandra
+                - name: CASSANDRA_PASSWORD
+                  value: cassandra
+              command:
+                - bash
+                - '-c'
+                - |
+                  set -x
+                  echo "Started Running at $(date)"
+                  # cassandra env
+                  export KEYSPACE="${KEYSPACE:-temporal}"
+                  export VISIBILITY_KEYSPACE="${VISIBILITY_KEYSPACE:-temporal_visibility}"
+                  export CASSANDRA_SEEDS=cassandra-db
+                  export CASSANDRA_DB_PORT=9042
+                  export CASSANDRA_USER=cassandra
+                  export CASSANDRA_PASSWORD=cassandra
+                  export SCHEMA_DIR=schema/cassandra/temporal/versioned
+                  export VISIBILITY_SCHEMA_DIR=schema/cassandra/visibility/versioned
+                  echo 'cassandra started'
+                  temporal-cassandra-tool --ep $CASSANDRA_SEEDS create -k $KEYSPACE --rf 1
+                  temporal-cassandra-tool --ep $CASSANDRA_SEEDS -k $KEYSPACE setup-schema -v 0.0
+                  temporal-cassandra-tool --ep $CASSANDRA_SEEDS -k $KEYSPACE update-schema -d $SCHEMA_DIR
+                  temporal-cassandra-tool --ep $CASSANDRA_SEEDS create -k $VISIBILITY_KEYSPACE --rf 1
+                  temporal-cassandra-tool --ep $CASSANDRA_SEEDS -k $VISIBILITY_KEYSPACE setup-schema -v 0.0
+                  temporal-cassandra-tool --ep $CASSANDRA_SEEDS -k $VISIBILITY_KEYSPACE update-schema -d $VISIBILITY_SCHEMA_DIR
+                  echo 'cassandra schema for temporal ready'
+          terminationGracePeriodSeconds: 30
+          restartPolicy: OnFailure

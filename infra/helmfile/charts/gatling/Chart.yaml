@@ -9,9 +9,9 @@ keywords:
 - ltaas
 - loadtest
 maintainers:
-- email: nataram4@anz.com
-  name: mani
+- email: shanmugm@anz.com
+  name: mugundan
 name: gatling
 sources:
-- https://github.service.anz/nataram4/cadence-gcp/infra/helmfile/charts/gatling
+- https://github.service.anz/shanmugm/temporal-gcp/infra/helmfile/charts/gatling
 version: 0.0.1

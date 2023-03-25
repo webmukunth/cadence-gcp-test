@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "temporal-sb-app.fullname" . }}
+  labels:
+{{ include "temporal-sb-app.labels" . | indent 4 }}
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: {{ .Values.service.port | quote }}
+    prometheus.io/path: "/actuator/prometheus"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "temporal-sb-app.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}

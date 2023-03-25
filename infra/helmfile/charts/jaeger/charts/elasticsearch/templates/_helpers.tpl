@@ -11,98 +11,74 @@ Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "elasticsearch.fullname" -}}
-{{- if .Values.fullnameOverride -}}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
 {{- $name := default .Chart.Name .Values.nameOverride -}}
-{{- if contains $name .Release.Name -}}
-{{- .Release.Name | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
-{{- end -}}
-{{- end -}}
 
-{{/*
-Create a default fully qualified client name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "elasticsearch.client.fullname" -}}
-{{ template "elasticsearch.fullname" . }}-{{ .Values.client.name }}
-{{- end -}}
-
-{{/*
-Create a default fully qualified data name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "elasticsearch.data.fullname" -}}
-{{ template "elasticsearch.fullname" . }}-{{ .Values.data.name }}
-{{- end -}}
-
-{{/*
-Create a default fully qualified master name.
-We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
-*/}}
-{{- define "elasticsearch.master.fullname" -}}
-{{ template "elasticsearch.fullname" . }}-{{ .Values.master.name }}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use for the client component
-*/}}
-{{- define "elasticsearch.serviceAccountName.client" -}}
-{{- if .Values.serviceAccounts.client.create -}}
-    {{ default (include "elasticsearch.client.fullname" .) .Values.serviceAccounts.client.name }}
+{{- define "elasticsearch.uname" -}}
+{{- if empty .Values.fullnameOverride -}}
+{{- if empty .Values.nameOverride -}}
+{{ .Values.clusterName }}-{{ .Values.nodeGroup }}
 {{- else -}}
-    {{ default "default" .Values.serviceAccounts.client.name }}
+{{ .Values.nameOverride }}-{{ .Values.nodeGroup }}
 {{- end -}}
-{{- end -}}
-
-{{/*
-Create the name of the service account to use for the data component
-*/}}
-{{- define "elasticsearch.serviceAccountName.data" -}}
-{{- if .Values.serviceAccounts.data.create -}}
-    {{ default (include "elasticsearch.data.fullname" .) .Values.serviceAccounts.data.name }}
 {{- else -}}
-    {{ default "default" .Values.serviceAccounts.data.name }}
+{{ .Values.fullnameOverride }}
 {{- end -}}
 {{- end -}}
 
 {{/*
-Create the name of the service account to use for the master component
+Generate certificates
 */}}
-{{- define "elasticsearch.serviceAccountName.master" -}}
-{{- if .Values.serviceAccounts.master.create -}}
-    {{ default (include "elasticsearch.master.fullname" .) .Values.serviceAccounts.master.name }}
+{{- define "elasticsearch.gen-certs" -}}
+{{- $altNames := list ( printf "%s.%s" (include "elasticsearch.name" .) .Release.Namespace ) ( printf "%s.%s.svc" (include "elasticsearch.name" .) .Release.Namespace ) -}}
+{{- $ca := genCA "elasticsearch-ca" 365 -}}
+{{- $cert := genSignedCert ( include "elasticsearch.name" . ) nil $altNames 365 $ca -}}
+tls.crt: {{ $cert.Cert | toString | b64enc }}
+tls.key: {{ $cert.Key | toString | b64enc }}
+ca.crt: {{ $ca.Cert | toString | b64enc }}
+{{- end -}}
+
+{{- define "elasticsearch.masterService" -}}
+{{- if empty .Values.masterService -}}
+{{- if empty .Values.fullnameOverride -}}
+{{- if empty .Values.nameOverride -}}
+{{ .Values.clusterName }}-master
 {{- else -}}
-    {{ default "default" .Values.serviceAccounts.master.name }}
+{{ .Values.nameOverride }}-master
+{{- end -}}
+{{- else -}}
+{{ .Values.fullnameOverride }}
+{{- end -}}
+{{- else -}}
+{{ .Values.masterService }}
+{{- end -}}
+{{- end -}}
+
+{{- define "elasticsearch.endpoints" -}}
+{{- $replicas := int (toString (.Values.replicas)) }}
+{{- $uname := (include "elasticsearch.uname" .) }}
+  {{- range $i, $e := untilStep 0 $replicas 1 -}}
+{{ $uname }}-{{ $i }},
+  {{- end -}}
+{{- end -}}
+
+{{- define "elasticsearch.esMajorVersion" -}}
+{{- if .Values.esMajorVersion -}}
+{{ .Values.esMajorVersion }}
+{{- else -}}
+{{- $version := int (index (.Values.imageTag | splitList ".") 0) -}}
+  {{- if and (contains "docker.elastic.co/elasticsearch/elasticsearch" .Values.image) (not (eq $version 0)) -}}
+{{ $version }}
+  {{- else -}}
+7
+  {{- end -}}
 {{- end -}}
 {{- end -}}
 
 {{/*
-plugin installer template
+Use the fullname if the serviceAccount value is not set
 */}}
-{{- define "plugin-installer" -}}
-- name: es-plugin-install
-  image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-  imagePullPolicy: {{ .Values.image.pullPolicy }}
-  securityContext:
-    capabilities:
-      add:
-        - IPC_LOCK
-        - SYS_RESOURCE
-  command:
-    - "sh"
-    - "-c"
-    - |
-      {{- range .Values.cluster.plugins }}
-      /usr/share/elasticsearch/bin/elasticsearch-plugin install -b {{ . }}
-      {{- end }}
-  volumeMounts:
-  - mountPath: /usr/share/elasticsearch/plugins/
-    name: plugindir
-  - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
-    name: config
-    subPath: elasticsearch.yml
+{{- define "elasticsearch.serviceAccount" -}}
+{{- .Values.rbac.serviceAccountName | default (include "elasticsearch.uname" .) -}}
 {{- end -}}

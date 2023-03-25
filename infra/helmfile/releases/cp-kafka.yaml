@@ -4,6 +4,7 @@ helmDefaults:
   timeout: 300
   force: true
   recreatePods: true
+  verify: false
 
 releases:
   - name: cp-kafka

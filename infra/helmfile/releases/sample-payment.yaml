@@ -7,38 +7,38 @@ helmDefaults:
 
 releases:
   - name: sample-payment-activities-client
-    chart: ../charts/cadence-sb-app
+    chart: ../charts/temporal-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
       component: sample-payment-activities-client
-      chart: cadence-sb-app
+      chart: temporal-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
   - name: sample-payment-workflow-client
-    chart: ../charts/cadence-sb-app
+    chart: ../charts/temporal-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
       component: sample-payment-workflow-client
-      chart: cadence-sb-app
+      chart: temporal-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
   - name: sample-payment-web
-    chart: ../charts/cadence-sb-app
+    chart: ../charts/temporal-sb-app
     wait: true
     installed: true
     namespace: default
     labels:
       package-manager: helmfile
       component: sample-payment-web
-      chart: cadence-sb-app
+      chart: temporal-sb-app
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
 
@@ -55,11 +55,12 @@ releases:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
     set:
       - name: gatling.simulations.BasicSimulation\.scala
-        file: ../../../sample-payment-web/src/gatling/simulations/com/anz/cadence/samplepayment/BasicSimulation.scala
+        file: ../../../sample-payment-web/src/gatling/simulations/com/anz/temporal/samplepayment/BasicSimulation.scala
       - name: gatling.conf.gatling\.conf
         file: ../../../sample-payment-web/src/gatling/resources/gatling.conf
       - name: gatling.conf.logback\.xml
         file: ../../../sample-payment-web/src/gatling/resources/logback.xml
+        
 environments:
   default: {}
   gke: {}

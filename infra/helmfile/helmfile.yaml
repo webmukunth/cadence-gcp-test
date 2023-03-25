@@ -15,7 +15,7 @@ repositories:
 helmfiles:
 #  - releases/mysql-db.yaml
   - releases/cassandra-db.yaml
-  - releases/cadence.yaml
+  - releases/temporal.yaml
   - releases/traefik.yaml
   - releases/cp-kafka.yaml
   - releases/mongodb.yaml

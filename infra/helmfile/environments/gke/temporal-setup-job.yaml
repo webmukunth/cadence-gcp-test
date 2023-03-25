@@ -1,0 +1,28 @@
+resources:
+  - apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: temporal-setup-job
+    spec:
+      activeDeadlineSeconds: 300
+      backoffLimit: 6
+      completions: 1
+      parallelism: 1
+      template:
+        spec:
+          containers:
+            - env:
+                - name: TEMPORAL_CLI_ADDRESS
+                  value: temporal-frontend:7233
+                - name: TEMPORAL_CLI_NAMESPACE
+                  value: temporal
+              image: docker.io/temporalio/admin-tools:1.17.1
+              name: temporal-setup-job
+              command:
+                - sh
+                - '-c'
+                - |
+                  #!/bin/bash -ex
+                  tctl --namespace temporal namespace register
+          terminationGracePeriodSeconds: 30
+          restartPolicy: OnFailure

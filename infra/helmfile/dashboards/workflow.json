@@ -86,7 +86,7 @@
           "refId": "D"
         },
         {
-          "expr": "sum(rate(cadence_workflow_failed_total[1m]))",
+          "expr": "sum(rate(temporal_workflow_failed_total[1m]))",
           "legendFormat": "Failed Count",
           "refId": "E"
         }
@@ -444,7 +444,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Cadence DB Requests",
+      "title": "Temporal DB Requests",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -537,7 +537,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Cadence DB Performance",
+      "title": "Temporal DB Performance",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -877,12 +877,12 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(cadence_latency_sum[3m])) by (type, operation)",
+          "expr": "sum(rate(temporal_latency_sum[3m])) by (type, operation)",
           "legendFormat": "Latency: {{type}}-{{operation}}",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(cadence_latency_count[3m])) by (type, operation)",
+          "expr": "sum(rate(temporal_latency_count[3m])) by (type, operation)",
           "legendFormat": "Count: {{type}}-{{operation}}",
           "refId": "D"
         }
@@ -891,7 +891,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Cadence Operation Stats",
+      "title": "Temporal Operation Stats",
       "tooltip": {
         "shared": true,
         "sort": 2,
@@ -978,23 +978,23 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(rate(cadence_PollForActivityTask_cadence_latency_seconds_sum[3m])) ",
+          "expr": "sum(rate(temporal_PollForActivityTask_temporal_latency_seconds_sum[3m])) ",
           "legendFormat": "Client Latency",
           "refId": "A"
         },
         {
-          "expr": "sum(rate(cadence_latency_sum{operation=\"PollForActivityTask\"}[3m])) by (type, operation)",
-          "legendFormat": "Cadence Latency: {{type}}-{{operation}}",
+          "expr": "sum(rate(temporal_latency_sum{operation=\"PollForActivityTask\"}[3m])) by (type, operation)",
+          "legendFormat": "Temporal Latency: {{type}}-{{operation}}",
           "refId": "B"
         },
         {
-          "expr": "sum(rate(cadence_PollForActivityTask_cadence_latency_seconds_count[3m])) ",
+          "expr": "sum(rate(temporal_PollForActivityTask_temporal_latency_seconds_count[3m])) ",
           "legendFormat": "Client Count: ",
           "refId": "C"
         },
         {
-          "expr": "sum(rate(cadence_latency_count{operation=\"PollForActivityTask\"}[3m])) by (type, operation)",
-          "legendFormat": "Cadence Count: {{type}}-{{operation}}",
+          "expr": "sum(rate(temporal_latency_count{operation=\"PollForActivityTask\"}[3m])) by (type, operation)",
+          "legendFormat": "Temporal Count: {{type}}-{{operation}}",
           "refId": "D"
         }
       ],
@@ -1083,16 +1083,16 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum (rate(cadence_errors[2m])) by(operation)",
+          "expr": "sum (rate(temporal_errors[2m])) by(operation)",
           "format": "time_series",
           "intervalFactor": 1,
           "key": 0.42651392099317587,
           "legendFormat": "Errors - {{operation}}",
           "refId": "A",
-          "target": "fetch service:cadence-frontend deployment:$deployment name:{cadence_errors,cadence_requests} | transformNull 0 | sum name | scaleToSeconds 1 | aliasByTags name"
+          "target": "fetch service:temporal-frontend deployment:$deployment name:{temporal_errors,temporal_requests} | transformNull 0 | sum name | scaleToSeconds 1 | aliasByTags name"
         },
         {
-          "expr": "sum(rate(cadence_requests[2m])) by(operation)",
+          "expr": "sum(rate(temporal_requests[2m])) by(operation)",
           "format": "time_series",
           "intervalFactor": 1,
           "legendFormat": "Requests - {{operation}}:{{domain}}",

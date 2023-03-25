@@ -10,9 +10,9 @@
 brokers: 3
 
 ## Image Info
-## ref: https://hub.docker.com/r/confluentinc/cp-kafka/
-image: confluentinc/cp-kafka
-imageTag: 5.0.1
+## ref: https://hub.docker.com/r/confluentinc/cp-server/
+image: confluentinc/cp-server
+imageTag: 6.1.0
 
 ## Specify a imagePullPolicy
 ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -32,6 +32,13 @@ podManagementPolicy: OrderedReady
 ## ref: https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/#update-strategies
 updateStrategy: RollingUpdate
 
+# Security Context
+# ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+# for Kafka container
+securityContext: {}
+  #  runAsUser: 1000
+  #  runAsGroup: 1000
+
 ## Kafka Server properties
 ## ref: https://kafka.apache.org/documentation/#configuration
 configurationOverrides:
@@ -45,14 +52,17 @@ configurationOverrides:
   ## - http://kafka.apache.org/documentation/#security_configbroker
   ## - https://cwiki.apache.org/confluence/display/KAFKA/KIP-103%3A+Separation+of+Internal+and+External+traffic
   ##
+  ## Advertised listeners will use the firstListenerPort value as it's default unless overridden here.
   ## Setting "advertised.listeners" here appends to "PLAINTEXT://${POD_IP}:9092,"
-  "advertised.listeners": |-
-   EXTERNAL://${HOST_IP}:$((31090 + ${KAFKA_BROKER_ID}))
+  # "advertised.listeners": |-
+  # EXTERNAL://${HOST_IP}:$((31090 + ${KAFKA_BROKER_ID}))
   "listener.security.protocol.map": |-
    PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
 
 ## Additional env variables
 customEnv: {}
+  # KAFKA_METRIC_REPORTERS: "io.confluent.metrics.reporter.ConfluentMetricsReporter"
+  # CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: "localhost:9092"
 
 persistence:
   enabled: true
@@ -73,7 +83,7 @@ persistence:
   disksPerBroker: 1
 
 ## Kafka JVM Heap Option
-heapOptions: "-Xms1G -Xmx1G"
+heapOptions: "-Xms512M -Xmx512M"
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
@@ -96,7 +106,11 @@ nodeSelector: {}
 
 ## Taints to tolerate on node assignment:
 ## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-tolerations: {}
+tolerations: []
+
+## Pod scheduling constraints
+## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity
+affinity: {}
 
 ## Monitoring
 ## Kafka JMX Settings
@@ -113,7 +127,12 @@ prometheus:
     enabled: true
     image: solsson/kafka-prometheus-jmx-exporter@sha256
     imageTag: 6f82e2b0464f50da8104acd7363fb9b995001ddff77d248379f8788e78946143
+    imagePullPolicy: IfNotPresent
     port: 5556
+
+    ## Resources configuration for the JMX exporter container.
+    ## See the `resources` documentation above for details.
+    resources: {}
 
 nodeport:
   enabled: false

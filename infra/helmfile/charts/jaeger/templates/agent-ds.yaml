@@ -4,56 +4,73 @@ kind: DaemonSet
 metadata:
   name: {{ template "jaeger.agent.name" . }}
   labels:
-    app.kubernetes.io/name: {{ include "jaeger.name" . }}
-    helm.sh/chart: {{ include "jaeger.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "jaeger.labels" . | nindent 4 }}
     app.kubernetes.io/component: agent
 {{- if .Values.agent.annotations }}
   annotations:
-{{ toYaml .Values.agent.annotations | indent 4 }}
+    {{- toYaml .Values.agent.annotations | nindent 4 }}
 {{- end }}
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ include "jaeger.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "jaeger.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: agent
+  {{- with .Values.agent.daemonset.updateStrategy }}
+  updateStrategy:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   template:
     metadata:
 {{- if .Values.agent.podAnnotations }}
       annotations:
-{{ toYaml .Values.agent.podAnnotations | indent 8 }}
+        {{- toYaml .Values.agent.podAnnotations | nindent 8 }}
 {{- end }}
       labels:
-        app.kubernetes.io/name: {{ include "jaeger.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "jaeger.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: agent
 {{- if .Values.agent.podLabels }}
-{{ toYaml .Values.agent.podLabels | indent 8 }}
+        {{- toYaml .Values.agent.podLabels | nindent 8 }}
 {{- end }}
     spec:
+      securityContext:
+        {{- toYaml .Values.agent.podSecurityContext | nindent 8 }}
       {{- if .Values.agent.useHostNetwork }}
       hostNetwork: true
       {{- end }}
       dnsPolicy: {{ .Values.agent.dnsPolicy }}
-      nodeSelector:
-{{ toYaml .Values.agent.nodeSelector | indent 8 }}
-{{- if .Values.agent.tolerations }}
-      tolerations:
-{{ toYaml .Values.agent.tolerations | indent 8 }}
-{{- end }}
+      {{- with .Values.agent.priorityClassName }}
+      priorityClassName: {{ . }}
+      {{- end }}
       serviceAccountName: {{ template "jaeger.agent.serviceAccountName" . }}
+      {{- with .Values.agent.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.agent.initContainers }}
+      initContainers:
+        {{- toYaml .Values.agent.initContainers | nindent 8 }}
+      {{- end}}
       containers:
       - name: {{ template "jaeger.agent.name" . }}
-        image: {{ .Values.agent.image }}:{{ .Values.tag }}
+        securityContext:
+          {{- toYaml .Values.agent.securityContext | nindent 10 }}
+        image: {{ .Values.agent.image }}:{{- .Values.agent.tag | default (include "jaeger.image.tag" .) }}
         imagePullPolicy: {{ .Values.agent.pullPolicy }}
+        args:
+          {{- range $key, $value := .Values.agent.cmdlineParams }}
+          {{- if $value }}
+          - --{{ $key }}={{ $value }}
+          {{- else }}
+          - --{{ $key }}
+          {{- end }}
+          {{- end }}
         env:
-        - name: REPORTER_GRPC_HOST_PORT
-          value: {{ include "jaeger.collector.name" . }}:{{ .Values.collector.service.grpcPort }}
-        {{- range $key, $value := .Values.agent.cmdlineParams }}
-        - name: {{ $key | replace "." "_" | replace "-" "_" | upper | quote }}
-          value: {{ $value }}
+        {{- if .Values.agent.extraEnv }}
+          {{- toYaml .Values.agent.extraEnv | nindent 10 }}
+        {{- end }}
+        {{- if not (hasKey .Values.agent.cmdlineParams "reporter.grpc.host-port") }}
+          - name: REPORTER_GRPC_HOST_PORT
+            value: {{ include "jaeger.collector.name" . }}:{{ .Values.collector.service.grpc.port }}
         {{- end }}
         ports:
         - name: zipkin-compact
@@ -92,5 +109,41 @@ spec:
             path: /
             port: admin
         resources:
-{{ toYaml .Values.agent.resources | indent 10 }}
+          {{- toYaml .Values.agent.resources | nindent 10 }}
+        volumeMounts:
+        {{- range .Values.agent.extraConfigmapMounts }}
+          - name: {{ .name }}
+            mountPath: {{ .mountPath }}
+            subPath: {{ .subPath }}
+            readOnly: {{ .readOnly }}
+        {{- end }}
+        {{- range .Values.agent.extraSecretMounts }}
+          - name: {{ .name }}
+            mountPath: {{ .mountPath }}
+            subPath: {{ .subPath }}
+            readOnly: {{ .readOnly }}
+        {{- end }}
+      volumes:
+      {{- range .Values.agent.extraConfigmapMounts }}
+        - name: {{ .name }}
+          configMap:
+            name: {{ .configMap }}
+      {{- end }}
+      {{- range .Values.agent.extraSecretMounts }}
+        - name: {{ .name }}
+          secret:
+            secretName: {{ .secretName }}
+      {{- end }}
+    {{- with .Values.agent.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.agent.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.agent.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
 {{- end -}}

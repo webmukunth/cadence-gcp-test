@@ -17,7 +17,8 @@ image:
   ## Bitnami Cassandra image tag
   ## ref: https://github.com/bitnami/bitnami-docker-cassandra#supported-tags-and-respective-dockerfile-links
   ##
-  tag: 3.11.4-debian-9-r188
+  tag: 4.0.0-debian-10-r15
+
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -108,6 +109,8 @@ persistence:
 ## Minimum memory for production is 8GB and 4 CPU cores
 ## ref: http://docs.datastax.com/en/archived/cassandra/2.0/cassandra/architecture/architecturePlanningHardware_c.html
 ##
+fullnameOverride: "cassandra-db"
+
 resources:
   requests:
     memory: 46Gi
@@ -125,8 +128,8 @@ resources:
 ##
 cluster:
   name: cassandra
-  replicaCount: 1
-  seedCount: 2
+  replicaCount: 2
+  seedCount: 1
   numTokens: 256
   datacenter: dc1
   rack: rack1

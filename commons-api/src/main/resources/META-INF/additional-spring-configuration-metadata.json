@@ -1,22 +1,22 @@
 {
   "properties": [
     {
-      "name": "cadence.host",
+      "name": "temporal.host",
       "type": "java.lang.String",
-      "description": "Cadence server host name."
+      "description": "temporal server host name."
     },
     {
-      "name": "cadence.port",
+      "name": "temporal.port",
       "type": "java.lang.Integer",
-      "description": "Cadence server port."
+      "description": "temporal server port."
     },
     {
-      "name": "cadence.emit-metric",
+      "name": "temporal.emit-metric",
       "type": "java.lang.Boolean",
       "description": "Enable metrics."
     },
     {
-      "name": "cadence.retention-period",
+      "name": "temporal.retention-period",
       "type": "java.time.Duration",
       "description": "Retention period for completed workflows."
     }

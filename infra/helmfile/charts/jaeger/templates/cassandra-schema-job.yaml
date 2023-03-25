@@ -5,93 +5,98 @@ kind: Job
 metadata:
   name: {{ include "jaeger.fullname" . }}-cassandra-schema
   labels:
-    app.kubernetes.io/name: {{ include "jaeger.name" . }}
-    helm.sh/chart: {{ include "jaeger.chart" . }}
+    {{- include "jaeger.labels" . | nindent 4 }}
     app.kubernetes.io/component: cassandra-schema
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
 {{- if .Values.schema.annotations }}
   annotations:
-{{ toYaml .Values.schema.annotations | indent 4 }}
+    {{- toYaml .Values.schema.annotations | nindent 4 }}
 {{- end }}
 spec:
-  activeDeadlineSeconds: 120
+  activeDeadlineSeconds: {{ .Values.schema.activeDeadlineSeconds }}
   template:
     metadata:
       name: {{ include "jaeger.fullname" . }}-cassandra-schema
+{{- if .Values.schema.podAnnotations }}
+      annotations:
+        {{- toYaml .Values.schema.podAnnotations | nindent 8 }}
+{{- end }}
 {{- if .Values.schema.podLabels }}
       labels:
-{{ toYaml .Values.schema.podLabels | indent 8 }}
+        {{- toYaml .Values.schema.podLabels | nindent 8 }}
 {{- end }}
     spec:
-      serviceAccountName: {{ include "jaeger.fullname" . }}-cassandra-schema
+      securityContext:
+        {{- toYaml .Values.schema.podSecurityContext | nindent 8 }}
+      serviceAccountName: {{ template "jaeger.cassandraSchema.serviceAccountName" . }}
+      {{- with .Values.schema.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: {{ include "jaeger.fullname" . }}-cassandra-schema
-        image: {{ .Values.schema.image }}:{{ .Values.tag }}
+        image: {{ .Values.schema.image }}:{{- include "jaeger.image.tag" . }}
         imagePullPolicy: {{ .Values.schema.pullPolicy }}
-        command:
-          - bash
-          - -c
-          - |
-            set -x
-            CQLSH=${CQLSH:-"/usr/bin/cqlsh"}
-            CQLSH_HOST=${CQLSH_HOST:-"cassandra"}
-            CQLSH_SSL=${CQLSH_SSL:-""}
-            CASSANDRA_WAIT_TIMEOUT=${CASSANDRA_WAIT_TIMEOUT:-"60"}
-            DATACENTER=${DATACENTER:-"dc1"}
-            KEYSPACE=${KEYSPACE:-"jaeger_v1_${DATACENTER}"}
-            MODE=${MODE:-"test"}
-            TEMPLATE=${TEMPLATE:-""}
-            USER=${CASSANDRA_USERNAME:-""}
-            PASSWORD=${CASSANDRA_PASSWORD:-""}
-
-            total_wait=0
-            while true
-            do
-              if [ -z "$PASSWORD" ]; then
-                ${CQLSH} ${CQLSH_SSL} ${CQLSH_HOST} -e "describe keyspaces"
-              else
-                ${CQLSH} ${CQLSH_SSL} ${CQLSH_HOST} -u ${USER} -p ${PASSWORD} -e "describe keyspaces"
-              fi
-              if (( $? == 0 )); then
-                break
-              else
-                if (( $total_wait >= ${CASSANDRA_WAIT_TIMEOUT} )); then
-                  echo "Timed out waiting for Cassandra."
-                  exit 1
-                fi
-                echo "Cassandra is still not up at ${CQLSH_HOST}. Waiting 1 second. $total_wait"
-                sleep 1s
-                ((total_wait++))
-              fi
-            done
-
-            echo "Generating the schema for the keyspace ${KEYSPACE} and datacenter ${DATACENTER}"
-
-            if [ -z "$PASSWORD" ]; then
-              MODE="${MODE}" DATACENTER="${DATACENTER}" KEYSPACE="${KEYSPACE}" /cassandra-schema/create.sh "${TEMPLATE}" | ${CQLSH} ${CQLSH_SSL} ${CQLSH_HOST}
-            else
-              MODE="${MODE}" DATACENTER="${DATACENTER}" KEYSPACE="${KEYSPACE}" /cassandra-schema/create.sh "${TEMPLATE}" | ${CQLSH} ${CQLSH_SSL} ${CQLSH_HOST} -u ${USER} -p ${PASSWORD}
-            fi
-            echo "Done"
+        securityContext:
+          {{- toYaml .Values.schema.securityContext | nindent 10 }}
         env:
-        - name: CQLSH_HOST
-          value: {{ template "cassandra.host" . }}
-        - name: MODE
-          value: {{ .Values.schema.mode | quote }}
-        - name: DATACENTER
-          value: {{ .Values.cassandra.config.dc_name | quote }}
-        - name: CASSANDRA_PORT
-          value: {{ .Values.storage.cassandra.port | quote }}
-        - name: CASSANDRA_USERNAME
-          value: {{ .Values.storage.cassandra.user }}
-        - name: CASSANDRA_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: {{ if .Values.storage.cassandra.existingSecret }}{{ .Values.storage.cassandra.existingSecret }}{{- else }}{{ include "jaeger.fullname" . }}-cassandra{{- end }}
-              key: password
+        {{- if .Values.schema.extraEnv }}
+          {{- toYaml .Values.schema.extraEnv | nindent 10 }}
+        {{- end }}
+          {{ range $key, $value := .Values.schema.env }}
+          - name: {{ $key | quote }}
+            value: {{ $value | quote }}
+          {{ end }}
+          {{- include "cassandra.env" . | nindent 10 }}
+          - name: CQLSH_HOST
+            value: {{ template "cassandra.host" . }}
+          {{ if .Values.storage.cassandra.tls.enabled }}
+          - name: CQLSH_SSL
+            value: "--ssl"
+          {{- end }}
+          - name: DATACENTER
+            value: {{ .Values.cassandra.config.dc_name | quote }}
+        {{- if .Values.storage.cassandra.keyspace }}
+          - name: KEYSPACE
+            value: {{ .Values.storage.cassandra.keyspace }}
+        {{- end }}
         resources:
-{{ toYaml .Values.schema.resources | indent 10 }}
+          {{- toYaml .Values.schema.resources | nindent 10 }}
+        volumeMounts:
+        {{- range .Values.schema.extraConfigmapMounts }}
+          - name: {{ .name }}
+            mountPath: {{ .mountPath }}
+            subPath: {{ .subPath }}
+            readOnly: {{ .readOnly }}
+        {{- end }}
+        {{- if .Values.storage.cassandra.tls.enabled }}
+          - name: {{ .Values.storage.cassandra.tls.secretName }}
+            mountPath: "/root/.cassandra/ca-cert.pem"
+            subPath: "ca-cert.pem"
+            readOnly: true
+          - name: {{ .Values.storage.cassandra.tls.secretName }}
+            mountPath: "/root/.cassandra/client-cert.pem"
+            subPath: "client-cert.pem"
+            readOnly: true
+          - name: {{ .Values.storage.cassandra.tls.secretName }}
+            mountPath: "/root/.cassandra/client-key.pem"
+            subPath: "client-key.pem"
+            readOnly: true
+          - name: {{ .Values.storage.cassandra.tls.secretName }}
+            mountPath: "/root/.cassandra/cqlshrc"
+            subPath: "cqlshrc"
+            readOnly: true
+        {{- end }}
       restartPolicy: OnFailure
+      volumes:
+      {{- range .Values.schema.extraConfigmapMounts }}
+        - name: {{ .name }}
+          configMap:
+            name: {{ .configMap }}
+      {{- end }}
+      {{- if .Values.storage.cassandra.tls.enabled }}
+        - name: {{ .Values.storage.cassandra.tls.secretName }}
+          secret:
+            secretName: {{ .Values.storage.cassandra.tls.secretName }}
+      {{- end }}
 {{- end -}}
 {{- end -}}

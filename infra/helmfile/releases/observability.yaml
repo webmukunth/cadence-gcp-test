@@ -30,8 +30,8 @@ releases:
     values:
       - ../environments/{{ .Environment.Name }}/{{`{{ .Release.Name }}`}}.yaml
     set:
-      - name: dashboards.default.cadence.json
-        file: ../dashboards/cadence.json
+      - name: dashboards.default.temporal.json
+        file: ../dashboards/temporal.json
       - name: dashboards.default.workflow.json
         file: ../dashboards/workflow.json
       - name: dashboards.default.gatling.json

@@ -37,7 +37,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 */}}
 {{- define "cp-kafka.cp-zookeeper.fullname" -}}
 {{- $name := default "cp-zookeeper" (index .Values "cp-zookeeper" "nameOverride") -}}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
+{{- printf "%s-%s-headless" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*
@@ -46,12 +46,34 @@ else use user-provided URL
 */}}
 {{- define "cp-kafka.cp-zookeeper.service-name" }}
 {{- if (index .Values "cp-zookeeper" "enabled") -}}
-{{- printf "%s-headless:2181" (include "cp-kafka.cp-zookeeper.fullname" .) }}
+{{- $clientPort := default 2181 (index .Values "cp-zookeeper" "clientPort") | int -}}
+{{- printf "%s:%d" (include "cp-kafka.cp-zookeeper.fullname" .) $clientPort }}
 {{- else -}}
 {{- $zookeeperConnect := printf "%s" (index .Values "cp-zookeeper" "url") }}
 {{- $zookeeperConnectOverride := (index .Values "configurationOverrides" "zookeeper.connect") }}
 {{- default $zookeeperConnect $zookeeperConnectOverride }}
 {{- end -}}
+{{- end -}}
+
+{{/*
+Form the Advertised Listeners. We will use the value of nodeport.firstListenerPort to create the
+external advertised listeners if configurationOverrides.advertised.listeners is not set.
+*/}}
+{{- define "cp-kafka.configuration.advertised.listeners" }}
+{{- if (index .Values "configurationOverrides" "advertised.listeners") -}}
+{{- printf ",%s" (first (pluck "advertised.listeners" .Values.configurationOverrides)) }}
+{{- else -}}
+{{- printf ",EXTERNAL://${HOST_IP}:$((%s + ${KAFKA_BROKER_ID}))" (.Values.nodeport.firstListenerPort | toString) }}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Create a default fully qualified kafka headless name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
+{{- define "cp-kafka.cp-kafka-headless.fullname" -}}
+{{- $name := "cp-kafka-headless" -}}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/*

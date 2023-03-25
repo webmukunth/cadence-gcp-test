@@ -1,12 +1,14 @@
-{{- if and .Values.collector.enabled .Values.serviceAccounts.collector.create -}}
+{{- if and .Values.collector.enabled .Values.collector.serviceAccount.create -}}
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: {{ template "jaeger.collector.serviceAccountName" . }}
   labels:
-    app.kubernetes.io/name: {{ include "jaeger.name" . }}
-    helm.sh/chart: {{ include "jaeger.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- include "jaeger.labels" . | nindent 4 }}
     app.kubernetes.io/component: collector
+  {{- with .Values.collector.serviceAccount.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+automountServiceAccountToken: {{ .Values.collector.serviceAccount.automountServiceAccountToken }}
 {{- end -}}

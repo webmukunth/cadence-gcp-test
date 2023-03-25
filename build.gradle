@@ -30,19 +30,20 @@ def getGitHash = { ->
 ext {
     springBootVersion = '2.2.0.M6'
     javaSpringJaegerVersion = '2.0.3'
-    uberCadenceClientVersion = '2.6.0'
+    temporalClientVersion = '1.12.0'
+    temporalOpenTracingVersion = '1.12.0'
     guavaVersion = '28.0-jre'
     errorProneVersion = '2.3.3'
     reactorKafkaVersion = '1.1.1.RELEASE'
     gatlingVersion = '3.2.1'
     scalaLibVersion = '2.12.8'
-    imageRepo = 'gcr.io/frontal-23980c'
+    imageRepo = 'gcr.io/regolith-0a6bb2'
     imageTag = "${getGitBranch()}-${getGitHash()}"
 }
 
 /* Common configuration for all sub projects */
 subprojects {
-    group = 'com.anz.bs.cadence'
+    group = 'com.anz.bs.temporal'
 
     apply plugin: 'java-library'
     apply plugin: 'maven'
@@ -117,9 +118,11 @@ subprojects {
         constraints {
             implementation "com.google.guava:guava:${guavaVersion}"
             implementation "io.opentracing.contrib:opentracing-spring-jaeger-cloud-starter:${javaSpringJaegerVersion}"
-            implementation "com.uber.cadence:cadence-client:${uberCadenceClientVersion}"
+            implementation "io.temporal:temporal-opentracing:${temporalOpenTracingVersion}"
+            implementation "io.temporal:temporal-sdk:${temporalClientVersion}"
             implementation "io.projectreactor.kafka:reactor-kafka:${reactorKafkaVersion}"
             errorprone "com.google.errorprone:error_prone_core:${errorProneVersion}"
+            testImplementation "io.temporal:temporal-testing:${temporalClientVersion}"
             testImplementation 'it.ozimov:embedded-redis:0.7.2'
         }
     }
@@ -127,7 +130,8 @@ subprojects {
     dependencies {
         if (!project.name.equals('commons-api')) {
             api project(':commons-api')
-            implementation "com.uber.cadence:cadence-client"
+            implementation "io.temporal:temporal-sdk"
+            implementation "io.temporal:temporal-opentracing"
         }
 
         implementation 'com.google.guava:guava'
@@ -185,8 +189,8 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
         implementation 'org.springframework.boot:spring-boot-starter-cache'
         implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-        /* cadence workflow */
-        implementation "com.uber.cadence:cadence-client"
+        implementation "io.temporal:temporal-sdk"
+        testImplementation 'io.temporal:temporal-testing'
 
         /* Kafka */
         implementation 'io.projectreactor.kafka:reactor-kafka'
@@ -205,7 +209,7 @@ configure(subprojects.findAll { it.name.endsWithAny('web', 'client') }) {
         to {
             /* Append '/' to imageRepo if required */
             imageRepo += (imageRepo != '' && imageRepo.lastIndexOf('/') < (imageRepo.length() - 1)) ? '/' : ''
-            image = "${imageRepo}cadence/${project.name}:${imageTag}"
+            image = "${imageRepo}temporal/${project.name}:${imageTag}"
             credHelper = 'gcr'
         }
         container {

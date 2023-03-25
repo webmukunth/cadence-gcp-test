@@ -1,4 +1,8 @@
+{{- if .Capabilities.APIVersions.Has "apps/v1" }}
+apiVersion: apps/v1
+{{- else }}
 apiVersion: apps/v1beta1
+{{- end }}
 kind: StatefulSet
 metadata:
   name: {{ template "cp-zookeeper.fullname" . }}
@@ -8,6 +12,12 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
+  {{- if .Capabilities.APIVersions.Has "apps/v1" }}
+  selector:
+    matchLabels:
+      app: {{ template "cp-zookeeper.name" . }}
+      release: {{ .Release.Name }}
+  {{- end }}
   serviceName: {{ template "cp-zookeeper.fullname" . }}-headless
   podManagementPolicy: {{ .Values.podManagementPolicy }}
   replicas: {{ default 3 .Values.servers }}
@@ -30,6 +40,9 @@ spec:
       {{- end }}
     spec:
       affinity:
+      {{- if .Values.affinity }}
+{{ toYaml .Values.affinity | indent 8 }}
+      {{- else }}
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
           - weight: 1
@@ -45,10 +58,12 @@ spec:
                     values:
                     - {{ .Release.Name }}
               topologyKey: "kubernetes.io/hostname"
+      {{- end }}
       containers:
       {{- if .Values.prometheus.jmx.enabled }}
       - name: prometheus-jmx-exporter
         image: "{{ .Values.prometheus.jmx.image }}:{{ .Values.prometheus.jmx.imageTag }}"
+        imagePullPolicy: "{{ .Values.prometheus.jmx.imagePullPolicy }}"
         command:
         - java
         - -XX:+UnlockExperimentalVMOptions
@@ -70,6 +85,9 @@ spec:
       - name: {{ template "cp-zookeeper.name" . }}-server
         image: "{{ .Values.image }}:{{ .Values.imageTag }}"
         imagePullPolicy: "{{ .Values.imagePullPolicy }}"
+        {{- if .Values.securityContext }}
+        securityContext: {{- toYaml .Values.securityContext | nindent 10 }}
+        {{- end }}
         ports:
         - containerPort: {{ .Values.clientPort }}
           name: client
@@ -115,7 +133,11 @@ spec:
         command:
         - "bash"
         - "-c"
-        - "ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-}+1)) && /etc/confluent/docker/run"
+        - |
+          ZK_FIX_HOST_REGEX="s/${HOSTNAME}\.[^:]*:/0.0.0.0:/g"
+          ZOOKEEPER_SERVER_ID=$((${HOSTNAME##*-}+1)) \
+          ZOOKEEPER_SERVERS=`echo $ZOOKEEPER_SERVERS | sed -e "$ZK_FIX_HOST_REGEX"` \
+          /etc/confluent/docker/run
         volumeMounts:
         - name: datadir
           mountPath: /var/lib/zookeeper/data

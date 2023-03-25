@@ -1,123 +1,114 @@
 # Jaeger
 
-[Jaeger](http://jaeger.readthedocs.io/en/latest/) is a distributed tracing system.
+[Jaeger](https://www.jaegertracing.io/) is a distributed tracing system.
 
 ## Introduction
 
-This chart adds all components required to run Jaeger as described in the [jaeger-kubernetes](https://github.com/jaegertracing/jaeger-kubernetes) GitHub page for a production-like deployment. The chart default will deploy a new Cassandra cluster (using the [cassandra chart](https://github.com/kubernetes/charts/tree/master/incubator/cassandra)), but also supports using an existing Cassandra cluster, deploying a new ElasticSearch cluster (using the [elasticsearch chart](https://github.com/kubernetes/charts/tree/master/incubator/elasticsearch)), or connecting to an existing ElasticSearch cluster. Once the back storage available, the chart will deploy jaeger-agent as a DaemonSet and deploy the jaeger-collector and jaeger-query components as standard individual deployments.
-
-## Prerequisites
-
-- Has been tested on Kubernetes 1.7+
-  - The `spark` cron job requires [K8s CronJob](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/) support:
-    > You need a working Kubernetes cluster at version >= 1.8 (for CronJob). For previous versions of cluster (< 1.8) you need to explicitly enable `batch/v2alpha1` API by passing `--runtime-config=batch/v2alpha1=true` to the API server ([see Turn on or off an API version for your cluster for more](https://kubernetes.io/docs/admin/cluster-management/#turn-on-or-off-an-api-version-for-your-cluster)).
-
-- The Cassandra chart calls out the following requirements (default) for a test environment (please see the important note in the installation section):
-```
-resources:
-  requests:
-    memory: 4Gi
-    cpu: 2
-  limits:
-    memory: 4Gi
-    cpu: 2
-```
-- The Cassandra chart calls out the following requirements for a production environment:
-```
-resources:
-  requests:
-    memory: 8Gi
-    cpu: 2
-  limits:
-    memory: 8Gi
-    cpu: 2
-```
-
-- The ElasticSearch chart calls out the following requirements for a production environment:
-```
-client:
-  ...
-  resources:
-    limits:
-      cpu: "1"
-      # memory: "1024Mi"
-    requests:
-      cpu: "25m"
-      memory: "512Mi"
-
-master:
-  ...
-  resources:
-    limits:
-      cpu: "1"
-      # memory: "1024Mi"
-    requests:
-      cpu: "25m"
-      memory: "512Mi"
-
-data:
-  ...
-  resources:
-    limits:
-      cpu: "1"
-      # memory: "2048Mi"
-    requests:
-      cpu: "25m"
-      memory: "1536Mi"
-```
+This chart adds all components required to run Jaeger as described in the [jaeger-kubernetes](https://github.com/jaegertracing/jaeger-kubernetes) GitHub page for a production-like deployment. The chart default will deploy a new Cassandra cluster (using the [cassandra chart](https://github.com/kubernetes/charts/tree/master/incubator/cassandra)), but also supports using an existing Cassandra cluster, deploying a new ElasticSearch cluster (using the [elasticsearch chart](https://github.com/elastic/helm-charts/tree/master/elasticsearch)), or connecting to an existing ElasticSearch cluster. Once the storage backend is available, the chart will deploy jaeger-agent as a DaemonSet and deploy the jaeger-collector and jaeger-query components as Deployments.
 
 ## Installing the Chart
 
-To install the chart with the release name `myrel`, run the following command:
+Add the Jaeger Tracing Helm repository:
 
 ```bash
-$ helm install incubator/jaeger --name myrel
+helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 ```
 
-After a few minutes, you should see a 3 node Cassandra instance, a Jaeger DaemonSet, a Jaeger Collector, and a Jaeger Query (UI) pod deployed into your Kubernetes cluster.
-
-IMPORTANT NOTE: For testing purposes, the footprint for Cassandra can be reduced significantly in the event resources become constrained (such as running on your local laptop or in a Vagrant environment). You can override the resources required run running this command:
+To install a release named `jaeger`:
 
 ```bash
-helm install incubator/jaeger --name myrel --set cassandra.config.max_heap_size=1024M --set cassandra.config.heap_new_size=256M --set cassandra.resources.requests.memory=2048Mi --set cassandra.resources.requests.cpu=0.4 --set cassandra.resources.limits.memory=2048Mi --set cassandra.resources.limits.cpu=0.4
+helm install jaeger jaegertracing/jaeger
 ```
 
-> **Tip**: List all releases using `helm list`
+By default, the chart deploys the following:
 
-## Installing the Chart using an Existing Cassandra Cluster
+- Jaeger Agent DaemonSet
+- Jaeger Collector Deployment
+- Jaeger Query (UI) Deployment
+- Cassandra StatefulSet (subject to change!)
 
-If you already have an existing running Cassandra cluster, you can configure the chart as follows to use it as your backing store (make sure you replace `<HOST>`, `<PORT>`, etc with your values):
+![Jaeger with Default
+components](https://www.jaegertracing.io/img/architecture-v1.png)
 
-```bash
-helm install incubator/jaeger --name myrel --set provisionDataStore.cassandra=false --set storage.cassandra.host=<HOST> --set storage.cassandra.port=<PORT> --set storage.cassandra.user=<USER> --set storage.cassandra.password=<PASSWORD>
+## Configuration
+
+See [Customizing the Chart Before Installing](https://helm.sh/docs/intro/using_helm/#customizing-the-chart-before-installing). To see all configurable options with detailed comments, visit the chart's [values.yaml](https://github.com/jaegertracing/helm-charts/blob/master/charts/jaeger/values.yaml), or run these configuration commands:
+
+```console
+$ helm show values jaegertracing/jaeger
 ```
 
-> **Tip**: It is highly encouraged to run the Cassandra cluster with storage persistence.
+You may also `helm show values` on this chart's [dependencies](#dependencies) for additional options.
 
-## Installing the Chart using a New ElasticSearch Cluster
+### Dependencies
 
-To install the chart with the release name `myrel` using a new ElasticSearch cluster instead of Cassandra (default), run the following command:
+If installing with a dependency such as Cassandra, Elasticsearch and/or Kafka
+their, values can be shown by running:
 
-```bash
-$ helm install incubator/jaeger --name myrel --set provisionDataStore.cassandra=false  --set provisionDataStore.elasticsearch=true --set storage.type=elasticsearch
+```console
+helm repo add elastic https://helm.elastic.co
+helm show values elastic/elasticsearch
 ```
 
-After a few minutes, you should see 2 ElasticSearch client nodes, 2 ElasticSearch data nodes, 3 ElasticSearch master nodes, a Jaeger DaemonSet, a Jaeger Collector, and a Jaeger Query (UI) pod deployed into your Kubernetes cluster.
-
-> **Tip**: If the ElasticSearch client nodes do not enter the running state, try --set elasticsearch.rbac.create=true
-
-## Installing the Chart using an Existing ElasticSearch Cluster
-
-If you already have an existing running ElasticSearch cluster, you can configure the chart as follows to use it as your backing store:
-
-```bash
-helm install incubator/jaeger --name myrel --set provisionDataStore.cassandra=false --set provisionDataStore.elasticsearch=false --set storage.type=elasticsearch --set storage.elasticsearch.host=<HOST> --set storage.elasticsearch.port=<PORT> --set storage.elasticsearch.user=<USER> --set storage.elasticsearch.password=<password>
+```console
+helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+helm show values incubator/cassandra
 ```
 
-> **Tip**: It is highly encouraged to run the ElasticSearch cluster with storage persistence.
+```console
+helm repo add bitnami
+helm show values bitnami/kafka
+```
 
+Please note, any dependency values must be nested within the key named after the
+chart, i.e. `elasticsearch`, `cassandra` and/or `kafka`.
 
-## Installing the Chart using an Existing ElasticSearch Cluster with TLS
+## Storage
+
+As per Jaeger documentation, for large scale production deployment the Jaeger
+team [recommends Elasticsearch backend over Cassandra](https://www.jaegertracing.io/docs/latest/faq/#what-is-the-recommended-storage-backend),
+as such the default backend may change in the future and **it is highly
+recommended to explicitly configure storage**.
+
+If you are just starting out with a testing/demo setup, you can also use in-memory storage for a
+fast and easy setup experience using the [Jaeger All in One executable](https://www.jaegertracing.io/docs/1.29/getting-started/#all-in-one).
+
+### Elasticsearch configuration
+
+#### Elasticsearch Rollover
+
+If using the [Elasticsearch
+Rollover](https://www.jaegertracing.io/docs/latest/deployment/#elasticsearch-rollover)
+feature, elasticsearch must already be present and so must be deployed
+separately from this chart, if not the rollover init hook won't be able to
+complete successfully.
+
+#### Installing the Chart using a New ElasticSearch Cluster
+
+To install the chart with the release name `jaeger` using a new ElasticSearch cluster instead of Cassandra (default), run the following command:
+
+```console
+helm install jaeger jaegertracing/jaeger \
+  --set provisionDataStore.cassandra=false \
+  --set provisionDataStore.elasticsearch=true \
+  --set storage.type=elasticsearch
+```
+
+#### Installing the Chart using an Existing Elasticsearch Cluster
+
+A release can be configured as follows to use an existing ElasticSearch cluster as it as the storage backend:
+
+```console
+helm install jaeger jaegertracing/jaeger \
+  --set provisionDataStore.cassandra=false \
+  --set storage.type=elasticsearch \
+  --set storage.elasticsearch.host=<HOST> \
+  --set storage.elasticsearch.port=<PORT> \
+  --set storage.elasticsearch.user=<USER> \
+  --set storage.elasticsearch.password=<password>
+```
+
+#### Installing the Chart using an Existing ElasticSearch Cluster with TLS
 
 If you already have an existing running ElasticSearch cluster with TLS, you can configure the chart as follows to use it as your backing store:
 
@@ -153,159 +144,257 @@ collector:
       subPath: ""
       configMap: jaeger-tls
       readOnly: true
+spark:
+  enabled: true
+  cmdlineParams:
+    java.opts: "-Djavax.net.ssl.trustStore=/tls/trust.store -Djavax.net.ssl.trustStorePassword=changeit"
+  extraConfigmapMounts:
+    - name: jaeger-tls
+      mountPath: /tls
+      subPath: ""
+      configMap: jaeger-tls
+      readOnly: true
+
 ```
 
-Content of the `jaeger-tls-cfgmap.yaml` file:
+Generate configmap jaeger-tls:
+
+```console
+keytool -import -trustcacerts -keystore trust.store -storepass changeit -alias es-root -file es.pem
+kubectl create configmap jaeger-tls --from-file=trust.store --from-file=es.pem
+```
+
+```console
+helm install jaeger jaegertracing/jaeger --values jaeger-values.yaml
+```
+
+### Cassandra configuration
+
+#### Installing the Chart using an Existing Cassandra Cluster
+
+If you already have an existing running Cassandra cluster, you can configure the chart as follows to use it as your backing store (make sure you replace `<HOST>`, `<PORT>`, etc with your values):
+
+```console
+helm install jaeger jaegertracing/jaeger \
+  --set provisionDataStore.cassandra=false \
+  --set storage.cassandra.host=<HOST> \
+  --set storage.cassandra.port=<PORT> \
+  --set storage.cassandra.user=<USER> \
+  --set storage.cassandra.password=<PASSWORD>
+```
+
+#### Installing the Chart using an Existing Cassandra Cluster with TLS
+
+If you already have an existing running Cassandra cluster with TLS, you can configure the chart as follows to use it as your backing store:
+
+Content of the `values.yaml` file:
+
+```YAML
+storage:
+  type: cassandra
+  cassandra:
+    host: <HOST>
+    port: <PORT>
+    user: <USER>
+    password: <PASSWORD>
+    tls:
+      enabled: true
+      secretName: cassandra-tls-secret
+
+provisionDataStore:
+  cassandra: false
+```
+
+Content of the `jaeger-tls-cassandra-secret.yaml` file:
 
 ```YAML
 apiVersion: v1
-kind: ConfigMap
+kind: Secret
 metadata:
-  name: jaeger-tls
+  name: cassandra-tls-secret
 data:
-  es.pem: |
+  commonName: <SERVER NAME>
+  ca-cert.pem: |
     -----BEGIN CERTIFICATE-----
     <CERT>
     -----END CERTIFICATE-----
+  client-cert.pem: |
+    -----BEGIN CERTIFICATE-----
+    <CERT>
+    -----END CERTIFICATE-----
+  client-key.pem: |
+    -----BEGIN RSA PRIVATE KEY-----
+    -----END RSA PRIVATE KEY-----
+  cqlshrc: |
+    [ssl]
+    certfile = ~/.cassandra/ca-cert.pem
+    userkey = ~/.cassandra/client-key.pem
+    usercert = ~/.cassandra/client-cert.pem
+
+```
+
+```console
+kubectl apply -f jaeger-tls-cassandra-secret.yaml
+helm install jaeger jaegertracing/jaeger --values values.yaml
+```
+
+### Ingester Configuration
+
+#### Installing the Chart with Ingester enabled
+
+The architecture illustrated below can be achieved by enabling the ingester component. When enabled, Cassandra or Elasticsearch (depending on the configured values) now becomes the ingester's storage backend, whereas Kafka becomes the storage backend of the collector service.
+
+![Jaeger with Ingester](https://www.jaegertracing.io/img/architecture-v2.png)
+
+#### Installing the Chart with Ingester enabled using a New Kafka Cluster
+
+To provision a new Kafka cluster along with jaeger-ingester:
+
+```console
+helm install jaeger jaegertracing/jaeger \
+  --set provisionDataStore.kafka=true \
+  --set ingester.enabled=true
+```
+
+#### Installing the Chart with Ingester using an existing Kafka Cluster
+
+You can use an existing Kafka cluster with jaeger too
+
+```console
+helm install jaeger jaegertracing/jaeger \
+  --set ingester.enabled=true \
+  --set storage.kafka.brokers={<BROKER1:PORT>,<BROKER2:PORT>} \
+  --set storage.kafka.topic=<TOPIC>
+```
+
+### Other Storage Configuration
+
+If you are using grpc-plugin based storage, you can set environment
+variables that are needed by the plugin.
+
+As as example if using the [jaeger-mongodb](https://github.com/mongodb-labs/jaeger-mongodb)
+plugin you can set the `MONGO_URL` as follows...
+
+```YAML
+storage:
+  type: grpc-plugin
+  grpcPlugin:
+    extraEnv:
+      - name: MONGO_URL
+        valueFrom:
+          secretKeyRef:
+            key: MONGO_URL
+            name: jaeger-secrets
+```
+
+### All in One In-Memory Configuration
+
+#### Installing the Chart using the All in One executable and in-memory storage
+
+To install the chart with the release name `jaeger` using in-memory storage and the All in One
+executable, configure the chart as follows:
+
+Content of the `values.yaml` file:
+
+```yaml
+provisionDataStore:
+  cassandra: false
+allInOne:
+  enabled: true
+storage:
+  type: none
+agent:
+  enabled: false
+collector:
+  enabled: false
+query:
+  enabled: false
+```
+
+It's possible to specify resources and extra environment variables for the all in one deployment:
+
+```yaml
+allInOne:
+  extraEnv:
+    - name: QUERY_BASE_PATH
+      value: /jaeger
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 256m
+      memory: 128Mi
 ```
 
 ```bash
-kubectl apply -f jaeger-tls-cfgmap.yaml
-helm install incubator/jaeger --name myrel --values jaeger-values.yaml
+helm install jaeger jaegertracing/jaeger --values values.yaml
 ```
 
-## Uninstalling the Chart
+## oAuth2 Sidecar
+If extra protection of the Jaeger UI is needed, then the oAuth2 sidecar can be enabled in the Jaeger Query. The oAuth2
+sidecar acts as a security proxy in front of the Jaeger Query service and enforces user authentication before reaching
+the Jaeger UI. This method can work with any valid provider including Keycloak, Azure, Google, GitHub, and more.
 
-To uninstall/delete the `myrel` deployment:
+Offical docs [here](https://oauth2-proxy.github.io/oauth2-proxy/docs/behaviour)
 
-```bash
-$ helm delete myrel
+Content of the `jaeger-values.yaml` file:
+
+```YAML
+query:
+  enabled: true
+  oAuthSidecar:
+    enabled: true
+    image: quay.io/oauth2-proxy/oauth2-proxy:v7.3.0
+    pullPolicy: IfNotPresent
+    containerPort: 4180
+    args:
+      - --config
+      - /etc/oauth2-proxy/oauth2-proxy.cfg
+      - --client-secret
+      - "$(client-secret)"
+    extraEnv:
+      - name: client-secret
+        valueFrom:
+          secretKeyRef:
+            name: client-secret
+            key: client-secret-key
+    extraConfigmapMounts: []
+    extraSecretMounts: []
+    config: |-
+      provider = "oidc"
+      https_address = ":4180"
+      upstreams = ["http://localhost:16686"]
+      redirect_url = "https://jaeger-svc-domain/oauth2/callback"
+      client_id = "jaeger-query"
+      oidc_issuer_url = "https://keycloak-svc-domain/auth/realms/Default"
+      cookie_secure = "true"
+      cookie_secret = ""
+      email_domains = "*"
+      oidc_groups_claim = "groups"
+      user_id_claim = "preferred_username"
+      skip_provider_button = "true"
 ```
 
-The command removes all the Kubernetes components associated with the chart and deletes the release.
+## Installing extra kubernetes objects
 
-> **Tip**: To completely remove the release, run `helm delete --purge myrel`
+If additional kubernetes objects need to be installed alongside this chart, set the `extraObjects` array to contain
+the yaml describing these objects. The values in the array are treated as a template to allow the use of variable
+substitution and function calls as in the example below.
 
-## Configuration
+Content of the `jaeger-values.yaml` file:
 
-The following table lists the configurable parameters of the Jaeger chart and their default values.
-
-|             Parameter                    |            Description              |                  Default               |
-|------------------------------------------|-------------------------------------|----------------------------------------|
-| `agent.annotations`                      | Annotations for Agent               |  `nil`                                   |
-| `agent.cmdlineParams`                    | Additional command line parameters  |  `nil`                                   |
-| `agent.dnsPolicy`                        | Configure DNS policy for agents     |  `ClusterFirst`                          |
-| `agent.service.annotations`              | Annotations for Agent SVC           |  `nil`                                   |
-| `agent.service.binaryPort`               | jaeger.thrift over binary thrift    |  `6832`                                  |
-| `agent.service.compactPort`              | jaeger.thrift over compact thrift   |  `6831`                                  |
-| `agent.image`                            | Image for Jaeger Agent              |  `jaegertracing/jaeger-agent`            |
-| `agent.podAnnotations`                   | Annotations for Agent pod           |  `nil`                                   |
-| `agent.pullPolicy`                       | Agent image pullPolicy              |  `IfNotPresent`                          |
-| `agent.service.loadBalancerSourceRanges` | list of IP CIDRs allowed access to load balancer (if supported) | `[]`       |
-| `agent.service.annotations`              | Annotations for Agent SVC           |  `nil`                                   |
-| `agent.service.binaryPort`               | jaeger.thrift over binary thrift    |  `6832`                                  |
-| `agent.service.compactPort`              | jaeger.thrift over compact thrift   |  `6831`                                  |
-| `agent.service.zipkinThriftPort`         | zipkin.thrift over compact thrift   |  `5775`                                  |
-| `agent.useHostNetwork`                   | Enable hostNetwork for agents       |  `false`                                 |
-| `agent.tolerations`                      | Node Tolerations                    | `[]`                                   |
-| `collector.cmdlineParams`                | Additional command line parameters  |  `nil`                                   |
-| `collector.podAnnotations`               | Annotations for Collector pod       |  `nil`                                   |
-| `collector.service.httpPort`             | Client port for HTTP thrift         |  `14268`                                 |
-| `collector.service.annotations`          | Annotations for Collector SVC       |  `nil`                                   |
-| `collector.image`                        | Image for jaeger collector          |  `jaegertracing/jaeger-collector`        |
-| `collector.pullPolicy`                   | Collector image pullPolicy          |  `IfNotPresent`                          |
-| `collector.tolerations`                  | Node Tolerations                    | `[]`                                   |
-| `collector.service.annotations`          | Annotations for Collector SVC       |  `nil`                                   |
-| `collector.service.httpPort`             | Client port for HTTP thrift         |  `14268`                                 |
-| `collector.service.loadBalancerSourceRanges` | list of IP CIDRs allowed access to load balancer (if supported) | `[]`   |
-| `collector.service.tchannelPort`         | Jaeger Agent port for thrift        |  `14267`                                 |
-| `collector.service.type`                 | Service type                        |  `ClusterIP`                             |
-| `collector.service.zipkinPort`           | Zipkin port for JSON/thrift HTTP    |  `9411`                                  |
-| `collector.extraConfigmapMounts`         | Additional collector configMap mounts |  `[]`                                  |
-| `elasticsearch.rbac.create`              | To enable RBAC                      |  `false`                                 |
-| `fullnameOverride`                       | Override full name                  |  `nil`                                 |
-| `hotrod.enabled`                         | Enables the Hotrod demo app         |  `false`                                 |
-| `hotrod.service.loadBalancerSourceRanges` | list of IP CIDRs allowed access to load balancer (if supported) | `[]`      |
-| `nameOverride`                           | Override name                       | `nil`                                  |
-| `provisionDataStore.cassandra`           | Provision Cassandra Data Store      |  `true`                                  |
-| `provisionDataStore.elasticsearch`       | Provision Elasticsearch Data Store  |  `false`                                 |
-| `query.agentSidecar.enabled`              | Enable agent sidecare for query deployment           |  `true`                                  |
-| `query.service.annotations`              | Annotations for Query SVC           |  `nil`                                   |
-| `query.cmdlineParams`                    | Additional command line parameters  |  `nil`                                   |
-| `query.image`                            | Image for Jaeger Query UI           |  `jaegertracing/jaeger-query `           |
-| `query.ingress.enabled`                  | Allow external traffic access       |  `false`                                 |
-| `query.ingress.annotations`              | Configure annotations for Ingress   |  `{}`                                    |
-| `query.ingress.hosts`                    | Configure host for Ingress          |  `nil`                                   |
-| `query.ingress.tls`                      | Configure tls for Ingress           |  `nil`                                   |
-| `query.podAnnotations`                   | Annotations for Query pod           |  `nil`                                   |
-| `query.pullPolicy`                       | Query UI image pullPolicy           |  `IfNotPresent`                          |
-| `query.tolerations`                      | Node Tolerations                    | `[]`                                   |
-| `query.service.loadBalancerSourceRanges` | list of IP CIDRs allowed access to load balancer (if supported) | `[]`       |
-| `query.service.port`                | External accessible port            |  `80`                                    |
-| `query.service.type`                     | Service type                        |  `ClusterIP`                             |
-| `query.basePath`                         | Base path of Query UI, used for ingress as well (if it is enabled)   |  `/`    |
-| `query.extraConfigmapMounts`             | Additional query configMap mounts   |  `[]`                                    |
-| `schema.annotations`                     | Annotations for the schema job      |  `nil`                                   |
-| `schema.image`                           | Image to setup cassandra schema     |  `jaegertracing/jaeger-cassandra-schema` |
-| `schema.mode`                            | Schema mode (prod or test)          |  `prod`                                  |
-| `schema.pullPolicy`                      | Schema image pullPolicy             |  `IfNotPresent`                          |
-| `schema.activeDeadlineSeconds`           | Deadline in seconds for cassandra schema creation job to complete |  `120`                            |
-| `serviceAccounts.agent.create`              | Create service account   |  `true`                                  |
-| `serviceAccounts.agent.name`              | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template  |  ``                                  |
-| `serviceAccounts.cassandraSchema.create`              | Create service account   |  `true`                                  |
-| `serviceAccounts.cassandraSchema.name`              | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template  |  ``                                  |
-| `serviceAccounts.collector.create`              | Create service account   |  `true`                                  |
-| `serviceAccounts.collector.name`              | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template  |  ``                                  |
-| `serviceAccounts.hotrod.create`              | Create service account   |  `true`                                  |
-| `serviceAccounts.hotrod.name`              | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template  |  ``                                  |
-| `serviceAccounts.query.create`              | Create service account   |  `true`                                  |
-| `serviceAccounts.query.name`              | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template  |  ``                                  |
-| `serviceAccounts.spark.create`              | Create service account   |  `true`                                  |
-| `serviceAccounts.spark.name`              | The name of the ServiceAccount to use. If not set and create is true, a name is generated using the fullname template  |  ``                                  |
-| `spark.enabled`                          | Enables the dependencies job        |  `false`                                 |
-| `spark.image`                            | Image for the dependencies job      |  `jaegertracing/spark-dependencies`      |
-| `spark.pullPolicy`                       | Image pull policy of the deps image |  `Always`                                |
-| `spark.schedule`                         | Schedule of the cron job            |  `"49 23 * * *"`                         |
-| `spark.successfulJobsHistoryLimit`       | Cron job successfulJobsHistoryLimit |  `5`                                     |
-| `spark.failedJobsHistoryLimit`           | Cron job failedJobsHistoryLimit     |  `5`                                     |
-| `spark.tag`                              | Tag of the dependencies job image   |  `latest`                                |
-| `spark.tolerations`                      | Node Tolerations                    | `[]`                                   |
-| `storage.cassandra.existingSecret`                 | Name of existing password secret object (for password authentication)          |  `nil`
-| `storage.cassandra.host`                 | Provisioned cassandra host          |  `cassandra`                             |
-| `storage.cassandra.password`             | Provisioned cassandra password  (ignored if storage.cassandra.existingSecret set)     |  `password`                              |
-| `storage.cassandra.port`                 | Provisioned cassandra port          |  `9042`                                  |
-| `storage.cassandra.usePassword`                 | Use password          |  `true`                                 |
-| `storage.cassandra.user`                 | Provisioned cassandra username      |  `user`                                  |
-| `storage.elasticsearch.existingSecret`                 | Name of existing password secret object (for password authentication)          |  `nil`                                 |
-| `storage.elasticsearch.host`             | Provisioned elasticsearch host      |  `elasticsearch`                         |
-| `storage.elasticsearch.password`         | Provisioned elasticsearch password  (ignored if storage.elasticsearch.existingSecret set)  |  `changeme`                              |
-| `storage.elasticsearch.port`             | Provisioned elasticsearch port      |  `9200`                                  |
-| `storage.elasticsearch.scheme`           | Provisioned elasticsearch scheme    |  `http`                                  |
-| `storage.elasticsearch.usePassword`                 | Use password          |  `true`                                 |
-| `storage.elasticsearch.user`             | Provisioned elasticsearch user      |  `elastic`                               |
-| `storage.elasticsearch.nodesWanOnly`     | Only access specified es host       |  `false`                                 |
-| `storage.type`                           | Storage type (ES or Cassandra)      |  `cassandra`                             |
-| `tag`                                    | Image tag/version                   |  `1.13.1`                                 |
-
-For more information about some of the tunable parameters that Cassandra provides, please visit the helm chart for [cassandra](https://github.com/kubernetes/charts/tree/master/incubator/cassandra) and the official [website](http://cassandra.apache.org/) at apache.org.
-
-For more information about some of the tunable parameters that Jaeger provides, please visit the official [Jaeger repo](https://github.com/uber/jaeger) at GitHub.com.
-
-Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example,
-
-```bash
-$ helm install --name myrel \
-    --set cassandra.config.rack_name=rack2 \
-    incubator/jaeger
+```YAML
+extraObjects:
+  - apiVersion: rbac.authorization.k8s.io/v1
+    kind: RoleBinding
+    metadata:
+      name: {{ .Release.Name }}-someRoleBinding
+    roleRef:
+      apiGroup: rbac.authorization.k8s.io
+      kind: Role
+      name: someRole
+    subjects:
+      - kind: ServiceAccount
+        name: "{{ include \"jaeger.esLookback.serviceAccountName\" . }}"
 ```
-
-Alternatively, a YAML file that specifies the values for the parameters can be provided while installing the chart.
-
-### Storage persistence
-
-Jaeger itself is a stateful application that by default uses Cassandra to store all related data. That means this helm chart has a dependency on the Cassandra helm chart for its data persistence. To deploy Jaeger with storage persistence, please take a look at the [README.md](https://github.com/kubernetes/charts/tree/master/incubator/cassandra) for configuration details.
-
-Override any required configuration options in the Cassandra chart that is required and then enable persistence by setting the following option: `--set cassandra.persistence.enabled=true`
-
-### Pending enhancements
-- [ ] Sidecar deployment support

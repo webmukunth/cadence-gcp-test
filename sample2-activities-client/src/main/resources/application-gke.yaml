@@ -11,12 +11,12 @@ spring:
     bootstrap-servers: cp-kafka-headless:9092
   data:
     mongodb:
-      uri: mongodb://cadence:cadence@mongodb-headless:27017/cadence
+      uri: mongodb://temporal:temporal@mongodb-headless:27017/temporal
   redis:
     password: redis
     host: redis-headless
     port: 6379
-cadence:
-  host: cadence-frontend-headless
+temporal:
+  host: temporal-frontend-headless
 server:
   port: 8080
